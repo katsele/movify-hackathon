@@ -22,8 +22,9 @@ All design decisions are documented. Read these before making architectural choi
 ## Tech stack
 
 ### Frontend
-- **Next.js** (App Router) deployed on **Vercel**
-- **React** with TypeScript
+- **Next.js 16** (App Router, Turbopack) deployed on **Vercel**
+- **React 19** with TypeScript
+- **ESLint 9** flat config (`eslint.config.mjs` — no legacy `.eslintrc.json`, no `next lint`)
 - **Tailwind CSS** + **shadcn/ui** for components
 - **recharts** for data visualisation (heatmap, line charts, bar charts)
 - **@tanstack/react-query** + **supabase-js** for data fetching
