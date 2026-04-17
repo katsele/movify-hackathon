@@ -23,13 +23,21 @@ class BoondConnector(BaseConnector):
         *,
         api_base: str | None = None,
         api_token: str | None = None,
+        client_key: str | None = None,
+        user_token: str | None = None,
+        app_key: str | None = None,
         export_dir: str | None = None,
     ) -> None:
         super().__init__(supabase_url, supabase_key)
         self.api_base = api_base or os.environ.get("BOOND_API_BASE")
         self.api_token = api_token or os.environ.get("BOOND_API_TOKEN")
+        self.client_key = client_key or os.environ.get("BOOND_CLIENT_KEY")
+        self.user_token = user_token or os.environ.get("BOOND_USER_TOKEN")
+        self.app_key = app_key or os.environ.get("BOOND_APP_KEY")
         self.export_dir = export_dir or os.environ.get("BOOND_EXPORT_DIR")
-        self.api_available = bool(self.api_base and self.api_token)
+        has_bearer = bool(self.api_token)
+        has_triple = bool(self.client_key and self.user_token and self.app_key)
+        self.api_available = bool(self.api_base) and (has_bearer or has_triple)
 
     def _source_name(self) -> str:
         return "boond_crm"
