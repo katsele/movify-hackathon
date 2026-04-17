@@ -116,7 +116,7 @@ create table if not exists forecasts (
   confidence            float,
   contributing_signals  uuid[],
   notes                 text,
-  unique (generated_at, forecast_week, skill_id)
+  unique (forecast_week, skill_id)
 );
 
 -- Forecast accuracy tracking (retrospective validation)

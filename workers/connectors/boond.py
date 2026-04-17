@@ -59,15 +59,34 @@ class BoondConnector(BaseConnector):
     def load(self, data: Any) -> int:  # type: ignore[override]
         loaded = 0
         for consultant in data.get("consultants", []):
-            self.db.table("consultants").upsert(consultant).execute()
+            self.db.table("consultants").upsert(consultant, on_conflict="external_id").execute()
             loaded += 1
         for deal in data.get("deals", []):
-            self.db.table("deals").upsert(deal).execute()
+            self.db.table("deals").upsert(deal, on_conflict="external_id").execute()
             loaded += 1
-        for profile in data.get("deal_profiles", []):
-            self.db.table("deal_profiles").upsert(profile).execute()
+
+        profiles = data.get("deal_profiles", [])
+        if profiles:
+            external_ids = sorted({p["deal_id"] for p in profiles if p.get("deal_id")})
+            rows = (
+                self.db.table("deals")
+                .select("id, external_id")
+                .in_("external_id", external_ids)
+                .execute()
+                .data
+                or []
+            )
+            deal_id_by_external = {r["external_id"]: r["id"] for r in rows}
+            for profile in profiles:
+                internal_id = deal_id_by_external.get(profile["deal_id"])
+                if not internal_id:
+                    log.warning("skipping deal_profile: unknown Boond deal %s", profile["deal_id"])
+                    continue
+                profile["deal_id"] = internal_id
+                self.db.table("deal_profiles").upsert(profile).execute()
+
         for project in data.get("projects", []):
-            self.db.table("projects").upsert(project).execute()
+            self.db.table("projects").upsert(project, on_conflict="external_id").execute()
         return loaded
 
     # ------ Boond API helpers (stub until credentials / API shape confirmed) --

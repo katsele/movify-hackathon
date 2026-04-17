@@ -42,7 +42,9 @@ class ForecastEngine:
         for skill in skills:
             forecasts = self.generate_forecast(skill["id"], weeks_ahead=weeks_ahead)
             for forecast in forecasts:
-                self.db.table("forecasts").upsert(forecast).execute()
+                self.db.table("forecasts").upsert(
+                    forecast, on_conflict="forecast_week,skill_id"
+                ).execute()
                 rows_written += 1
         log.info("forecast engine wrote %d rows", rows_written)
         return rows_written
