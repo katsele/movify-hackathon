@@ -260,3 +260,13 @@ Minimum viable demo = stories 1–3 + 5. Stories 4 and 6 are cuttable.
 - No real-time websocket updates (polling or manual refresh is fine)
 - No email digest (V1)
 - No multi-language UI (English only)
+
+## Agent tooling (Superpowers)
+
+This repo enables the [Superpowers](https://github.com/obra/superpowers) plugin for all contributors. It provides shared skills (brainstorming, writing-plans, TDD, systematic-debugging, verification-before-completion, ...), a `code-reviewer` subagent, and a `SessionStart` hook.
+
+- **Claude Code**: opening this repo with `claude` will prompt you to install the plugin referenced in `.claude/settings.json`. Accept the prompt, or run `/plugin install superpowers@claude-plugins-official` manually.
+- **Conductor**: no action needed. Each worktree Conductor spawns runs Claude Code, which picks up `.claude/settings.json` automatically.
+- **Cursor**: plugins are user-scoped in Cursor. Run `/add-plugin superpowers` once in the Cursor Agent chat.
+
+Skills trigger automatically based on context — don't invoke them explicitly unless you want to force one. The `code-reviewer` subagent is useful at the end of each story in the hackathon build sequence above.
