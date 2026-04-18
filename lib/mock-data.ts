@@ -14,6 +14,7 @@ export interface ForecastCell {
   gap: number;
   confidence: number;
   contributingSignalIds?: string[];
+  notes?: string;
 }
 
 // Back-compat alias — existing imports keep working while the rename lands.

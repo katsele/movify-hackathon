@@ -7,6 +7,7 @@ weights are zeroed for the hackathon cut (those connectors ship in V1).
 from __future__ import annotations
 
 import logging
+import math
 from datetime import date, datetime, timedelta, timezone
 from typing import Any
 
@@ -16,6 +17,15 @@ log = logging.getLogger(__name__)
 
 CONVERGENCE_WINDOW_DAYS = 28
 SIGNAL_RECENCY_WINDOW_DAYS = 90
+MIN_PERSISTED_DEMAND = 0.1
+SOURCE_CONFIDENCE_CAPS: dict[str, float] = {
+    "crm_pipeline": 0.50,
+    "procurement_notice": 0.75,
+    "news_event": 0.55,
+    "historical_pattern": 0.25,
+    "trend_spike": 0.40,
+    "job_posting": 0.55,
+}
 
 
 class ForecastEngine:
@@ -61,10 +71,13 @@ class ForecastEngine:
     # ------------------------------------------------------------------ run --
 
     def run(self, weeks_ahead: int = 12) -> int:
+        self._clear_future_forecasts()
         skills = self.db.table("skills").select("id, name").execute().data or []
         rows_written = 0
         for skill in skills:
             forecasts = self.generate_forecast(skill["id"], weeks_ahead=weeks_ahead)
+            if not self._should_persist_skill(forecasts):
+                continue
             for forecast in forecasts:
                 self.db.table("forecasts").upsert(
                     forecast, on_conflict="forecast_week,skill_id"
@@ -77,17 +90,23 @@ class ForecastEngine:
 
     def generate_forecast(self, skill_id: str, weeks_ahead: int = 12) -> list[dict]:
         results: list[dict] = []
-        today = date.today()
 
         for offset in range(1, weeks_ahead + 1):
-            target_week = today + timedelta(weeks=offset)
+            target_week = _start_of_week(date.today()) + timedelta(weeks=offset)
 
             crm = self._score_crm_pipeline(skill_id, target_week)
             procurement = self._score_procurement(skill_id, target_week)
             news = self._score_news_events(skill_id, target_week)
-            historical = self._score_historical_pattern(skill_id, target_week)
             trend = self._score_trends(skill_id, target_week)
             postings = self._score_job_postings(skill_id, target_week)
+            has_current_signal = (
+                crm > 0 or procurement > 0 or news > 0 or trend > 0 or postings > 0
+            )
+            historical = (
+                self._score_historical_pattern(skill_id, target_week)
+                if has_current_signal
+                else 0.0
+            )
 
             raw_demand = (
                 crm * self.weights["crm_pipeline"]
@@ -98,19 +117,30 @@ class ForecastEngine:
                 + postings * self.weights["job_posting"]
             )
 
-            active = sum(
+            source_confidences = {
+                "crm_pipeline": self._effective_source_confidence(
+                    "crm_pipeline", crm
+                ),
+                "procurement_notice": self._effective_source_confidence(
+                    "procurement_notice", procurement
+                ),
+                "news_event": self._effective_source_confidence("news_event", news),
+                "trend_spike": self._effective_source_confidence(
+                    "trend_spike", trend
+                ),
+                "job_posting": self._effective_source_confidence(
+                    "job_posting", postings
+                ),
+                "historical_pattern": self._effective_source_confidence(
+                    "historical_pattern", historical
+                ),
+            }
+            confidence = self._combine_source_confidence(source_confidences)
+            converging = sum(
                 1
-                for s in (crm, procurement, historical, news, trend, postings)
-                if s > 0
-            )
-            base_confidence = min(active / 4.0, 1.0)
-            sources = self._convergent_sources(skill_id, target_week)
-            # When ≥2 independent sources hit the same skill within 4 weeks of
-            # the target week, raise the confidence. Single-source (e.g. pipeline
-            # only) stays at base — the UI then renders it with the low-confidence
-            # opacity + hatched pattern.
-            converging = len(sources) >= 2
-            confidence = min(base_confidence + (0.2 if converging else 0.0), 1.0)
+                for source, value in source_confidences.items()
+                if value > 0 and source != "historical_pattern"
+            ) >= 2
             supply = self._get_supply(skill_id, target_week)
 
             results.append(
@@ -141,6 +171,43 @@ class ForecastEngine:
 
     # ---------------------------------------------------- signal scorers ----
 
+    def _clear_future_forecasts(self) -> None:
+        start = _start_of_week(date.today()).isoformat()
+        self.db.table("forecasts").delete().gte("forecast_week", start).execute()
+
+    @staticmethod
+    def _should_persist_skill(forecasts: list[dict]) -> bool:
+        return any(
+            float(forecast.get("predicted_demand") or 0) >= MIN_PERSISTED_DEMAND
+            for forecast in forecasts
+        )
+
+    @staticmethod
+    def _effective_source_confidence(source: str, score: float) -> float:
+        if score <= 0:
+            return 0.0
+        cap = SOURCE_CONFIDENCE_CAPS[source]
+        return min(cap, 1 - math.exp(-score))
+
+    @staticmethod
+    def _combine_source_confidence(source_confidences: dict[str, float]) -> float:
+        active = {
+            source: value for source, value in source_confidences.items() if value > 0
+        }
+        if not active:
+            return 0.0
+
+        combined = 1.0 - math.prod(1.0 - value for value in active.values())
+        supporting = [
+            source for source in active.keys() if source != "historical_pattern"
+        ]
+
+        if not supporting:
+            return round(min(combined, 0.25), 2)
+        if len(supporting) == 1:
+            return round(min(combined, SOURCE_CONFIDENCE_CAPS[supporting[0]]), 2)
+        return round(min(combined + 0.1, 0.95), 2)
+
     def _score_crm_pipeline(self, skill_id: str, target_week: date) -> float:
         deals = (
             self.db.table("deal_profiles")
@@ -151,6 +218,7 @@ class ForecastEngine:
             or []
         )
         score = 0.0
+        current_week = _start_of_week(date.today())
         for row in deals:
             deal = row.get("deals") or {}
             if deal.get("status") in ("won", "lost"):
@@ -159,8 +227,9 @@ class ForecastEngine:
             probability = deal.get("probability", 0.5)
             if not start:
                 continue
-            weeks_from_now = (date.fromisoformat(start) - date.today()).days / 7
-            proximity = max(0.0, 1 - abs(weeks_from_now - (target_week - date.today()).days / 7) / 12)
+            weeks_from_now = (date.fromisoformat(start) - current_week).days / 7
+            target_offset = (target_week - current_week).days / 7
+            proximity = max(0.0, 1 - abs(weeks_from_now - target_offset) / 12)
             score += row["quantity"] * probability * proximity
         return score
 
@@ -287,28 +356,7 @@ class ForecastEngine:
                 continue
             if abs((target_week - detected).days) <= CONVERGENCE_WINDOW_DAYS:
                 ids.append(row["signal_id"])
-        return ids
-
-    def _convergent_sources(self, skill_id: str, target_week: date) -> set[str]:
-        rows = (
-            self.db.table("signal_skills")
-            .select("signals(detected_at, source)")
-            .eq("skill_id", skill_id)
-            .execute()
-            .data
-            or []
-        )
-        sources: set[str] = set()
-        for row in rows:
-            sig = row.get("signals") or {}
-            detected = _parse_detected_at(sig.get("detected_at"))
-            if detected is None:
-                continue
-            if abs((target_week - detected).days) <= CONVERGENCE_WINDOW_DAYS:
-                source = sig.get("source")
-                if source:
-                    sources.add(source)
-        return sources
+        return sorted(set(ids))
 
     def _explain(
         self,
@@ -371,3 +419,7 @@ def _parse_detected_at(value: Any) -> date | None:
             except ValueError:
                 return None
     return None
+
+
+def _start_of_week(value: date) -> date:
+    return value - timedelta(days=value.weekday())

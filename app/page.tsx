@@ -11,6 +11,7 @@ import { useConsultants } from "@/lib/hooks/useBench";
 import { useSignals } from "@/lib/hooks/useSignals";
 import { useSignalsByIds } from "@/lib/hooks/useSignalsByIds";
 import { forecastToCells } from "@/lib/forecast-adapter";
+import { summarizeForecastCells } from "@/lib/forecast-display";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
 import type { RecentSignal } from "@/lib/types";
 
@@ -28,9 +29,11 @@ export default function DashboardPage() {
   const signalIds = cells.flatMap((c) => c.contributingSignalIds ?? []);
   const signalsLookup = useSignalsByIds(signalIds);
 
-  const topGaps = [...cells]
-    .filter((c) => c.week <= 6 && c.gap > 0)
-    .sort((a, b) => b.gap - a.gap)
+  const topGaps = summarizeForecastCells(
+    cells.filter((c) => c.week <= 6),
+    6,
+  )
+    .filter((summary) => summary.maxGap > 0)
     .slice(0, 3);
 
   const onBench =
@@ -80,7 +83,7 @@ export default function DashboardPage() {
         <KPICard
           label="Top gap"
           value={topGapSkill ? topGapSkill.skill : "—"}
-          unit={topGapSkill ? `+${topGapSkill.gap} needed` : undefined}
+          unit={topGapSkill ? `+${topGapSkill.maxGap} needed` : undefined}
           accent="critical"
         />
         <KPICard
@@ -113,6 +116,7 @@ export default function DashboardPage() {
               cells={cells}
               weeks={12}
               signalsById={signalsLookup.data}
+              limitSkills={10}
             />
           )}
         </CardContent>
@@ -124,18 +128,22 @@ export default function DashboardPage() {
             <CardTitle>Gap alerts — next 6 weeks</CardTitle>
           </CardHeader>
           <CardContent className="pt-0 divide-y divide-border">
-            {topGaps.map((g, i) => (
-              <GapAlert
-                key={`${g.skill}-${i}`}
-                skill={g.skill}
-                discipline={g.discipline}
-                gap={g.gap}
-                window={`Week ${g.week}`}
-                confidence={g.confidence}
-                rationale={`${g.demand} profiles needed vs ${g.supply} available. Driven by pipeline deals + converging external signals.`}
-                href={`/forecast/${encodeURIComponent(g.skill)}`}
-              />
-            ))}
+            {topGaps.map((g, i) => {
+              const peakCell =
+                g.cells.find((cell) => cell.gap === g.maxGap) ?? g.cells[0];
+              return (
+                <GapAlert
+                  key={`${g.skill}-${i}`}
+                  skill={g.skill}
+                  discipline={g.discipline}
+                  gap={g.maxGap}
+                  window={`Week ${peakCell.week}`}
+                  confidence={g.maxConfidence}
+                  rationale={`${peakCell.demand} profiles needed vs ${peakCell.supply} available. Driven by pipeline deals + converging external signals.`}
+                  href={`/forecast/${encodeURIComponent(g.skill)}`}
+                />
+              );
+            })}
           </CardContent>
         </Card>
         <Card>
