@@ -10,25 +10,19 @@ import { ActionCard } from "@/components/ActionCard";
 import { ConfidenceIndicator } from "@/components/ConfidenceIndicator";
 import {
   SignalWeightChart,
-  type SignalWeightDatum,
 } from "@/components/SignalWeightChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  buildSourceWeightSettingsRows,
+  sourceWeightSettingsToChartData,
+} from "@/lib/constants/forecastFactors";
 import { useForecast } from "@/lib/hooks/useForecast";
 import { useSignals } from "@/lib/hooks/useSignals";
+import { useSourceWeightsSettings } from "@/lib/hooks/useSourceWeightsSettings";
 import { useSkillByName } from "@/lib/hooks/useSkillByName";
 import { forecastToCells } from "@/lib/forecast-adapter";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
 import type { RecentSignal } from "@/lib/types";
-
-// Colours map to the locked semantic signal palette (spec §6.3).
-const WEIGHTS: SignalWeightDatum[] = [
-  { source: "Pipeline (CRM)", weight: 0.35, color: "#059669" }, // signal-covered
-  { source: "Procurement", weight: 0.25, color: "#2563EB" }, // signal-procurement
-  { source: "Historical", weight: 0.15, color: "#78736A" }, // neutral-500
-  { source: "News", weight: 0.05, color: "#A8A39A" }, // neutral-400
-  { source: "Trend (V1)", weight: 0.0, color: "#7C3AED" }, // signal-trend
-  { source: "Job postings (V1)", weight: 0.0, color: "#0891B2" }, // signal-posting
-];
 
 export default function SkillDrilldownPage({
   params,
@@ -41,6 +35,7 @@ export default function SkillDrilldownPage({
   const skillLookup = useSkillByName(skillName);
   const liveForecast = useForecast(skillLookup.data?.id);
   const liveSignals = useSignals({ skill: skillName });
+  const sourceWeights = useSourceWeightsSettings();
 
   const liveCells = liveForecast.data
     ? forecastToCells(liveForecast.data)
@@ -68,6 +63,8 @@ export default function SkillDrilldownPage({
   const avgConfidence =
     cells.reduce((s, c) => s + c.confidence, 0) / (cells.length || 1);
   const totalGap = cells.reduce((s, c) => s + Math.max(0, c.gap), 0);
+  const weightRows =
+    sourceWeights.data?.settings ?? buildSourceWeightSettingsRows(undefined);
 
   return (
     <div className="space-y-6">
@@ -118,7 +115,9 @@ export default function SkillDrilldownPage({
             <CardTitle>Signal contributions</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <SignalWeightChart data={WEIGHTS} />
+            <SignalWeightChart
+              data={sourceWeightSettingsToChartData(weightRows)}
+            />
           </CardContent>
         </Card>
       </div>
