@@ -15,19 +15,20 @@ from typing import Any
 
 from supabase import Client, create_client
 
+from connectors.forecast_constants import (
+    FTE_PER_NEWS,
+    FTE_PER_POSTING,
+    FTE_PER_TENDER,
+    FTE_PER_TREND,
+    compute_confidence,
+    predict_demand,
+)
+
 log = logging.getLogger(__name__)
 
 CONVERGENCE_WINDOW_DAYS = 28
 SIGNAL_RECENCY_WINDOW_DAYS = 90
 MIN_PERSISTED_DEMAND = 0.1
-SOURCE_CONFIDENCE_CAPS: dict[str, float] = {
-    "crm_pipeline": 0.50,
-    "procurement_notice": 0.75,
-    "news_event": 0.55,
-    "historical_pattern": 0.40,
-    "trend_spike": 0.40,
-    "job_posting": 0.55,
-}
 
 # Historical pattern constants -------------------------------------------------
 HALF_LIFE_YEARS = 2.0
@@ -143,39 +144,19 @@ class ForecastEngine:
             if not has_current_signal:
                 historical *= HISTORY_DAMPEN_WITHOUT_CURRENT_SIGNAL
 
-            raw_demand = (
-                crm * self.weights["crm_pipeline"]
-                + procurement * self.weights["procurement_notice"]
-                + historical * self.weights["historical_pattern"]
-                + news * self.weights["news_event"]
-                + trend * self.weights["trend_spike"]
-                + postings * self.weights["job_posting"]
-            )
-
-            source_confidences = {
-                "crm_pipeline": self._effective_source_confidence(
-                    "crm_pipeline", crm
-                ),
-                "procurement_notice": self._effective_source_confidence(
-                    "procurement_notice", procurement
-                ),
-                "news_event": self._effective_source_confidence("news_event", news),
-                "trend_spike": self._effective_source_confidence(
-                    "trend_spike", trend
-                ),
-                "job_posting": self._effective_source_confidence(
-                    "job_posting", postings
-                ),
-                "historical_pattern": self._effective_source_confidence(
-                    "historical_pattern", historical
-                ),
+            estimates = {
+                "crm_pipeline": crm,
+                "procurement_notice": procurement,
+                "historical_pattern": historical,
+                "news_event": news,
+                "trend_spike": trend,
+                "job_posting": postings,
             }
-            confidence = self._combine_source_confidence(source_confidences)
-            converging = sum(
-                1
-                for source, value in source_confidences.items()
-                if value > 0 and source != "historical_pattern"
-            ) >= 2
+            raw_demand = predict_demand(estimates, self.weights)
+
+            active_factors = sum(1 for v in estimates.values() if v > 0)
+            converging = len(self._convergent_sources(skill_id, target_month)) >= 2
+            confidence = round(compute_confidence(active_factors, converging), 2)
             supply = self._get_supply(skill_id, target_month)
 
             results.append(
@@ -218,31 +199,28 @@ class ForecastEngine:
             for forecast in forecasts
         )
 
-    @staticmethod
-    def _effective_source_confidence(source: str, score: float) -> float:
-        if score <= 0:
-            return 0.0
-        cap = SOURCE_CONFIDENCE_CAPS[source]
-        return min(cap, 1 - math.exp(-score))
-
-    @staticmethod
-    def _combine_source_confidence(source_confidences: dict[str, float]) -> float:
-        active = {
-            source: value for source, value in source_confidences.items() if value > 0
-        }
-        if not active:
-            return 0.0
-
-        combined = 1.0 - math.prod(1.0 - value for value in active.values())
-        supporting = [
-            source for source in active.keys() if source != "historical_pattern"
-        ]
-
-        if not supporting:
-            return round(min(combined, 0.25), 2)
-        if len(supporting) == 1:
-            return round(min(combined, SOURCE_CONFIDENCE_CAPS[supporting[0]]), 2)
-        return round(min(combined + 0.1, 0.95), 2)
+    def _convergent_sources(self, skill_id: str, target_month: date) -> set[str]:
+        """Distinct signal `source` values with activity within CONVERGENCE_WINDOW_DAYS."""
+        rows = (
+            self.db.table("signal_skills")
+            .select("signals(detected_at, source)")
+            .eq("skill_id", skill_id)
+            .execute()
+            .data
+            or []
+        )
+        sources: set[str] = set()
+        for row in rows:
+            sig = row.get("signals") or {}
+            src = sig.get("source")
+            if not isinstance(src, str):
+                continue
+            detected = _parse_detected_at(sig.get("detected_at"))
+            if detected is None:
+                continue
+            if abs((target_month - detected).days) <= CONVERGENCE_WINDOW_DAYS:
+                sources.add(src)
+        return sources
 
     def _score_crm_pipeline(self, skill_id: str, target_month: date) -> float:
         deals = (
@@ -271,7 +249,7 @@ class ForecastEngine:
         return score
 
     def _score_procurement(self, skill_id: str, target_month: date) -> float:
-        return self._score_signal_sources(
+        return FTE_PER_TENDER * self._score_signal_sources(
             skill_id,
             sources=("ted_procurement",),
             target_month=target_month,
@@ -279,7 +257,7 @@ class ForecastEngine:
         )
 
     def _score_news_events(self, skill_id: str, target_month: date) -> float:
-        return self._score_signal_sources(
+        return FTE_PER_NEWS * self._score_signal_sources(
             skill_id,
             sources=("news_intelligence", "news"),
             target_month=target_month,
@@ -287,7 +265,7 @@ class ForecastEngine:
         )
 
     def _score_trends(self, skill_id: str, target_month: date) -> float:
-        return self._score_signal_sources(
+        return FTE_PER_TREND * self._score_signal_sources(
             skill_id,
             sources=("google_trends",),
             target_month=target_month,
@@ -295,7 +273,7 @@ class ForecastEngine:
         )
 
     def _score_job_postings(self, skill_id: str, target_month: date) -> float:
-        return self._score_signal_sources(
+        return FTE_PER_POSTING * self._score_signal_sources(
             skill_id,
             sources=("ats_greenhouse", "ats_lever"),
             target_month=target_month,
