@@ -40,6 +40,15 @@ export default function DashboardPage() {
   const recentSignals: RecentSignal[] = liveSignals.data?.length
     ? liveSignals.data
     : (MOCK_SIGNALS as RecentSignal[]);
+  // Converging signals earn the top of the feed — they are the cross-source
+  // triangulation that justifies the forecaster. Ties fall back to recency.
+  const topSignals = [...recentSignals]
+    .sort(
+      (a, b) =>
+        (b.converging_count ?? 0) - (a.converging_count ?? 0) ||
+        new Date(b.detected_at).getTime() - new Date(a.detected_at).getTime(),
+    )
+    .slice(0, 4);
 
   return (
     <div className="space-y-6">
@@ -164,7 +173,7 @@ export default function DashboardPage() {
             <CardTitle>Recent signals</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 pt-0">
-            {recentSignals.slice(0, 4).map((s, i) => (
+            {topSignals.map((s, i) => (
               <SignalCard
                 key={s.signal_id ?? `${s.title ?? "signal"}-${i}`}
                 signal={s}
