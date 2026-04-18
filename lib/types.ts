@@ -26,6 +26,13 @@ export type SignalType =
   | "job_posting"
   | "news_event"
   | "pipeline_deal";
+export type ForecastFactorKey =
+  | "crm_pipeline"
+  | "procurement_notice"
+  | "historical_pattern"
+  | "news_event"
+  | "trend_spike"
+  | "job_posting";
 
 export interface Skill {
   id: string;
@@ -193,4 +200,23 @@ export interface SignalRawData {
 
 export interface ForecastWithSkill extends Forecast {
   skills: Pick<Skill, "name" | "discipline"> | null;
+}
+
+export interface SourceWeight {
+  source_key: ForecastFactorKey;
+  weight: number;
+  updated_at: string;
+}
+
+export interface SourceWeightSettingsRow extends SourceWeight {
+  label: string;
+  description: string;
+  color: string;
+  percentage: number;
+  source_labels: string[];
+  last_data_seen_at: string | null;
+}
+
+export interface UpdateSourceWeightsPayload {
+  weights: Record<ForecastFactorKey, number>;
 }

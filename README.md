@@ -84,6 +84,7 @@ Other scripts:
 | `/forecast/[skill]` | Skill drill-down: demand curve, contributing signals, recommended action |
 | `/bench` | Consultants by discipline + pipeline deals with timeline |
 | `/signals` | Filterable explorer of raw ingested signals |
+| `/settings` | Forecast factor weights and immediate recalculation |
 
 ## Run the Python worker suite
 
@@ -181,7 +182,7 @@ All variables live in `.env.local` (never commit this file). Template is `.env.l
 | `NEXT_PUBLIC_SUPABASE_URL` | Frontend | Yes | Supabase project URL (shipped to the browser) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Frontend | Yes | Supabase anon key (shipped to the browser) |
 | `SUPABASE_URL` | Workers | Yes (falls back to `NEXT_PUBLIC_SUPABASE_URL`) | Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Workers | Yes | Service-role key for writes. Never expose to the browser. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Workers + Next.js server routes | Yes | Service-role key for writes and on-demand forecast recalculation. Never expose to the browser. |
 | `BOOND_API_BASE` | Workers (Boond) | No | Defaults to `https://ui.boondmanager.com/api` |
 | `BOOND_USER_TOKEN` | Workers (Boond) | JWT scheme | JWT payload user token |
 | `BOOND_CLIENT_TOKEN` | Workers (Boond) | JWT scheme | JWT payload client token |

@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, CalendarRange, Users, Radio } from "lucide-react";
+import {
+  LayoutGrid,
+  CalendarRange,
+  Users,
+  Radio,
+  SlidersHorizontal,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -10,6 +16,7 @@ const NAV_ITEMS = [
   { href: "/forecast", label: "Forecast", icon: CalendarRange },
   { href: "/bench", label: "Bench", icon: Users },
   { href: "/signals", label: "Signals", icon: Radio },
+  { href: "/settings", label: "Settings", icon: SlidersHorizontal },
 ];
 
 export function SidebarNav() {

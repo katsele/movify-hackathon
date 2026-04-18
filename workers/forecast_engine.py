@@ -16,13 +16,15 @@ from supabase import Client, create_client
 log = logging.getLogger(__name__)
 
 CONVERGENCE_WINDOW_DAYS = 28
-NEWS_RECENCY_WINDOW_DAYS = 90
+SIGNAL_RECENCY_WINDOW_DAYS = 90
 MIN_PERSISTED_DEMAND = 0.1
 SOURCE_CONFIDENCE_CAPS: dict[str, float] = {
     "crm_pipeline": 0.50,
     "procurement_notice": 0.75,
     "news_event": 0.55,
     "historical_pattern": 0.25,
+    "trend_spike": 0.40,
+    "job_posting": 0.55,
 }
 
 
@@ -32,10 +34,8 @@ class ForecastEngine:
         "procurement_notice": 0.25,
         "historical_pattern": 0.15,
         "news_event": 0.05,
-        # Trend + job-posting connectors don't ship until V1 — keep the keys for
-        # schema parity but score them as zero so they never distort the demo.
-        "trend_spike": 0.0,
-        "job_posting": 0.0,
+        "trend_spike": 0.10,
+        "job_posting": 0.10,
     }
 
     def __init__(
@@ -46,7 +46,27 @@ class ForecastEngine:
         weights: dict[str, float] | None = None,
     ) -> None:
         self.db: Client = create_client(supabase_url, supabase_key)
-        self.weights = {**self.DEFAULT_WEIGHTS, **(weights or {})}
+        persisted = self._load_source_weights()
+        self.weights = {**self.DEFAULT_WEIGHTS, **persisted, **(weights or {})}
+
+    def _load_source_weights(self) -> dict[str, float]:
+        try:
+            rows = self.db.table("source_weights").select("source_key, weight").execute().data or []
+        except Exception as exc:
+            log.warning("failed to load source_weights, using defaults: %s", exc)
+            return {}
+
+        weights: dict[str, float] = {}
+        for row in rows:
+            key = row.get("source_key")
+            value = row.get("weight")
+            if not isinstance(key, str):
+                continue
+            try:
+                weights[key] = float(value)
+            except (TypeError, ValueError):
+                continue
+        return weights
 
     # ------------------------------------------------------------------ run --
 
@@ -77,7 +97,11 @@ class ForecastEngine:
             crm = self._score_crm_pipeline(skill_id, target_week)
             procurement = self._score_procurement(skill_id, target_week)
             news = self._score_news_events(skill_id, target_week)
-            has_current_signal = crm > 0 or procurement > 0 or news > 0
+            trend = self._score_trends(skill_id, target_week)
+            postings = self._score_job_postings(skill_id, target_week)
+            has_current_signal = (
+                crm > 0 or procurement > 0 or news > 0 or trend > 0 or postings > 0
+            )
             historical = (
                 self._score_historical_pattern(skill_id, target_week)
                 if has_current_signal
@@ -89,6 +113,8 @@ class ForecastEngine:
                 + procurement * self.weights["procurement_notice"]
                 + historical * self.weights["historical_pattern"]
                 + news * self.weights["news_event"]
+                + trend * self.weights["trend_spike"]
+                + postings * self.weights["job_posting"]
             )
 
             source_confidences = {
@@ -99,6 +125,12 @@ class ForecastEngine:
                     "procurement_notice", procurement
                 ),
                 "news_event": self._effective_source_confidence("news_event", news),
+                "trend_spike": self._effective_source_confidence(
+                    "trend_spike", trend
+                ),
+                "job_posting": self._effective_source_confidence(
+                    "job_posting", postings
+                ),
                 "historical_pattern": self._effective_source_confidence(
                     "historical_pattern", historical
                 ),
@@ -113,6 +145,7 @@ class ForecastEngine:
 
             results.append(
                 {
+                    "generated_at": datetime.now(timezone.utc).isoformat(),
                     "skill_id": skill_id,
                     "forecast_week": target_week.isoformat(),
                     "predicted_demand": round(raw_demand, 2),
@@ -123,7 +156,14 @@ class ForecastEngine:
                         skill_id, target_week
                     ),
                     "notes": self._explain(
-                        skill_id, crm, procurement, news, historical, converging
+                        skill_id,
+                        crm,
+                        procurement,
+                        news,
+                        historical,
+                        trend,
+                        postings,
+                        converging,
                     ),
                 }
             )
@@ -194,26 +234,42 @@ class ForecastEngine:
         return score
 
     def _score_procurement(self, skill_id: str, target_week: date) -> float:
-        return self._score_signal_source(
+        return self._score_signal_sources(
             skill_id,
-            source="ted_procurement",
+            sources=("ted_procurement",),
             target_week=target_week,
-            window_days=NEWS_RECENCY_WINDOW_DAYS,
+            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
         )
 
     def _score_news_events(self, skill_id: str, target_week: date) -> float:
-        return self._score_signal_source(
+        return self._score_signal_sources(
             skill_id,
-            source="news_intelligence",
+            sources=("news_intelligence", "news"),
             target_week=target_week,
-            window_days=NEWS_RECENCY_WINDOW_DAYS,
+            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
         )
 
-    def _score_signal_source(
+    def _score_trends(self, skill_id: str, target_week: date) -> float:
+        return self._score_signal_sources(
+            skill_id,
+            sources=("google_trends",),
+            target_week=target_week,
+            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
+        )
+
+    def _score_job_postings(self, skill_id: str, target_week: date) -> float:
+        return self._score_signal_sources(
+            skill_id,
+            sources=("ats_greenhouse", "ats_lever"),
+            target_week=target_week,
+            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
+        )
+
+    def _score_signal_sources(
         self,
         skill_id: str,
         *,
-        source: str,
+        sources: tuple[str, ...],
         target_week: date,
         window_days: int,
     ) -> float:
@@ -226,9 +282,10 @@ class ForecastEngine:
             or []
         )
         score = 0.0
+        allowed = set(sources)
         for row in rows:
             sig = row.get("signals") or {}
-            if sig.get("source") != source:
+            if sig.get("source") not in allowed:
                 continue
             detected = _parse_detected_at(sig.get("detected_at"))
             if detected is None:
@@ -308,6 +365,8 @@ class ForecastEngine:
         procurement: float,
         news: float,
         historical: float,
+        trend: float,
+        postings: float,
         converging: bool,
     ) -> str:
         skill = (
@@ -329,6 +388,10 @@ class ForecastEngine:
             parts.append(f"Belgian news coverage signals demand for {name}")
         if historical > 0:
             parts.append("Seasonality: demand typically rises this quarter")
+        if trend > 0:
+            parts.append(f"Trend signals show growing attention around {name}")
+        if postings > 0:
+            parts.append(f"Live job postings point to hiring pressure for {name}")
         if converging:
             parts.append("Multiple independent sources agree — confidence boosted")
         return ". ".join(parts) + "." if parts else "No strong signals detected."
