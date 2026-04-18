@@ -43,12 +43,14 @@ For the full data model and ADRs, see [`docs/architecture.md`](docs/architecture
 
 3. **Apply database migrations**
 
-   Open the Supabase SQL editor for your project and run the four migration files in `supabase/migrations/` in order:
+   Open the Supabase SQL editor for your project and run every migration file in `supabase/migrations/` in order. The current set is:
 
    1. `001_initial_schema.sql` — core tables (consultants, deals, skills, signals, forecasts, …)
    2. `002_story1_seed.sql` — demo seed data so the app is usable immediately
    3. `003_skill_taxonomy.sql` — skill discipline / alias taxonomy
    4. `004_news_intelligence.sql` — news signal tables and materialised views
+   5. `005_convergence.sql`, `006_ted_cleanup.sql`, `007_ats_sources.sql`, `007_source_weights.sql`
+   6. `008_boond_history_full_refresh.sql` — `projects.source_kind / project_state / project_type / top_skill_tokens` and the `consultant_bench_history` tables used by the CSV history import
 
 4. **Install Python dependencies**
 
@@ -105,10 +107,34 @@ Env vars are auto-loaded from `.env.local` via `python-dotenv`. Every worker nee
 | Command | Source | Writes to | Extra env needed |
 |---|---|---|---|
 | `python run_connector.py boond` | Boondmanager CRM | `consultants`, `deals`, `deal_profiles`, `projects` | Boond JWT triple (`BOOND_USER_TOKEN`, `BOOND_CLIENT_TOKEN`, `BOOND_CLIENT_KEY`) **or** Basic auth (`BOOND_USERNAME`, `BOOND_PASSWORD`) |
-| `python run_connector.py boond_csv` | Boond CSV exports in `mockdata/` (fallback when the live API is unavailable) | `consultants`, `consultant_skills`, `projects`, `project_skills` | Optional `BOOND_CSV_DIR` to override the default `mockdata/` path |
+| `python run_connector.py boond_csv [--replace-scope none\|source\|all_boond]` | Boond CSV exports in `mockdata/` — current + historical bench and projects | `consultants`, `consultant_skills`, `projects`, `project_skills`, `consultant_bench_history`, `consultant_bench_history_skills` | Optional `BOOND_CSV_DIR` to override the default `mockdata/` path |
 | `python run_connector.py ted_procurement` | TED EU procurement notices | `signals`, `signal_skills` | — |
 | `python run_connector.py google_trends` | Google Trends, geo=BE | `signals`, `signal_skills` | — |
 | `python run_connector.py news_intelligence` | News RSS / Atom feeds | `signals`, `signal_skills`, news event tables | — |
+
+#### Refreshing Boond data from mockdata/
+
+The connector reads all four CSVs under `mockdata/`:
+
+- `mock-boond-bench-data.csv` → current bench consultants + `consultant_skills`
+- `mock-boond-project-data.csv` → current `projects` (`source_kind='current'`) and their `on_mission` assignees
+- `mock-boond-project-history.csv` → historical `projects` (`source_kind='history'`); does **not** create current consultants
+- `mock-boond-bench-history.csv` → `consultant_bench_history` and `consultant_bench_history_skills` (storage-only; no effect on current consultant status)
+
+`project_skills` are built from the `Top Skills` column when present, with a fallback to title-based extraction when the column is empty.
+
+`--replace-scope` controls pre-load purge:
+
+- `none` (default) — upsert only; existing rows stay.
+- `source` — delete prior `boond_csv:%` deals, consultants, and projects before load.
+- `all_boond` — also delete live `boond:%` rows, wipe `consultant_bench_history`, and remove the Story 1 seed consultant so Supabase reflects only the checked-in mockdata.
+
+Recommended full-refresh flow (take a scoped `pg_dump` of `consultants`, `consultant_skills`, `deals`, `deal_profiles`, `projects`, `project_skills`, `forecasts`, `forecast_actuals` before running):
+
+```bash
+python run_connector.py boond_csv --replace-scope all_boond
+python run_forecast.py
+```
 
 ### Forecast aggregator
 
