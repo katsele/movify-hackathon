@@ -1,5 +1,6 @@
 "use client";
 
+import { roundConsultantCount } from "@/lib/consultant-counts";
 import {
   Area,
   AreaChart,
@@ -45,6 +46,8 @@ export function DemandCurve({ data, height = 260 }: DemandCurveProps) {
           }}
         />
         <YAxis
+          allowDecimals={false}
+          tickFormatter={(value) => `${roundConsultantCount(Number(value))}`}
           tick={{
             fontSize: 11,
             fill: "#78736A",
@@ -61,6 +64,7 @@ export function DemandCurve({ data, height = 260 }: DemandCurveProps) {
           }}
           labelStyle={{ color: "#F4F3F1" }}
           itemStyle={{ color: "#F4F3F1" }}
+          formatter={(value: number) => `${roundConsultantCount(value)}`}
         />
         <Legend
           iconType="line"

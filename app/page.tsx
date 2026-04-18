@@ -12,6 +12,10 @@ import { useSignals } from "@/lib/hooks/useSignals";
 import { useSignalsByIds } from "@/lib/hooks/useSignalsByIds";
 import { forecastToCells } from "@/lib/forecast-adapter";
 import { summarizeForecastCells } from "@/lib/forecast-display";
+import {
+  formatSignedConsultantGap,
+  roundConsultantCount,
+} from "@/lib/consultant-counts";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
 import type { RecentSignal } from "@/lib/types";
 
@@ -25,12 +29,18 @@ export default function DashboardPage() {
     : [];
   const usingMock = !liveForecast.isLoading && liveCells.length === 0;
   const cells = usingMock ? buildMockForecast() : liveCells;
+  const displayCells = cells.map((cell) => ({
+    ...cell,
+    demand: roundConsultantCount(cell.demand),
+    supply: roundConsultantCount(cell.supply),
+    gap: roundConsultantCount(cell.gap),
+  }));
 
   const signalIds = cells.flatMap((c) => c.contributingSignalIds ?? []);
   const signalsLookup = useSignalsByIds(signalIds);
 
   const topGaps = summarizeForecastCells(
-    cells.filter((c) => c.week <= 6),
+    displayCells.filter((c) => c.week <= 6),
     6,
   )
     .filter((summary) => summary.maxGap > 0)
@@ -83,7 +93,11 @@ export default function DashboardPage() {
         <KPICard
           label="Top gap"
           value={topGapSkill ? topGapSkill.skill : "—"}
-          unit={topGapSkill ? `+${topGapSkill.maxGap} needed` : undefined}
+          unit={
+            topGapSkill
+              ? `${formatSignedConsultantGap(topGapSkill.maxGap)} needed`
+              : undefined
+          }
           accent="critical"
         />
         <KPICard
@@ -139,7 +153,7 @@ export default function DashboardPage() {
                   gap={g.maxGap}
                   window={`Week ${peakCell.week}`}
                   confidence={g.maxConfidence}
-                  rationale={`${peakCell.demand} profiles needed vs ${peakCell.supply} available. Driven by pipeline deals + converging external signals.`}
+                  rationale={`${roundConsultantCount(peakCell.demand)} profiles needed vs ${roundConsultantCount(peakCell.supply)} available. Driven by pipeline deals + converging external signals.`}
                   href={`/forecast/${encodeURIComponent(g.skill)}`}
                 />
               );

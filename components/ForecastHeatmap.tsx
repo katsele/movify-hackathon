@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  formatSignedConsultantGap,
+  roundConsultantCount,
+} from "@/lib/consultant-counts";
 import { summarizeForecastCells } from "@/lib/forecast-display";
 import type { ForecastCell } from "@/lib/mock-data";
 import type { SignalLookup } from "@/lib/hooks/useSignalsByIds";
@@ -50,7 +54,13 @@ export function ForecastHeatmap({
   signalsById,
   limitSkills,
 }: ForecastHeatmapProps) {
-  const visibleRows = summarizeForecastCells(cells, weeks);
+  const displayCells = cells.map((cell) => ({
+    ...cell,
+    demand: roundConsultantCount(cell.demand),
+    supply: roundConsultantCount(cell.supply),
+    gap: roundConsultantCount(cell.gap),
+  }));
+  const visibleRows = summarizeForecastCells(displayCells, weeks);
   const rows =
     typeof limitSkills === "number"
       ? visibleRows.slice(0, limitSkills)
@@ -108,7 +118,7 @@ export function ForecastHeatmap({
                           "cursor-pointer transition-colors hover:ring-2 hover:ring-brand-700/40",
                       )}
                     >
-                      {cell.gap > 0 ? `+${cell.gap}` : cell.gap}
+                      {formatSignedConsultantGap(cell.gap)}
                     </div>
                   );
                   return (
@@ -140,7 +150,7 @@ export function ForecastHeatmap({
                             <div className="tabular">
                               Gap:{" "}
                               <span className="font-mono font-semibold">
-                                {cell.gap > 0 ? `+${cell.gap}` : cell.gap}
+                                {formatSignedConsultantGap(cell.gap)}
                               </span>
                             </div>
                             <div className="tabular">

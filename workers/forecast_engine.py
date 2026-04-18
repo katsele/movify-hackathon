@@ -73,9 +73,14 @@ class ForecastEngine:
     def run(self, weeks_ahead: int = 12) -> int:
         self._clear_future_forecasts()
         skills = self.db.table("skills").select("id, name").execute().data or []
+        generated_at = datetime.now(timezone.utc).isoformat()
         rows_written = 0
         for skill in skills:
-            forecasts = self.generate_forecast(skill["id"], weeks_ahead=weeks_ahead)
+            forecasts = self.generate_forecast(
+                skill["id"],
+                weeks_ahead=weeks_ahead,
+                generated_at=generated_at,
+            )
             if not self._should_persist_skill(forecasts):
                 continue
             for forecast in forecasts:
@@ -88,8 +93,15 @@ class ForecastEngine:
 
     # ---------------------------------------------------------- generation --
 
-    def generate_forecast(self, skill_id: str, weeks_ahead: int = 12) -> list[dict]:
+    def generate_forecast(
+        self,
+        skill_id: str,
+        weeks_ahead: int = 12,
+        *,
+        generated_at: str | None = None,
+    ) -> list[dict]:
         results: list[dict] = []
+        stamp = generated_at or datetime.now(timezone.utc).isoformat()
 
         for offset in range(1, weeks_ahead + 1):
             target_week = _start_of_week(date.today()) + timedelta(weeks=offset)
@@ -145,7 +157,7 @@ class ForecastEngine:
 
             results.append(
                 {
-                    "generated_at": datetime.now(timezone.utc).isoformat(),
+                    "generated_at": stamp,
                     "skill_id": skill_id,
                     "forecast_week": target_week.isoformat(),
                     "predicted_demand": round(raw_demand, 2),

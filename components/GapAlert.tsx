@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { AlertTriangle, CircleDot, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  formatSignedConsultantGap,
+  roundConsultantCount,
+} from "@/lib/consultant-counts";
 import { ConfidenceIndicator } from "@/components/ConfidenceIndicator";
 
 interface GapAlertProps {
@@ -21,7 +25,9 @@ export function GapAlert({
   confidence,
   href,
 }: GapAlertProps) {
-  const severity: "critical" | "warning" = gap >= 3 ? "critical" : "warning";
+  const displayGap = roundConsultantCount(gap);
+  const severity: "critical" | "warning" =
+    displayGap >= 3 ? "critical" : "warning";
 
   const icon =
     severity === "critical" ? (
@@ -45,7 +51,7 @@ export function GapAlert({
           : "bg-signal-watch/10 text-signal-watch",
       )}
     >
-      +{gap}
+      {formatSignedConsultantGap(displayGap)}
     </span>
   );
 

@@ -9,9 +9,22 @@ export function useForecast(skillId?: string) {
   return useQuery({
     queryKey: ["forecasts", skillId ?? "all"],
     queryFn: async () => {
+      const latestSnapshotQuery = supabase
+        .from("forecasts")
+        .select("generated_at")
+        .order("generated_at", { ascending: false })
+        .limit(1);
+
+      const { data: snapshots, error: snapshotError } = await latestSnapshotQuery;
+      if (snapshotError) throw snapshotError;
+
+      const latestGeneratedAt = snapshots?.[0]?.generated_at;
+      if (!latestGeneratedAt) return [] as ForecastWithSkill[];
+
       let query = supabase
         .from("forecasts")
         .select("*, skills(name, discipline)")
+        .eq("generated_at", latestGeneratedAt)
         .order("forecast_week", { ascending: true });
 
       if (skillId) query = query.eq("skill_id", skillId);
