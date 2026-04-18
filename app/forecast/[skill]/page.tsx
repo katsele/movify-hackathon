@@ -21,6 +21,7 @@ import { useSignals } from "@/lib/hooks/useSignals";
 import { useSourceWeightsSettings } from "@/lib/hooks/useSourceWeightsSettings";
 import { useSkillByName } from "@/lib/hooks/useSkillByName";
 import { forecastToCells } from "@/lib/forecast-adapter";
+import { monthLabel } from "@/lib/forecast-display";
 import {
   formatSignedConsultantGap,
   roundConsultantCount,
@@ -61,9 +62,9 @@ export default function SkillDrilldownPage({
       : (MOCK_SIGNALS.filter((s) => s.skill_name === skillName) as RecentSignal[]);
 
   const curveData = displayCells
-    .sort((a, b) => a.week - b.week)
+    .sort((a, b) => a.month - b.month)
     .map((c) => ({
-      week: `W${c.week}`,
+      month: monthLabel(c.month),
       demand: c.demand,
       supply: c.supply,
       confidenceLow: Math.max(0, c.demand - 1),
@@ -102,7 +103,7 @@ export default function SkillDrilldownPage({
             )}
             <ConfidenceIndicator value={avgConfidence} />
             <span className="text-xs text-muted-foreground">
-              Cumulative 12w gap:{" "}
+              Cumulative 12-month gap:{" "}
               <span className="font-semibold text-foreground">
                 {formatSignedConsultantGap(totalGap)}
               </span>
@@ -114,7 +115,7 @@ export default function SkillDrilldownPage({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Demand vs supply — next 12 weeks</CardTitle>
+            <CardTitle>Demand vs supply — next 12 months</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
             <DemandCurve data={curveData} />
@@ -153,7 +154,7 @@ export default function SkillDrilldownPage({
         </Card>
         <ActionCard
           title={`Start sourcing ${skillName} now`}
-          explanation={`Gap accumulates to ${formatSignedConsultantGap(totalGap)} over 12 weeks. Convergence across pipeline, news and procurement signals points to sustained demand. Start referral outreach and earmark rolling-off profiles.`}
+          explanation={`Gap accumulates to ${formatSignedConsultantGap(totalGap)} over 12 months. Convergence across pipeline, news and procurement signals points to sustained demand. Start referral outreach and earmark rolling-off profiles.`}
           primaryAction={{ label: "Open referral brief" }}
           secondaryAction={{ label: "Pin to weekly digest" }}
         />

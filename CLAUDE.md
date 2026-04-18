@@ -62,7 +62,7 @@ movify-hackaton/
 │   ├── layout.tsx             # Root layout with SidebarNav
 │   ├── page.tsx               # Dashboard (home)
 │   ├── forecast/
-│   │   ├── page.tsx           # Full 12-week heatmap
+│   │   ├── page.tsx           # Full 12-month heatmap
 │   │   └── [skill]/page.tsx   # Skill drill-down
 │   ├── bench/
 │   │   └── page.tsx           # Consultants + pipeline
@@ -162,7 +162,7 @@ The forecast engine combines five signal types with configurable weights:
 
 **Confidence** = number of converging signal sources / 4 (capped at 1.0). A prediction backed by 3+ sources is high confidence; a prediction from pipeline alone is low confidence.
 
-**Output:** A rolling 12-week forecast per skill, with predicted demand, current supply, gap, confidence, contributing signal IDs, and a human-readable explanation.
+**Output:** A rolling 12-month forecast per skill, with predicted demand, current supply, gap, confidence, contributing signal IDs, and a human-readable explanation.
 
 ### Signal skill tagging
 

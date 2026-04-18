@@ -136,7 +136,7 @@ export default function SettingsPage() {
 
   const helperText =
     delta === 0
-      ? "Allocation is balanced. Saving will persist the weights and regenerate the 12-week forecast."
+      ? "Allocation is balanced. Saving will persist the weights and regenerate the 12-month forecast."
       : delta > 0
         ? `${delta}% still unallocated. Add weight before saving.`
         : `${Math.abs(delta)}% over budget. Reduce one or more factors before saving.`;
@@ -175,7 +175,7 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Settings"
-        subtitle="Tune how much each forecast driver should influence the next 12 weeks."
+        subtitle="Tune how much each forecast driver should influence the next 12 months."
         lastUpdated={weightsQuery.data ? maxUpdatedAt(savedRows) : undefined}
       />
 

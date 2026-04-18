@@ -18,7 +18,7 @@ def main() -> int:
     supabase_key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
 
     engine = ForecastEngine(supabase_url=supabase_url, supabase_key=supabase_key)
-    written = engine.run(weeks_ahead=12)
+    written = engine.run(months_ahead=12)
     print(f"forecast engine wrote {written} forecast rows")
     return 0
 

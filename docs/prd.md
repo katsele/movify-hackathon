@@ -7,7 +7,7 @@
 
 ## 1. Executive Summary
 
-We're building a **Skills Demand Forecaster** for Movify's talent leads to solve the problem of reactive staffing decisions — where consultancies discover skill demand shifts 2–3 months late, burning €22K/month per idle consultant — by combining Boond CRM pipeline data with external market signals (procurement feeds, industry news, international trends, technology adoption curves) into a rolling 12-week skill demand forecast. The hackathon deliverable is a working prototype that ingests real Boond data and at least two external signal sources to produce a visible demand forecast with bench gap indicators. The full V1 extends this to all three signal layers and a weekly digest, targeting Movify as first customer with the architecture designed to be CRM-agnostic from day one.
+We're building a **Skills Demand Forecaster** for Movify's talent leads to solve the problem of reactive staffing decisions — where consultancies discover skill demand shifts 2–3 months late, burning €22K/month per idle consultant — by combining Boond CRM pipeline data with external market signals (procurement feeds, industry news, international trends, technology adoption curves) into a rolling 12-month skill demand forecast. The hackathon deliverable is a working prototype that ingests real Boond data and at least two external signal sources to produce a visible demand forecast with bench gap indicators. The full V1 extends this to all three signal layers and a weekly digest, targeting Movify as first customer with the architecture designed to be CRM-agnostic from day one.
 
 ---
 
@@ -102,7 +102,7 @@ Staffing decisions are reactive. Movify discovers what skills clients need *afte
 
 ### The concept
 
-A demand forecasting engine modelled on hotel/airline yield management. Instead of "you have X rooms free," it says "you will need X profiles in 6 weeks, here's why, here's what to do now." Three signal layers feed a forecasting engine that produces a rolling 12-week skill demand prediction.
+A demand forecasting engine modelled on hotel/airline yield management. Instead of "you have X rooms free," it says "you will need X profiles in 3 months, here's why, here's what to do now." Three signal layers feed a forecasting engine that produces a rolling 12-month skill demand prediction.
 
 ### Architecture: three signal layers
 
@@ -123,7 +123,7 @@ A demand forecasting engine modelled on hotel/airline yield management. Instead 
 
 **Layer 3 — Forecasting engine**
 - Combines Layers 1 + 2 using GenAI-powered pattern extraction
-- Produces: 12-week skill demand heatmap, bench gap alerts, confidence scores, actionable triggers
+- Produces: 12-month skill demand heatmap, bench gap alerts, confidence scores, actionable triggers
 
 ### Hackathon deliverable (1 day)
 
@@ -132,7 +132,7 @@ The hackathon prototype must demonstrate the core loop end-to-end, even if data 
 **Must have (hackathon day):**
 1. **Boond data ingestion** — pull real pipeline and bench data (via API or export)
 2. **At least 2 external signal sources wired up** — procurement feed (TED API) + one other (e.g., Google Trends geo=BE, or ATS endpoints)
-3. **A visible 12-week forecast** — dashboard or simple UI showing predicted skill demand vs. current bench, with at least basic gap indicators
+3. **A visible 12-month forecast** — dashboard or simple UI showing predicted skill demand vs. current bench, with at least basic gap indicators
 4. **Skill taxonomy mapping** — even if simple, map incoming data to Movify's discipline taxonomy
 
 **Nice to have (hackathon day):**
@@ -153,7 +153,7 @@ The hackathon prototype must demonstrate the core loop end-to-end, even if data 
 
 **Flow 1: Weekly forecast check**
 1. Sebastiaan opens the dashboard on Monday morning
-2. Sees 12-week skill demand heatmap with bench overlay
+2. Sees 12-month skill demand heatmap with bench overlay
 3. Spots: "AI engineering demand forecast +40% in weeks 6–10, driven by 3 new procurement notices + KBC AI investment signal. Current bench: 1 AI engineer available. Gap: 2–3 profiles."
 4. Action: triggers recruitment pipeline for AI engineers now, 6 weeks ahead of demand
 
@@ -164,7 +164,7 @@ The hackathon prototype must demonstrate the core loop end-to-end, even if data 
 
 **Flow 3: Staffing meeting prep**
 1. Before weekly staffing meeting, Sebastiaan pulls up the forecast view
-2. Shows the team: "here's what the data says we'll need in 8–12 weeks vs. what we have"
+2. Shows the team: "here's what the data says we'll need in 3–6 months vs. what we have"
 3. Discussion shifts from "what are you hearing?" anecdotes to data-backed decisions
 
 ---
@@ -195,7 +195,7 @@ The hackathon prototype must demonstrate the core loop end-to-end, even if data 
 The hackathon prototype is successful if:
 1. Real Boond data is visible in the system (not mocked)
 2. At least 2 external signals are ingested and displayed
-3. A 12-week forecast view exists (even if naive)
+3. A 12-month forecast view exists (even if naive)
 4. Sebastiaan says: "I can see how this becomes useful" — the core concept is proven
 
 ---
@@ -232,11 +232,11 @@ Acceptance criteria:
 - [ ] At least one additional source is wired up and displaying data
 - [ ] Data is mapped to the same skill taxonomy as Boond and procurement data
 
-**Story H4: View a 12-week demand forecast**
-As a talent lead, I want to see a rolling 12-week prediction of which skills will be in demand, overlaid against my current bench, so I can see gaps before they become urgent.
+**Story H4: View a 12-month demand forecast**
+As a talent lead, I want to see a rolling 12-month prediction of which skills will be in demand, overlaid against my current bench, so I can see gaps before they become urgent.
 
 Acceptance criteria:
-- [ ] Heatmap or timeline view showing predicted demand by skill for next 12 weeks
+- [ ] Heatmap or timeline view showing predicted demand by skill for next 12 months
 - [ ] Current bench overlay showing coverage vs. predicted demand
 - [ ] Gap indicators: skills where predicted demand > available supply
 - [ ] Even a simple/naive prediction model is acceptable for hackathon — the UI and data flow matter more than model sophistication
@@ -357,7 +357,7 @@ A suggested sequence for the 1-day hackathon:
 |---|---|---|
 | **Morning 1** | 1.5h | Resolve Boond data access (API or export). Pull real data. Design skill taxonomy mapping. |
 | **Morning 2** | 1.5h | Wire up TED API v3 procurement feed with Belgian + CPV filters. Basic keyword extraction. |
-| **Afternoon 1** | 1.5h | Wire up second signal source (Google Trends or ATS endpoints). Build the 12-week forecast view (even naive). |
+| **Afternoon 1** | 1.5h | Wire up second signal source (Google Trends or ATS endpoints). Build the 12-month forecast view (even naive). |
 | **Afternoon 2** | 1.5h | Overlay bench data on forecast. Add gap indicators. Polish the dashboard. |
 | **End of day** | 30min | Demo to Sebastiaan. "Sniff test" validation. Capture feedback and next steps. |
 

@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ForecastFactorKey, SignalSource } from "@/lib/types";
 
-const FORECAST_WEEKS = 12;
+const FORECAST_MONTHS = 12;
 const CONVERGENCE_WINDOW_DAYS = 28;
 const SIGNAL_RECENCY_WINDOW_DAYS = 90;
 const CONFIDENCE_DIVISOR = 4;
@@ -59,7 +59,7 @@ interface ConsultantSkillRow {
 
 interface ForecastInsertRow {
   generated_at: string;
-  forecast_week: string;
+  forecast_month: string;
   skill_id: string;
   predicted_demand: number;
   current_supply: number;
@@ -86,8 +86,21 @@ function startOfUtcDay(date: Date): Date {
   );
 }
 
-function addDays(date: Date, days: number): Date {
-  return new Date(date.getTime() + days * MS_PER_DAY);
+function startOfUtcMonth(date: Date): Date {
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
+}
+
+function addMonths(date: Date, months: number): Date {
+  return new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1),
+  );
+}
+
+function monthDiff(a: Date, b: Date): number {
+  return (
+    (a.getUTCFullYear() - b.getUTCFullYear()) * 12 +
+    (a.getUTCMonth() - b.getUTCMonth())
+  );
 }
 
 function parseDateValue(value: string | null | undefined): Date | null {
@@ -129,7 +142,7 @@ function groupBySkill<T extends { skill_id: string }>(rows: T[]): Map<string, T[
 
 function scoreSignalSources(
   rows: SignalSkillRow[],
-  targetWeek: Date,
+  targetMonth: Date,
   sources: SignalSource[],
 ): number {
   let score = 0;
@@ -142,7 +155,7 @@ function scoreSignalSources(
     const detectedAt = parseDateValue(signal.detected_at);
     if (!detectedAt) continue;
 
-    const daysAge = Math.abs(daysBetween(targetWeek, detectedAt));
+    const daysAge = Math.abs(daysBetween(targetMonth, detectedAt));
     if (daysAge > SIGNAL_RECENCY_WINDOW_DAYS) continue;
 
     const decay = Math.max(0, 1 - daysAge / SIGNAL_RECENCY_WINDOW_DAYS);
@@ -152,9 +165,13 @@ function scoreSignalSources(
   return score;
 }
 
-function scoreCrmPipeline(rows: DealProfileRow[], today: Date, targetWeek: Date): number {
+function scoreCrmPipeline(
+  rows: DealProfileRow[],
+  currentMonth: Date,
+  targetMonth: Date,
+): number {
   let score = 0;
-  const targetWeeksFromNow = daysBetween(targetWeek, today) / 7;
+  const targetOffset = monthDiff(targetMonth, currentMonth);
 
   for (const row of rows) {
     const deal = asSingle(row.deals);
@@ -164,10 +181,10 @@ function scoreCrmPipeline(rows: DealProfileRow[], today: Date, targetWeek: Date)
     const startDate = parseDateValue(deal.expected_start);
     if (!startDate) continue;
 
-    const weeksFromNow = daysBetween(startDate, today) / 7;
+    const monthsFromNow = monthDiff(startOfUtcMonth(startDate), currentMonth);
     const proximity = Math.max(
       0,
-      1 - Math.abs(weeksFromNow - targetWeeksFromNow) / 12,
+      1 - Math.abs(monthsFromNow - targetOffset) / 12,
     );
 
     score += (row.quantity ?? 0) * (deal.probability ?? 0.5) * proximity;
@@ -176,7 +193,7 @@ function scoreCrmPipeline(rows: DealProfileRow[], today: Date, targetWeek: Date)
   return score;
 }
 
-function scoreHistoricalPattern(rows: ProjectSkillRow[], targetWeek: Date): number {
+function scoreHistoricalPattern(rows: ProjectSkillRow[], targetMonth: Date): number {
   if (!rows.length) return 0;
 
   const monthCounts = new Map<number, number>();
@@ -192,10 +209,10 @@ function scoreHistoricalPattern(rows: ProjectSkillRow[], targetWeek: Date): numb
   const total = Array.from(monthCounts.values()).reduce((sum, value) => sum + value, 0);
   if (total <= 0) return 0;
 
-  return (monthCounts.get(targetWeek.getUTCMonth()) ?? 0) / total;
+  return (monthCounts.get(targetMonth.getUTCMonth()) ?? 0) / total;
 }
 
-function getSupply(rows: ConsultantSkillRow[], targetWeek: Date): number {
+function getSupply(rows: ConsultantSkillRow[], targetMonth: Date): number {
   let available = 0;
 
   for (const row of rows) {
@@ -204,7 +221,7 @@ function getSupply(rows: ConsultantSkillRow[], targetWeek: Date): number {
     if (consultant.current_status === "on_mission") continue;
 
     const availableFrom = parseDateValue(consultant.available_from);
-    if (availableFrom && availableFrom.getTime() > targetWeek.getTime()) continue;
+    if (availableFrom && availableFrom.getTime() > targetMonth.getTime()) continue;
 
     available += 1;
   }
@@ -212,7 +229,7 @@ function getSupply(rows: ConsultantSkillRow[], targetWeek: Date): number {
   return available;
 }
 
-function contributingSignalIds(rows: SignalSkillRow[], targetWeek: Date): string[] {
+function contributingSignalIds(rows: SignalSkillRow[], targetMonth: Date): string[] {
   const ids = new Set<string>();
 
   for (const row of rows) {
@@ -220,7 +237,7 @@ function contributingSignalIds(rows: SignalSkillRow[], targetWeek: Date): string
     const detectedAt = parseDateValue(signal?.detected_at);
     if (!detectedAt) continue;
 
-    if (Math.abs(daysBetween(targetWeek, detectedAt)) <= CONVERGENCE_WINDOW_DAYS) {
+    if (Math.abs(daysBetween(targetMonth, detectedAt)) <= CONVERGENCE_WINDOW_DAYS) {
       ids.add(row.signal_id);
     }
   }
@@ -228,7 +245,7 @@ function contributingSignalIds(rows: SignalSkillRow[], targetWeek: Date): string
   return Array.from(ids);
 }
 
-function convergentSources(rows: SignalSkillRow[], targetWeek: Date): Set<string> {
+function convergentSources(rows: SignalSkillRow[], targetMonth: Date): Set<string> {
   const sources = new Set<string>();
 
   for (const row of rows) {
@@ -238,7 +255,7 @@ function convergentSources(rows: SignalSkillRow[], targetWeek: Date): Set<string
     const detectedAt = parseDateValue(signal.detected_at);
     if (!detectedAt) continue;
 
-    if (Math.abs(daysBetween(targetWeek, detectedAt)) <= CONVERGENCE_WINDOW_DAYS) {
+    if (Math.abs(daysBetween(targetMonth, detectedAt)) <= CONVERGENCE_WINDOW_DAYS) {
       sources.add(signal.source);
     }
   }
@@ -281,7 +298,7 @@ function explainForecast(
 export async function generateAndPersistForecasts(
   supabase: SupabaseClient,
   weights: Record<ForecastFactorKey, number>,
-  weeksAhead = FORECAST_WEEKS,
+  monthsAhead = FORECAST_MONTHS,
 ): Promise<ForecastRecalculationResult> {
   const [
     skillsResult,
@@ -321,7 +338,7 @@ export async function generateAndPersistForecasts(
     (consultantSkillsResult.data ?? []) as ConsultantSkillRow[],
   );
 
-  const today = startOfUtcDay(new Date());
+  const currentMonth = startOfUtcMonth(new Date());
   const generatedAt = new Date().toISOString();
   const forecastRows: ForecastInsertRow[] = [];
 
@@ -331,21 +348,21 @@ export async function generateAndPersistForecasts(
     const projectRows = projectsBySkill.get(skill.id) ?? [];
     const consultantRows = consultantsBySkill.get(skill.id) ?? [];
 
-    for (let offset = 1; offset <= weeksAhead; offset += 1) {
-      const targetWeek = addDays(today, offset * 7);
+    for (let offset = 1; offset <= monthsAhead; offset += 1) {
+      const targetMonth = addMonths(currentMonth, offset);
 
       const scores: Record<ForecastFactorKey, number> = {
-        crm_pipeline: scoreCrmPipeline(dealRows, today, targetWeek),
-        procurement_notice: scoreSignalSources(signalRows, targetWeek, [
+        crm_pipeline: scoreCrmPipeline(dealRows, currentMonth, targetMonth),
+        procurement_notice: scoreSignalSources(signalRows, targetMonth, [
           "ted_procurement",
         ]),
-        historical_pattern: scoreHistoricalPattern(projectRows, targetWeek),
-        news_event: scoreSignalSources(signalRows, targetWeek, [
+        historical_pattern: scoreHistoricalPattern(projectRows, targetMonth),
+        news_event: scoreSignalSources(signalRows, targetMonth, [
           "news",
           "news_intelligence",
         ]),
-        trend_spike: scoreSignalSources(signalRows, targetWeek, ["google_trends"]),
-        job_posting: scoreSignalSources(signalRows, targetWeek, [
+        trend_spike: scoreSignalSources(signalRows, targetMonth, ["google_trends"]),
+        job_posting: scoreSignalSources(signalRows, targetMonth, [
           "ats_greenhouse",
           "ats_lever",
         ]),
@@ -361,23 +378,23 @@ export async function generateAndPersistForecasts(
 
       const activeSignals = Object.values(scores).filter((score) => score > 0).length;
       const baseConfidence = Math.min(activeSignals / CONFIDENCE_DIVISOR, 1);
-      const converging = convergentSources(signalRows, targetWeek).size >= 2;
+      const converging = convergentSources(signalRows, targetMonth).size >= 2;
       const confidence = Math.min(
         baseConfidence + (converging ? 0.2 : 0),
         1,
       );
 
-      const supply = getSupply(consultantRows, targetWeek);
+      const supply = getSupply(consultantRows, targetMonth);
 
       forecastRows.push({
         generated_at: generatedAt,
-        forecast_week: isoDate(targetWeek),
+        forecast_month: isoDate(targetMonth),
         skill_id: skill.id,
         predicted_demand: roundTo(rawDemand),
         current_supply: supply,
         gap: roundTo(rawDemand - supply),
         confidence: roundTo(confidence),
-        contributing_signals: contributingSignalIds(signalRows, targetWeek),
+        contributing_signals: contributingSignalIds(signalRows, targetMonth),
         notes: explainForecast(skill.name, scores, converging),
       });
     }
@@ -387,7 +404,7 @@ export async function generateAndPersistForecasts(
     const batch = forecastRows.slice(index, index + UPSERT_BATCH_SIZE);
     const { error } = await supabase
       .from("forecasts")
-      .upsert(batch, { onConflict: "forecast_week,skill_id" });
+      .upsert(batch, { onConflict: "forecast_month,skill_id" });
 
     if (error) throw error;
   }

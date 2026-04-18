@@ -14,7 +14,7 @@ import {
 } from "recharts";
 
 export interface DemandCurvePoint {
-  week: string;
+  month: string;
   demand: number;
   supply: number;
   confidenceLow: number;
@@ -38,7 +38,7 @@ export function DemandCurve({ data, height = 260 }: DemandCurveProps) {
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E1" />
         <XAxis
-          dataKey="week"
+          dataKey="month"
           tick={{
             fontSize: 11,
             fill: "#78736A",
