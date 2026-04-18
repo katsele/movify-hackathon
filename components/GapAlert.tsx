@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowRight } from "lucide-react";
+import { AlertTriangle, CircleDot, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ConfidenceIndicator } from "@/components/ConfidenceIndicator";
 
@@ -19,58 +19,48 @@ export function GapAlert({
   gap,
   window,
   confidence,
-  rationale,
   href,
 }: GapAlertProps) {
-  const severity: "critical" | "warning" =
-    gap >= 3 ? "critical" : "warning";
-  const borderClass =
-    severity === "critical"
-      ? "border-l-gap-critical bg-rose-50/40"
-      : "border-l-gap-warning bg-amber-50/40";
+  const severity: "critical" | "warning" = gap >= 3 ? "critical" : "warning";
 
-  const content = (
-    <div
+  const icon =
+    severity === "critical" ? (
+      <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-gap-critical" />
+    ) : (
+      <CircleDot className="h-3.5 w-3.5 shrink-0 text-gap-warning" />
+    );
+
+  const gapBadge = (
+    <span
       className={cn(
-        "p-3 rounded-md border border-l-4 hover:shadow-sm transition-shadow",
-        borderClass,
+        "inline-flex items-center rounded px-1.5 py-0.5 text-xs font-semibold tabular-nums",
+        severity === "critical"
+          ? "bg-rose-100 text-gap-critical"
+          : "bg-amber-100 text-gap-warning",
       )}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2">
-          <AlertTriangle
-            className={cn(
-              "h-4 w-4 mt-0.5",
-              severity === "critical"
-                ? "text-gap-critical"
-                : "text-gap-warning",
-            )}
-          />
-          <div>
-            <div className="text-sm font-semibold leading-tight">
-              {skill}{" "}
-              <span className="text-muted-foreground text-xs font-normal">
-                · {discipline}
-              </span>
-            </div>
-            <div className="text-xs text-muted-foreground mt-0.5">
-              Gap {gap > 0 ? `+${gap}` : gap} · {window}
-            </div>
-          </div>
-        </div>
+      +{gap}
+    </span>
+  );
+
+  const row = (
+    <div className="flex items-center gap-2 py-2 px-1 rounded hover:bg-muted/40 transition-colors group">
+      {icon}
+      <span className="text-sm font-medium leading-none">{skill}</span>
+      <span className="text-xs text-muted-foreground leading-none">
+        {discipline}
+      </span>
+      <span className="text-xs text-muted-foreground leading-none">·</span>
+      <span className="text-xs text-muted-foreground leading-none">{window}</span>
+      <div className="ml-auto flex items-center gap-2">
+        {gapBadge}
         <ConfidenceIndicator value={confidence} showLabel={false} />
+        {href && (
+          <ArrowRight className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+        )}
       </div>
-      <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-        {rationale}
-      </p>
-      {href && (
-        <div className="flex items-center gap-1 text-xs font-medium mt-2 text-foreground">
-          View detail
-          <ArrowRight className="h-3 w-3" />
-        </div>
-      )}
     </div>
   );
 
-  return href ? <Link href={href}>{content}</Link> : content;
+  return href ? <Link href={href}>{row}</Link> : row;
 }

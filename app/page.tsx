@@ -133,7 +133,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle>Gap alerts — next 6 weeks</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 pt-0">
+          <CardContent className="pt-0 divide-y divide-border">
             {topGaps.map((g, i) => (
               <GapAlert
                 key={`${g.skill}-${i}`}
