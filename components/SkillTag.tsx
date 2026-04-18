@@ -6,14 +6,18 @@ interface SkillTagProps {
   className?: string;
 }
 
-export function SkillTag({ name, variant = "default", className }: SkillTagProps) {
+export function SkillTag({
+  name,
+  variant = "default",
+  className,
+}: SkillTagProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-full border px-2 py-0.5 text-[12px] font-medium tracking-[0.01em]",
         variant === "default"
-          ? "bg-slate-100 text-slate-700"
-          : "bg-slate-50 text-slate-500",
+          ? "border-neutral-200 bg-neutral-100 text-neutral-700"
+          : "border-neutral-200 bg-neutral-50 text-neutral-500",
         className,
       )}
     >

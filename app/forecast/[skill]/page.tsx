@@ -20,13 +20,14 @@ import { forecastToCells } from "@/lib/forecast-adapter";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
 import type { RecentSignal } from "@/lib/types";
 
+// Colours map to the locked semantic signal palette (spec §6.3).
 const WEIGHTS: SignalWeightDatum[] = [
-  { source: "Pipeline (CRM)", weight: 0.35, color: "#059669" },
-  { source: "Procurement", weight: 0.25, color: "#2563EB" },
-  { source: "Historical", weight: 0.15, color: "#64748B" },
-  { source: "News", weight: 0.05, color: "#6B7280" },
-  { source: "Trend (V1)", weight: 0.0, color: "#7C3AED" },
-  { source: "Job postings (V1)", weight: 0.0, color: "#0891B2" },
+  { source: "Pipeline (CRM)", weight: 0.35, color: "#059669" }, // signal-covered
+  { source: "Procurement", weight: 0.25, color: "#2563EB" }, // signal-procurement
+  { source: "Historical", weight: 0.15, color: "#78736A" }, // neutral-500
+  { source: "News", weight: 0.05, color: "#A8A39A" }, // neutral-400
+  { source: "Trend (V1)", weight: 0.0, color: "#7C3AED" }, // signal-trend
+  { source: "Job postings (V1)", weight: 0.0, color: "#0891B2" }, // signal-posting
 ];
 
 export default function SkillDrilldownPage({

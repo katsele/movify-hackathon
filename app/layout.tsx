@@ -1,12 +1,25 @@
 import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { SidebarNav } from "@/components/SidebarNav";
 
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Movify · Skills Demand Forecaster",
+  title: "Azimuth · Skills Demand Forecaster",
   description:
-    "Predict which skills Movify clients will need in 3–6 months from CRM pipeline + external market signals.",
+    "Skills demand forecasting for Belgian digital consultancies — predict the skill-mix your clients will buy in the next 3–6 months by fusing CRM pipeline with external market signals.",
 };
 
 export default function RootLayout({
@@ -15,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="antialiased bg-[#F9FAFB] text-foreground">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="antialiased bg-neutral-50 text-neutral-700">
         <Providers>
           <div className="flex h-screen w-screen overflow-hidden">
             <SidebarNav />

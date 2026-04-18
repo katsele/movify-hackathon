@@ -7,18 +7,18 @@ const STATUS_META: Record<
 > = {
   on_mission: {
     label: "On mission",
-    dot: "bg-blue-500",
-    text: "text-blue-700",
+    dot: "bg-signal-procurement",
+    text: "text-signal-procurement",
   },
   on_bench: {
     label: "On bench",
-    dot: "bg-emerald-500",
-    text: "text-emerald-700",
+    dot: "bg-signal-covered",
+    text: "text-signal-covered",
   },
   rolling_off: {
     label: "Rolling off",
-    dot: "bg-amber-500",
-    text: "text-amber-700",
+    dot: "bg-signal-watch",
+    text: "text-signal-watch",
   },
 };
 
