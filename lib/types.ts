@@ -121,7 +121,7 @@ export interface SignalSkill {
 export interface Forecast {
   id: string;
   generated_at: string;
-  forecast_week: string;
+  forecast_month: string;
   skill_id: string;
   predicted_demand: number;
   current_supply: number;

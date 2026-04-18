@@ -25,7 +25,7 @@ export function useForecast(skillId?: string) {
         .from("forecasts")
         .select("*, skills(name, discipline)")
         .eq("generated_at", latestGeneratedAt)
-        .order("forecast_week", { ascending: true });
+        .order("forecast_month", { ascending: true });
 
       if (skillId) query = query.eq("skill_id", skillId);
 

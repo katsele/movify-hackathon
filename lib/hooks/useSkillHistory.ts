@@ -10,7 +10,7 @@ export interface MonthlyRange {
 export interface SkillHistoryRow {
   seasonal_index_by_month: Record<number, number>;
   weighted_monthly: Record<number, number>;
-  baseline_weekly: number;
+  baseline_monthly: number;
   tightness: number;
   skill_median_duration: number | null;
   monthly_history_range: Record<number, MonthlyRange>;

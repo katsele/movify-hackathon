@@ -11,7 +11,7 @@ import { useConsultants } from "@/lib/hooks/useBench";
 import { useSignals } from "@/lib/hooks/useSignals";
 import { useSignalsByIds } from "@/lib/hooks/useSignalsByIds";
 import { forecastToCells } from "@/lib/forecast-adapter";
-import { summarizeForecastCells } from "@/lib/forecast-display";
+import { monthLabel, summarizeForecastCells } from "@/lib/forecast-display";
 import {
   formatSignedConsultantGap,
   roundConsultantCount,
@@ -40,7 +40,7 @@ export default function DashboardPage() {
   const signalsLookup = useSignalsByIds(signalIds);
 
   const topGaps = summarizeForecastCells(
-    displayCells.filter((c) => c.week <= 6),
+    displayCells.filter((c) => c.month <= 6),
     6,
   )
     .filter((summary) => summary.maxGap > 0)
@@ -81,14 +81,14 @@ export default function DashboardPage() {
           value={onBench}
           unit="consultants"
           delta={12}
-          deltaLabel="vs last week"
+          deltaLabel="vs last month"
           accent="covered"
         />
         <KPICard
           label="Pipeline"
           value={`€${pipelineValue}M`}
           delta={8}
-          deltaLabel="vs last week"
+          deltaLabel="vs last month"
         />
         <KPICard
           label="Top gap"
@@ -105,13 +105,13 @@ export default function DashboardPage() {
           value={recentSignals.length}
           unit="last 30 days"
           delta={-4}
-          deltaLabel="vs last week"
+          deltaLabel="vs last month"
         />
       </div>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between gap-2">
-          <CardTitle>12-week forecast</CardTitle>
+          <CardTitle>12-month forecast</CardTitle>
           {usingMock && (
             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-900">
               Mock data — run connectors + forecast engine to populate live
@@ -128,7 +128,7 @@ export default function DashboardPage() {
           ) : (
             <ForecastHeatmap
               cells={cells}
-              weeks={12}
+              months={12}
               signalsById={signalsLookup.data}
               limitSkills={10}
             />
@@ -139,7 +139,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
-            <CardTitle>Gap alerts — next 6 weeks</CardTitle>
+            <CardTitle>Gap alerts — next 6 months</CardTitle>
           </CardHeader>
           <CardContent className="pt-0 divide-y divide-border">
             {topGaps.map((g, i) => {
@@ -151,7 +151,7 @@ export default function DashboardPage() {
                   skill={g.skill}
                   discipline={g.discipline}
                   gap={g.maxGap}
-                  window={`Week ${peakCell.week}`}
+                  window={monthLabel(peakCell.month)}
                   confidence={g.maxConfidence}
                   rationale={`${roundConsultantCount(peakCell.demand)} profiles needed vs ${roundConsultantCount(peakCell.supply)} available. Driven by pipeline deals + converging external signals.`}
                   href={`/forecast/${encodeURIComponent(g.skill)}`}

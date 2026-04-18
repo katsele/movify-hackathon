@@ -8,7 +8,7 @@ import type {
 export interface ForecastCell {
   skill: string;
   discipline: string;
-  week: number;
+  month: number;
   demand: number;
   supply: number;
   gap: number;
@@ -48,14 +48,14 @@ export function buildMockForecast(): ForecastCell[] {
   MOCK_SKILLS.forEach((skill, i) => {
     const baseDemand = 2 + Math.floor(rand() * 5);
     const baseSupply = 1 + Math.floor(rand() * 4);
-    for (let week = 1; week <= 12; week++) {
-      const drift = Math.sin((week + i) / 3) * 2;
+    for (let month = 1; month <= 12; month++) {
+      const drift = Math.sin((month + i) / 3) * 2;
       const demand = Math.max(0, Math.round(baseDemand + drift + rand() * 2));
       const supply = Math.max(0, baseSupply + Math.floor(rand() * 2));
       cells.push({
         skill: skill.name,
         discipline: skill.discipline,
-        week,
+        month,
         demand,
         supply,
         gap: demand - supply,

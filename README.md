@@ -1,6 +1,6 @@
 # Skills Demand Forecaster
 
-A demand forecasting engine for IT consultancy staffing, built for Movify. It predicts which skills clients will need in the next 12 weeks by combining Boond CRM pipeline data with external market signals (TED procurement notices, Google Trends, news feeds). Think hotel yield management, but for consultant staffing.
+A demand forecasting engine for IT consultancy staffing, built for Movify. It predicts which skills clients will need over the next 12 months by combining Boond CRM pipeline data with external market signals (TED procurement notices, Google Trends, news feeds). Think hotel yield management, but for consultant staffing.
 
 This is a hackathon build, desktop-first, single-user (Sebastiaan, talent lead at Movify). For product context see [`docs/value-prop.md`](docs/value-prop.md) and [`docs/prd.md`](docs/prd.md).
 
@@ -82,7 +82,7 @@ Other scripts:
 | Route | Purpose |
 |---|---|
 | `/` | Dashboard — KPI cards, compact heatmap, gap alerts, signal feed |
-| `/forecast` | Full 12-week heatmap, filterable by discipline / region |
+| `/forecast` | Full 12-month heatmap, filterable by discipline / region |
 | `/forecast/[skill]` | Skill drill-down: demand curve, contributing signals, recommended action |
 | `/bench` | Consultants by discipline + pipeline deals with timeline |
 | `/signals` | Filterable explorer of raw ingested signals |

@@ -23,6 +23,7 @@ import { useSourceWeightsSettings } from "@/lib/hooks/useSourceWeightsSettings";
 import { useSkillByName } from "@/lib/hooks/useSkillByName";
 import { useSkillHistory } from "@/lib/hooks/useSkillHistory";
 import { forecastToCells } from "@/lib/forecast-adapter";
+import { monthLabel } from "@/lib/forecast-display";
 import {
   formatSignedConsultantGap,
   roundConsultantCount,
@@ -67,19 +68,15 @@ export default function SkillDrilldownPage({
     ? skillHistory.data?.skills[skillLookup.data.id]
     : undefined;
   const now = new Date();
-  const monday = new Date(now);
-  const day = monday.getDay();
-  monday.setDate(monday.getDate() + (day === 0 ? -6 : 1 - day));
-  monday.setHours(0, 0, 0, 0);
+  const currentMonthIndex = now.getUTCMonth();
 
   const curveData = displayCells
-    .sort((a, b) => a.week - b.week)
+    .sort((a, b) => a.month - b.month)
     .map((c) => {
-      const weekDate = new Date(monday.getTime() + c.week * 7 * 24 * 60 * 60 * 1000);
-      const month = weekDate.getUTCMonth() + 1;
-      const range = history?.monthly_history_range?.[month];
+      const calendarMonth = ((currentMonthIndex + c.month) % 12) + 1;
+      const range = history?.monthly_history_range?.[calendarMonth];
       return {
-        week: `W${c.week}`,
+        month: monthLabel(c.month),
         demand: c.demand,
         supply: c.supply,
         confidenceLow: Math.max(0, c.demand - 1),
@@ -89,9 +86,7 @@ export default function SkillDrilldownPage({
       };
     });
 
-  const nextForecastMonth = new Date(
-    monday.getTime() + 7 * 24 * 60 * 60 * 1000,
-  ).getUTCMonth() + 1;
+  const nextForecastMonth = ((currentMonthIndex + 1) % 12) + 1;
 
   const avgConfidence =
     cells.reduce((s, c) => s + c.confidence, 0) / (cells.length || 1);
@@ -125,7 +120,7 @@ export default function SkillDrilldownPage({
             )}
             <ConfidenceIndicator value={avgConfidence} />
             <span className="text-xs text-muted-foreground">
-              Cumulative 12w gap:{" "}
+              Cumulative 12-month gap:{" "}
               <span className="font-semibold text-foreground">
                 {formatSignedConsultantGap(totalGap)}
               </span>
@@ -137,7 +132,7 @@ export default function SkillDrilldownPage({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Demand vs supply — next 12 weeks</CardTitle>
+            <CardTitle>Demand vs supply — next 12 months</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
             <DemandCurve data={curveData} showHistoricalBand />
@@ -170,7 +165,7 @@ export default function SkillDrilldownPage({
               <div>
                 <div className="text-muted-foreground">Baseline</div>
                 <div className="font-mono text-sm">
-                  {history.baseline_weekly.toFixed(2)} / wk
+                  {history.baseline_monthly.toFixed(2)} / mo
                 </div>
               </div>
               <div>
@@ -223,7 +218,7 @@ export default function SkillDrilldownPage({
         </Card>
         <ActionCard
           title={`Start sourcing ${skillName} now`}
-          explanation={`Gap accumulates to ${formatSignedConsultantGap(totalGap)} over 12 weeks. Convergence across pipeline, news and procurement signals points to sustained demand. Start referral outreach and earmark rolling-off profiles.`}
+          explanation={`Gap accumulates to ${formatSignedConsultantGap(totalGap)} over 12 months. Convergence across pipeline, news and procurement signals points to sustained demand. Start referral outreach and earmark rolling-off profiles.`}
           primaryAction={{ label: "Open referral brief" }}
           secondaryAction={{ label: "Pin to weekly digest" }}
         />

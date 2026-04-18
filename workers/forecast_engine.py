@@ -1,7 +1,7 @@
 """Forecasting engine — weighted signal aggregation (V1).
 
 Combines CRM pipeline, news intelligence, procurement notices and historical
-patterns into a rolling 12-week demand forecast per skill. Trend and job-posting
+patterns into a rolling 12-month demand forecast per skill. Trend and job-posting
 weights are zeroed for the hackathon cut (those connectors ship in V1).
 """
 from __future__ import annotations
@@ -46,7 +46,7 @@ class HistoricalAggregate:
     weighted_monthly: dict[int, float] = field(
         default_factory=lambda: {m: 0.0 for m in range(1, 13)}
     )
-    baseline_weekly: float = 0.0
+    baseline_monthly: float = 0.0
     tightness: float = 0.0
     skill_median_duration: float | None = None
 
@@ -95,7 +95,7 @@ class ForecastEngine:
 
     # ------------------------------------------------------------------ run --
 
-    def run(self, weeks_ahead: int = 12) -> int:
+    def run(self, months_ahead: int = 12) -> int:
         self._clear_future_forecasts()
         skills = self.db.table("skills").select("id, name").execute().data or []
         generated_at = datetime.now(timezone.utc).isoformat()
@@ -103,14 +103,14 @@ class ForecastEngine:
         for skill in skills:
             forecasts = self.generate_forecast(
                 skill["id"],
-                weeks_ahead=weeks_ahead,
+                months_ahead=months_ahead,
                 generated_at=generated_at,
             )
             if not self._should_persist_skill(forecasts):
                 continue
             for forecast in forecasts:
                 self.db.table("forecasts").upsert(
-                    forecast, on_conflict="forecast_week,skill_id"
+                    forecast, on_conflict="forecast_month,skill_id"
                 ).execute()
                 rows_written += 1
         log.info("forecast engine wrote %d rows", rows_written)
@@ -121,25 +121,25 @@ class ForecastEngine:
     def generate_forecast(
         self,
         skill_id: str,
-        weeks_ahead: int = 12,
+        months_ahead: int = 12,
         *,
         generated_at: str | None = None,
     ) -> list[dict]:
         results: list[dict] = []
         stamp = generated_at or datetime.now(timezone.utc).isoformat()
 
-        for offset in range(1, weeks_ahead + 1):
-            target_week = _start_of_week(date.today()) + timedelta(weeks=offset)
+        for offset in range(1, months_ahead + 1):
+            target_month = _add_months(_start_of_month(date.today()), offset)
 
-            crm = self._score_crm_pipeline(skill_id, target_week)
-            procurement = self._score_procurement(skill_id, target_week)
-            news = self._score_news_events(skill_id, target_week)
-            trend = self._score_trends(skill_id, target_week)
-            postings = self._score_job_postings(skill_id, target_week)
+            crm = self._score_crm_pipeline(skill_id, target_month)
+            procurement = self._score_procurement(skill_id, target_month)
+            news = self._score_news_events(skill_id, target_month)
+            trend = self._score_trends(skill_id, target_month)
+            postings = self._score_job_postings(skill_id, target_month)
             has_current_signal = (
                 crm > 0 or procurement > 0 or news > 0 or trend > 0 or postings > 0
             )
-            historical = self._score_historical_pattern(skill_id, target_week)
+            historical = self._score_historical_pattern(skill_id, target_month)
             if not has_current_signal:
                 historical *= HISTORY_DAMPEN_WITHOUT_CURRENT_SIGNAL
 
@@ -176,23 +176,23 @@ class ForecastEngine:
                 for source, value in source_confidences.items()
                 if value > 0 and source != "historical_pattern"
             ) >= 2
-            supply = self._get_supply(skill_id, target_week)
+            supply = self._get_supply(skill_id, target_month)
 
             results.append(
                 {
                     "generated_at": stamp,
                     "skill_id": skill_id,
-                    "forecast_week": target_week.isoformat(),
+                    "forecast_month": target_month.isoformat(),
                     "predicted_demand": round(raw_demand, 2),
                     "current_supply": supply,
                     "gap": round(raw_demand - supply, 2),
                     "confidence": round(confidence, 2),
                     "contributing_signals": self._contributing_signal_ids(
-                        skill_id, target_week
+                        skill_id, target_month
                     ),
                     "notes": self._explain(
                         skill_id,
-                        target_week,
+                        target_month,
                         crm,
                         procurement,
                         news,
@@ -208,8 +208,8 @@ class ForecastEngine:
     # ---------------------------------------------------- signal scorers ----
 
     def _clear_future_forecasts(self) -> None:
-        start = _start_of_week(date.today()).isoformat()
-        self.db.table("forecasts").delete().gte("forecast_week", start).execute()
+        start = _start_of_month(date.today()).isoformat()
+        self.db.table("forecasts").delete().gte("forecast_month", start).execute()
 
     @staticmethod
     def _should_persist_skill(forecasts: list[dict]) -> bool:
@@ -244,7 +244,7 @@ class ForecastEngine:
             return round(min(combined, SOURCE_CONFIDENCE_CAPS[supporting[0]]), 2)
         return round(min(combined + 0.1, 0.95), 2)
 
-    def _score_crm_pipeline(self, skill_id: str, target_week: date) -> float:
+    def _score_crm_pipeline(self, skill_id: str, target_month: date) -> float:
         deals = (
             self.db.table("deal_profiles")
             .select("quantity, deals(expected_start, probability, status)")
@@ -254,7 +254,8 @@ class ForecastEngine:
             or []
         )
         score = 0.0
-        current_week = _start_of_week(date.today())
+        current_month = _start_of_month(date.today())
+        target_offset = _month_diff(target_month, current_month)
         for row in deals:
             deal = row.get("deals") or {}
             if deal.get("status") in ("won", "lost"):
@@ -263,41 +264,41 @@ class ForecastEngine:
             probability = deal.get("probability", 0.5)
             if not start:
                 continue
-            weeks_from_now = (date.fromisoformat(start) - current_week).days / 7
-            target_offset = (target_week - current_week).days / 7
-            proximity = max(0.0, 1 - abs(weeks_from_now - target_offset) / 12)
+            start_month = _start_of_month(date.fromisoformat(start))
+            months_from_now = _month_diff(start_month, current_month)
+            proximity = max(0.0, 1 - abs(months_from_now - target_offset) / 12)
             score += row["quantity"] * probability * proximity
         return score
 
-    def _score_procurement(self, skill_id: str, target_week: date) -> float:
+    def _score_procurement(self, skill_id: str, target_month: date) -> float:
         return self._score_signal_sources(
             skill_id,
             sources=("ted_procurement",),
-            target_week=target_week,
+            target_month=target_month,
             window_days=SIGNAL_RECENCY_WINDOW_DAYS,
         )
 
-    def _score_news_events(self, skill_id: str, target_week: date) -> float:
+    def _score_news_events(self, skill_id: str, target_month: date) -> float:
         return self._score_signal_sources(
             skill_id,
             sources=("news_intelligence", "news"),
-            target_week=target_week,
+            target_month=target_month,
             window_days=SIGNAL_RECENCY_WINDOW_DAYS,
         )
 
-    def _score_trends(self, skill_id: str, target_week: date) -> float:
+    def _score_trends(self, skill_id: str, target_month: date) -> float:
         return self._score_signal_sources(
             skill_id,
             sources=("google_trends",),
-            target_week=target_week,
+            target_month=target_month,
             window_days=SIGNAL_RECENCY_WINDOW_DAYS,
         )
 
-    def _score_job_postings(self, skill_id: str, target_week: date) -> float:
+    def _score_job_postings(self, skill_id: str, target_month: date) -> float:
         return self._score_signal_sources(
             skill_id,
             sources=("ats_greenhouse", "ats_lever"),
-            target_week=target_week,
+            target_month=target_month,
             window_days=SIGNAL_RECENCY_WINDOW_DAYS,
         )
 
@@ -306,7 +307,7 @@ class ForecastEngine:
         skill_id: str,
         *,
         sources: tuple[str, ...],
-        target_week: date,
+        target_month: date,
         window_days: int,
     ) -> float:
         rows = (
@@ -326,21 +327,21 @@ class ForecastEngine:
             detected = _parse_detected_at(sig.get("detected_at"))
             if detected is None:
                 continue
-            days_age = abs((target_week - detected).days)
+            days_age = abs((target_month - detected).days)
             if days_age > window_days:
                 continue
             decay = max(0.0, 1.0 - days_age / window_days)
             score += row["confidence"] * decay
         return score
 
-    def _score_historical_pattern(self, skill_id: str, target_week: date) -> float:
+    def _score_historical_pattern(self, skill_id: str, target_month: date) -> float:
         agg = self._get_historical_aggregate(skill_id)
-        if agg is None or agg.baseline_weekly <= 0:
+        if agg is None or agg.baseline_monthly <= 0:
             return 0.0
         pressure_mult = 1.0 + BENCH_PRESSURE_GAIN * max(0.0, agg.tightness)
         return (
-            agg.baseline_weekly
-            * agg.seasonal_index.get(target_week.month, 1.0)
+            agg.baseline_monthly
+            * agg.seasonal_index.get(target_month.month, 1.0)
             * pressure_mult
         )
 
@@ -455,7 +456,7 @@ class ForecastEngine:
                     m: agg.weighted_monthly[m] / avg for m in range(1, 13)
                 }
 
-        agg.baseline_weekly = baseline_weighted / 52.0
+        agg.baseline_monthly = baseline_weighted / float(BASELINE_WINDOW_MONTHS)
 
         if durations:
             skill_median = float(statistics.median(durations))
@@ -471,7 +472,7 @@ class ForecastEngine:
 
         return agg
 
-    def _get_supply(self, skill_id: str, target_week: date) -> int:
+    def _get_supply(self, skill_id: str, target_month: date) -> int:
         rows = (
             self.db.table("consultant_skills")
             .select("consultants(current_status, available_from)")
@@ -486,13 +487,13 @@ class ForecastEngine:
             if consultant.get("current_status") == "on_mission":
                 continue
             avail_from = consultant.get("available_from")
-            if avail_from and date.fromisoformat(avail_from) > target_week:
+            if avail_from and date.fromisoformat(avail_from) > target_month:
                 continue
             available += 1
         return available
 
     def _contributing_signal_ids(
-        self, skill_id: str, target_week: date
+        self, skill_id: str, target_month: date
     ) -> list[str]:
         rows = (
             self.db.table("signal_skills")
@@ -507,14 +508,14 @@ class ForecastEngine:
             detected = _parse_detected_at((row.get("signals") or {}).get("detected_at"))
             if detected is None:
                 continue
-            if abs((target_week - detected).days) <= CONVERGENCE_WINDOW_DAYS:
+            if abs((target_month - detected).days) <= CONVERGENCE_WINDOW_DAYS:
                 ids.append(row["signal_id"])
         return sorted(set(ids))
 
     def _explain(
         self,
         skill_id: str,
-        target_week: date,
+        target_month: date,
         crm: float,
         procurement: float,
         news: float,
@@ -543,7 +544,7 @@ class ForecastEngine:
         if historical > 0:
             agg = self._get_historical_aggregate(skill_id)
             if agg is not None:
-                index = agg.seasonal_index.get(target_week.month, 1.0)
+                index = agg.seasonal_index.get(target_month.month, 1.0)
                 if index > 1.2:
                     parts.append(f"Historically busier than average this month for {name}")
                 elif index < 0.8:
@@ -587,5 +588,16 @@ def _parse_detected_at(value: Any) -> date | None:
     return None
 
 
-def _start_of_week(value: date) -> date:
-    return value - timedelta(days=value.weekday())
+def _start_of_month(value: date) -> date:
+    return value.replace(day=1)
+
+
+def _add_months(value: date, months: int) -> date:
+    month_index = value.month - 1 + months
+    year = value.year + month_index // 12
+    month = month_index % 12 + 1
+    return date(year, month, 1)
+
+
+def _month_diff(a: date, b: date) -> int:
+    return (a.year - b.year) * 12 + (a.month - b.month)

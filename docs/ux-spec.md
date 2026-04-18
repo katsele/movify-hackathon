@@ -59,7 +59,7 @@ Azimuth
 │   Entry point for all workflows
 │
 ├── /forecast
-│   Full 12-week forecast heatmap (larger, interactive)
+│   Full 12-month forecast heatmap (larger, interactive)
 │   ├── /forecast/[skill] — Skill drill-down
 │   │   Demand curve, contributing signals, bench detail, recommended action
 │
@@ -115,13 +115,13 @@ The Monday morning view. Everything on one screen, no scrolling required for the
 │  NAV   │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐     │
 │        │  │ On Bench  │ │ Pipeline │ │ Top Gap  │ │ Signals  │     │
 │ ◉ Dash │  │    12     │ │  €1.2M   │ │AI Eng +3 │ │  7 new   │     │
-│ ◎ Fore │  │ ↓2 vs lw │ │  8 deals │ │ wk 6-10  │ │ this wk  │     │
+│ ◎ Fore │  │ ↓2 vs lm │ │  8 deals │ │ Sep-Dec  │ │ this mo  │     │
 │ ◎ Bench│  └──────────┘ └──────────┘ └──────────┘ └──────────┘     │
 │ ◎ Sig  │                                                            │
 │        │  ┌────────────────────────────────────────────────────┐    │
-│        │  │  12-WEEK FORECAST HEATMAP (compact)                │    │
+│        │  │  12-MONTH FORECAST HEATMAP (compact)               │    │
 │        │  │                                                    │    │
-│        │  │  Skill        W1  W2  W3  W4  W5  W6  W7  W8 ...  │    │
+│        │  │  Skill        M1  M2  M3  M4  M5  M6  M7  M8 ...  │    │
 │        │  │  AI Eng.      ██  ██  ██  ██  ██  ██  ██  ██      │    │
 │        │  │  React        ▓▓  ▓▓  ██  ██  ██  ▓▓  ▓▓  ▓▓      │    │
 │        │  │  Cloud/DevOps ░░  ░░  ▓▓  ▓▓  ██  ██  ██  ██      │    │
@@ -162,10 +162,10 @@ The Monday morning view. Everything on one screen, no scrolling required for the
 
 | Card | Primary value | Trend | Colour logic |
 |---|---|---|---|
-| **On Bench** | Count of available consultants | ↑↓ vs. last week | Neutral (grey) — context-dependent |
+| **On Bench** | Count of available consultants | ↑↓ vs. last month | Neutral (grey) — context-dependent |
 | **Pipeline** | Total pipeline value or deal count | Count of active deals | Neutral |
 | **Top Gap** | Skill with largest predicted shortfall | Gap size + time range | Red if gap > 2, amber if 1-2 |
-| **New Signals** | Count of signals ingested this week | — | Blue (informational) |
+| **New Signals** | Count of signals ingested this month | — | Blue (informational) |
 
 **Compact heatmap:**
 - Abbreviated version of the full forecast heatmap (top 8–10 skills by gap severity)
@@ -193,13 +193,13 @@ Full interactive forecast heatmap. The analytical view for deep exploration.
 │ ☰  Forecast                              Last updated: 5 min ago 🔄│
 ├────────┬────────────────────────────────────────────────────────────┤
 │        │                                                            │
-│  NAV   │  Filters: [All disciplines ▾] [All regions ▾] [12 weeks ▾]│
+│  NAV   │  Filters: [All disciplines ▾] [All regions ▾] [12 months ▾]│
 │        │                                                            │
 │        │  ┌────────────────────────────────────────────────────┐    │
 │        │  │                                                    │    │
-│        │  │  12-WEEK FORECAST HEATMAP (full)                   │    │
+│        │  │  12-MONTH FORECAST HEATMAP (full)                  │    │
 │        │  │                                                    │    │
-│        │  │  Discipline / Skill  W1  W2  W3  W4  ... W12  Gap │    │
+│        │  │  Discipline / Skill  M1  M2  M3  M4  ... M12 Gap  │    │
 │        │  │  ─────────────────────────────────────────────────  │    │
 │        │  │  AI / ML ENGINEERING                               │    │
 │        │  │    AI Strategy       ░░  ░░  ▓▓  ▓▓  ... ██   +3  │    │
@@ -234,12 +234,12 @@ Full interactive forecast heatmap. The analytical view for deep exploration.
 
 | Interaction | Behaviour |
 |---|---|
-| **Hover cell** | Tooltip: "AI Strategy · Week 6 — Predicted demand: 4, Current supply: 1, Gap: +3, Confidence: 0.72. Driven by: 2 procurement notices, 1 pipeline deal." |
+| **Hover cell** | Tooltip: "AI Strategy · Sep — Predicted demand: 4, Current supply: 1, Gap: +3, Confidence: 0.72. Driven by: 2 procurement notices, 1 pipeline deal." |
 | **Click row** | Navigate to `/forecast/[skill]` drill-down |
 | **Sort** | Default: sorted by max gap (descending). Toggle: alphabetical, by discipline, by confidence |
 | **Filter (discipline)** | Dropdown: All, AI/ML, Web Dev, Cloud/DevOps, Product, UX, Data, etc. |
 | **Filter (region)** | Dropdown: All Belgium, Flanders, Wallonia, Brussels |
-| **Filter (timeframe)** | 4 weeks / 8 weeks / 12 weeks |
+| **Filter (timeframe)** | 3 months / 6 months / 12 months |
 
 **Colour encoding:**
 
@@ -269,7 +269,7 @@ Deep dive into a single skill's forecast. Answers: "Why does the forecaster pred
 ├────────┬────────────────────────────────────────────────────────────┤
 │        │                                                            │
 │  NAV   │  ┌────────────────────────────────────────────────────┐    │
-│        │  │  DEMAND FORECAST (12 weeks)                        │    │
+│        │  │  DEMAND FORECAST (12 months)                       │    │
 │        │  │                                                    │    │
 │        │  │  5 ┤                          ╭──────╮             │    │
 │        │  │  4 ┤                    ╭─────╯      ╰───╮         │    │
@@ -277,7 +277,7 @@ Deep dive into a single skill's forecast. Answers: "Why does the forecaster pred
 │        │  │  2 ┤        ╭─────╯                               │    │
 │        │  │  1 ┤────────╯  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │    │
 │        │  │  0 ┤                                               │    │
-│        │  │    └──W1──W2──W3──W4──W5──W6──W7──W8──W9──W10──   │    │
+│        │  │    └──M1──M2──M3──M4──M5──M6──M7──M8──M9──M10──   │    │
 │        │  │                                                    │    │
 │        │  │  ── Predicted demand    ─ ─ Current supply (1)     │    │
 │        │  │  ░░ Confidence band                                │    │
@@ -311,22 +311,22 @@ Deep dive into a single skill's forecast. Answers: "Why does the forecaster pred
 │        │  │     [View on TED →]                                │    │
 │        │  │                                                    │    │
 │        │  │  💼 Pipeline: BNP Paribas Fortis AI integration    │    │
-│        │  │     Status: Proposal · Expected start: Week 6      │    │
+│        │  │     Status: Proposal · Expected start: Sep         │    │
 │        │  │     Requested: 2× AI engineer (senior)             │    │
 │        │  │                                                    │    │
 │        │  │  📈 Google Trends: "AI engineer Belgium" ↑ 28%     │    │
-│        │  │     4-week trend · Confidence: 0.7                 │    │
+│        │  │     3-month trend · Confidence: 0.7                │    │
 │        │  └────────────────────────────────────────────────────┘    │
 │        │                                                            │
 │        │  ┌────────────────────────────────────────────────────┐    │
 │        │  │  💡 RECOMMENDED ACTION                             │    │
 │        │  │                                                    │    │
-│        │  │  Gap of +3 AI engineers predicted in weeks 6–10.   │    │
+│        │  │  Gap of +3 AI engineers predicted in months 6–10.  │    │
 │        │  │  Current supply: 1 (Sarah M.), dropping to 0 in    │    │
-│        │  │  week 8 (Tom D. rolls off).                        │    │
+│        │  │  month 8 (Tom D. rolls off).                       │    │
 │        │  │                                                    │    │
 │        │  │  Suggested actions:                                │    │
-│        │  │  • Start recruiting 2 AI engineers now (6-wk lead) │    │
+│        │  │  • Start recruiting 2 AI engineers now (6-mo lead) │    │
 │        │  │  • Extend Tom D.'s availability if possible        │    │
 │        │  │  • Activate freelancer network for AI profiles     │    │
 │        │  └────────────────────────────────────────────────────┘    │
@@ -338,7 +338,7 @@ Deep dive into a single skill's forecast. Answers: "Why does the forecaster pred
 
 | Row | Content | Purpose |
 |---|---|---|
-| 1 | Demand curve (line chart) | Visual forecast — demand vs. supply over 12 weeks, with confidence band |
+| 1 | Demand curve (line chart) | Visual forecast — demand vs. supply over 12 months, with confidence band |
 | 2 | Contributing signals (left) + Bench detail (right) | Why the forecast says what it says + who is available |
 | 3 | Signal evidence list | Every contributing signal, with source links |
 | 4 | Recommended action card | Plain-language summary + suggested next steps |
@@ -348,7 +348,7 @@ Deep dive into a single skill's forecast. Answers: "Why does the forecaster pred
 - Dashed line: current supply (bench + rolling off schedule)
 - Shaded area between lines when demand > supply: the gap, coloured red with opacity = confidence
 - Light grey confidence band around predicted demand line (±1 standard deviation equivalent)
-- X-axis: weeks 1–12. Y-axis: headcount (0–6 typical range)
+- X-axis: months 1–12. Y-axis: headcount (0–6 typical range)
 
 **Contributing signals breakdown:**
 - Horizontal bar chart showing each signal source's weight contribution
@@ -405,7 +405,7 @@ Current state of Movify's talent. Two views: consultants and pipeline.
 - Grouped by discipline (collapsible sections)
 - Each group header shows: discipline name + count of consultants in that discipline
 - Each consultant row: name, seniority, status badge, availability date
-- Status badges: 🟢 On bench, 🔵 On mission, 🟡 Rolling off (within 4 weeks)
+- Status badges: 🟢 On bench, 🔵 On mission, 🟡 Rolling off (within 1 month)
 - Search filters across name, skill, status
 
 **Pipeline tab:**
@@ -416,14 +416,14 @@ Current state of Movify's talent. Two views: consultants and pipeline.
 │                                                                │
 │  Deal              Client        Start   Profiles   Prob.  €   │
 │  ─────────────────────────────────────────────────────────────  │
-│  AI integration    BNP Paribas   Wk 6   2× AI eng   70%  180K │
-│  Cloud migration   Proximus      Wk 8   3× Cloud    50%  240K │
-│  UX redesign       Belfius       Wk 4   1× UX, 1PM  80%   90K │
-│  Data platform     KBC           Wk 10  2× Data eng  40%  150K │
+│  AI integration    BNP Paribas   Sep    2× AI eng   70%  180K │
+│  Cloud migration   Proximus      Nov    3× Cloud    50%  240K │
+│  UX redesign       Belfius       Aug    1× UX, 1PM  80%   90K │
+│  Data platform     KBC           Jan    2× Data eng  40%  150K │
 │  ...                                                           │
 │                                                                │
 │  Timeline view:                                                │
-│  W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12           │
+│  M1  M2  M3  M4  M5  M6  M7  M8  M9  M10  M11  M12           │
 │  ─────────────[UX Belfius]                                     │
 │  ────────────────────[AI BNP]                                  │
 │  ──────────────────────────────[Cloud Prox]                    │
@@ -502,14 +502,14 @@ Browse and search all ingested signals. The raw intelligence layer.
 | **SidebarNav** | Persistent left sidebar with 4 nav items + collapse toggle | All pages |
 | **PageHeader** | Page title + "Last updated" timestamp + refresh button | All pages |
 | **KPICard** | Big number + label + trend indicator + optional sparkline | Dashboard |
-| **ForecastHeatmap** | Grid: skills × weeks, colour-coded cells with gap column | Dashboard, Forecast |
+| **ForecastHeatmap** | Grid: skills × months, colour-coded cells with gap column | Dashboard, Forecast |
 | **GapAlert** | Coloured card: skill, gap size, timeframe, contributing signal summary, link | Dashboard |
 | **SignalCard** | Icon + title + source + metadata + skill tags + time ago | Dashboard, Signals, Drill-down |
 | **SkillTag** | Small pill/badge with skill name, used in signal cards and bench rows | Signals, Bench, Drill-down |
 | **StatusBadge** | Coloured dot + label for consultant status (on bench, on mission, rolling off) | Bench |
 | **ConfidenceIndicator** | Visual indicator: filled dots or bar showing confidence 0–1 | Heatmap tooltips, Drill-down |
 | **FilterBar** | Horizontal bar with dropdown filters + active filter chips | Forecast, Signals |
-| **DemandCurve** | Line chart: demand vs. supply over 12 weeks with confidence band | Drill-down |
+| **DemandCurve** | Line chart: demand vs. supply over 12 months with confidence band | Drill-down |
 | **SignalWeightChart** | Horizontal bars showing signal source contributions | Drill-down |
 | **ActionCard** | Highlighted card with recommended action text | Drill-down |
 | **ConsultantRow** | Name + seniority + status badge + availability | Bench |
@@ -567,7 +567,7 @@ Every drill-down has a clear "back" path via the sidebar nav or breadcrumb. No d
               ┌────────┴────────┐
               │   Tooltip        │
               │   AI Strategy    │
-              │   Week 6         │
+              │   Sep            │
               │   Demand: 4      │
               │   Supply: 1      │
               │   Gap: +3        │
@@ -588,7 +588,7 @@ Every drill-down has a clear "back" path via the sidebar nav or breadcrumb. No d
 
 ### Filter persistence
 
-- Filters on `/forecast` page persist in URL query params (`/forecast?discipline=ai&region=brussels&weeks=8`)
+- Filters on `/forecast` page persist in URL query params (`/forecast?discipline=ai&region=brussels&months=6`)
 - Shareable URLs: copy URL → send to colleague → they see the same filtered view
 - Filters do NOT persist across pages (each page has its own filter context)
 
@@ -895,7 +895,7 @@ Not everything above needs to be built on day one. Prioritised by hackathon stor
 
 1. **Heatmap: skills vs. disciplines as rows?** Current spec shows skills grouped under disciplines. Alternative: show only discipline-level rows, drill into skills on click. Depends on how many skills have data on day one.
 
-2. **Recommended actions: generated or templated?** V1 could use simple templates ("Gap of +N [skill] predicted in weeks X–Y. Start recruiting now.") rather than AI-generated prose. Faster to build, easier to control.
+2. **Recommended actions: generated or templated?** V1 could use simple templates ("Gap of +N [skill] predicted in months X–Y. Start recruiting now.") rather than AI-generated prose. Faster to build, easier to control.
 
 3. **Weekly digest format:** The spec focuses on the dashboard. The weekly digest (email or notification) needs its own UX design — defer to V1 post-hackathon.
 

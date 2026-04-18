@@ -12,12 +12,12 @@ export interface ForecastSkillSummary {
 
 export function summarizeForecastCells(
   cells: ForecastCell[],
-  weeks = 12,
+  months = 12,
 ): ForecastSkillSummary[] {
   const grouped = new Map<string, ForecastSkillSummary>();
 
   for (const cell of cells) {
-    if (cell.week < 1 || cell.week > weeks) continue;
+    if (cell.month < 1 || cell.month > months) continue;
 
     const existing = grouped.get(cell.skill);
     if (existing) {
@@ -44,7 +44,7 @@ export function summarizeForecastCells(
     .filter((summary) => summary.maxDemand > 0)
     .map((summary) => ({
       ...summary,
-      cells: [...summary.cells].sort((a, b) => a.week - b.week),
+      cells: [...summary.cells].sort((a, b) => a.month - b.month),
     }))
     .sort(
       (a, b) =>
@@ -54,4 +54,15 @@ export function summarizeForecastCells(
         b.maxDemand - a.maxDemand ||
         a.skill.localeCompare(b.skill),
     );
+}
+
+const MONTH_LABEL_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+});
+
+export function monthLabel(offset: number, anchor: Date = new Date()): string {
+  const target = new Date(
+    Date.UTC(anchor.getUTCFullYear(), anchor.getUTCMonth() + offset, 1),
+  );
+  return MONTH_LABEL_FORMATTER.format(target);
 }

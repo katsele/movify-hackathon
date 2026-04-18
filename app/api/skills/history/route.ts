@@ -5,7 +5,6 @@ import { loadHistoricalDataset } from "@/lib/server/forecast-engine";
 export const runtime = "nodejs";
 
 const MS_PER_YEAR = 365.25 * 24 * 60 * 60 * 1000;
-const WEEKS_PER_MONTH = 4.345;
 const HISTORY_YEARS_FOR_ENVELOPE = 3;
 
 interface MonthlyRange {
@@ -35,8 +34,8 @@ function buildMonthlyHistoryRange(
       samples.push(yearMonthCounts.get(`${year}-${month}`) ?? 0);
     }
     range[month] = {
-      min: Math.min(...samples) / WEEKS_PER_MONTH,
-      max: Math.max(...samples) / WEEKS_PER_MONTH,
+      min: Math.min(...samples),
+      max: Math.max(...samples),
     };
   }
   return range;
@@ -60,7 +59,7 @@ export async function GET() {
       {
         seasonal_index_by_month: Record<number, number>;
         weighted_monthly: Record<number, number>;
-        baseline_weekly: number;
+        baseline_monthly: number;
         tightness: number;
         skill_median_duration: number | null;
         monthly_history_range: Record<number, MonthlyRange>;
@@ -72,7 +71,7 @@ export async function GET() {
       skills[skillId] = {
         seasonal_index_by_month: aggregate.seasonalIndex,
         weighted_monthly: aggregate.weightedMonthly,
-        baseline_weekly: aggregate.baselineWeekly,
+        baseline_monthly: aggregate.baselineMonthly,
         tightness: aggregate.tightness,
         skill_median_duration: aggregate.skillMedianDuration,
         monthly_history_range: buildMonthlyHistoryRange(starts, today),
