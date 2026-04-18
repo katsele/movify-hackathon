@@ -1,0 +1,11 @@
+Internal reference;Last Name;First Name;Job Title;Seniority;Status;Available From;Last Client;Last Project;Last Project End;Primary Skills;Location;Agency;Country
+CON001;Jacobs;Matthias;Senior Java Developer;Senior;Available;13/03/2026;KBC;Senior Java Developer - KBC;12/03/2026;Java, Spring Boot, PostgreSQL, Docker, REST API, Kafka;Brussels;Movify SRL;Belgium
+CON002;Lemmens;Karel;React Developer;Medior;Available;20/03/2026;Proximus;React Developer - Proximus;19/03/2026;React, TypeScript, Next.js, Tailwind, GraphQL, Jest;Leuven;Movify SRL;Belgium
+CON003;De Backer;Niels;Data Engineer;Senior;Available;11/03/2026;Engie;Data Engineer - Engie;10/03/2026;Python, SQL, dbt, Snowflake, Airflow, AWS;Brussels;Movify SRL;Belgium
+CON004;Goossens;Pieter;UX/UI Designer;Medior;Available;07/04/2026;Smals;UX/UI Designer - Smals;06/04/2026;Figma, Design Systems, User Research, Prototyping, Accessibility;Namur;Movify SRL;Belgium
+CON005;Coenen;Griet;Senior Product Owner;Senior;Available;11/03/2026;Belfius;Senior Product Owner - Belfius;10/03/2026;Agile, Scrum, Jira, Product Discovery, Roadmapping, OKRs;Liège;Movify SRL;Belgium
+CON006;Mertens;Niels;Business Analyst;Medior;Available;08/03/2026;AXA Belgium;Business Analyst - AXA Belgium;07/03/2026;Business Analysis, BPMN, UML, SQL, Requirements, Confluence;Ghent;Movify SRL;Belgium
+CON007;Lemaire;Mélanie;AI Engineer;Senior;Available;18/03/2026;ING;AI Engineer - ING;17/03/2026;Python, LangChain, OpenAI API, PyTorch, RAG, Vector DB;Antwerp;Movify SRL;Belgium
+CON008;De Vos;Pieter-Jan;iOS Developer;Medior;Available;28/03/2026;BNP Paribas Fortis;iOS Developer - BNP Paribas Fortis;27/03/2026;Swift, SwiftUI, iOS, Xcode, Combine, REST API;Namur;Movify SRL;Belgium
+CON009;Rousseau;Amélie;DevOps Engineer;Senior;Available;12/04/2026;bpost;DevOps Engineer - bpost;11/04/2026;AWS, Kubernetes, Terraform, GitHub Actions, Docker, Prometheus;Brussels;Movify SRL;Belgium
+CON010;Leroy;Damien;Scrum Master;Medior;Ramping Down;17/05/2026;SPW;Scrum Master - SPW;16/05/2026;Scrum, Agile, Jira, SAFe, Facilitation, Coaching;Brussels;Movify SRL;Belgium
