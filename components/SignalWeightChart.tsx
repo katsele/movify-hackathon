@@ -36,21 +36,29 @@ export function SignalWeightChart({
           type="number"
           domain={[0, 1]}
           tickFormatter={(v) => `${Math.round(Number(v) * 100)}%`}
-          tick={{ fontSize: 11, fill: "#6B7280" }}
+          tick={{
+            fontSize: 11,
+            fill: "#78736A",
+            fontFamily: "var(--font-mono)",
+          }}
         />
         <YAxis
           type="category"
           dataKey="source"
           width={120}
-          tick={{ fontSize: 12, fill: "#111827" }}
+          tick={{ fontSize: 12, fill: "#27251F" }}
         />
         <Tooltip
           formatter={(v: number) => `${Math.round(v * 100)}%`}
           contentStyle={{
             fontSize: 12,
             borderRadius: 6,
-            border: "1px solid #E5E7EB",
+            border: "1px solid #E7E5E1",
+            backgroundColor: "#1A1814",
+            color: "#F4F3F1",
           }}
+          labelStyle={{ color: "#F4F3F1" }}
+          itemStyle={{ color: "#F4F3F1" }}
         />
         <Bar dataKey="weight" radius={[0, 4, 4, 0]}>
           {data.map((d) => (

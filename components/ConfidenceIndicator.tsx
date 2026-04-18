@@ -6,6 +6,12 @@ interface ConfidenceIndicatorProps {
   className?: string;
 }
 
+/**
+ * Confidence is triple-coded per UX spec §6.6:
+ *   (a) opacity on the bars (via tone),
+ *   (b) a short pill label ("72% conf."),
+ *   (c) border style — solid (high), dotted (medium), dashed (low).
+ */
 export function ConfidenceIndicator({
   value,
   showLabel = true,
@@ -13,14 +19,25 @@ export function ConfidenceIndicator({
 }: ConfidenceIndicatorProps) {
   const clamped = Math.max(0, Math.min(1, value));
   const filled = Math.round(clamped * 4);
-  const level =
-    clamped >= 0.75 ? "High" : clamped >= 0.5 ? "Medium" : "Low";
-  const tone =
-    clamped >= 0.75
-      ? "text-emerald-700"
-      : clamped >= 0.5
-        ? "text-slate-600"
-        : "text-slate-400";
+  const high = clamped >= 0.75;
+  const mid = !high && clamped >= 0.5;
+
+  const barTone = high
+    ? "bg-signal-covered"
+    : mid
+      ? "bg-neutral-500"
+      : "bg-neutral-300";
+  const emptyTone = "bg-neutral-200";
+  const labelTone = high
+    ? "text-signal-covered border-signal-covered/40"
+    : mid
+      ? "text-neutral-700 border-neutral-300"
+      : "text-neutral-500 border-neutral-300";
+  const labelBorderStyle = high
+    ? "border-solid"
+    : mid
+      ? "border-dotted"
+      : "border-dashed";
 
   return (
     <div className={cn("inline-flex items-center gap-1.5", className)}>
@@ -30,20 +47,28 @@ export function ConfidenceIndicator({
             key={i}
             className={cn(
               "block w-1 rounded-full",
-              i < filled
-                ? clamped >= 0.75
-                  ? "bg-emerald-500"
-                  : clamped >= 0.5
-                    ? "bg-slate-500"
-                    : "bg-slate-300"
-                : "bg-slate-200",
-              i === 0 ? "h-2" : i === 1 ? "h-2.5" : i === 2 ? "h-3" : "h-3.5",
+              i < filled ? barTone : emptyTone,
+              i === 0
+                ? "h-2"
+                : i === 1
+                  ? "h-2.5"
+                  : i === 2
+                    ? "h-3"
+                    : "h-3.5",
             )}
           />
         ))}
       </div>
       {showLabel && (
-        <span className={cn("text-xs font-medium", tone)}>{level}</span>
+        <span
+          className={cn(
+            "inline-flex items-center rounded-full border px-1.5 py-0 text-[10px] font-medium font-mono tabular leading-4",
+            labelBorderStyle,
+            labelTone,
+          )}
+        >
+          {Math.round(clamped * 100)}% conf.
+        </span>
       )}
     </div>
   );

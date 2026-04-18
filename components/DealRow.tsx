@@ -17,19 +17,21 @@ function formatDate(iso: string | null) {
 }
 
 const STATUS_STYLE: Record<Deal["status"], string> = {
-  prospect: "text-slate-600 bg-slate-100",
-  proposal: "text-blue-700 bg-blue-50",
-  negotiation: "text-violet-700 bg-violet-50",
-  won: "text-emerald-700 bg-emerald-50",
-  lost: "text-slate-500 bg-slate-100 line-through",
+  prospect: "text-neutral-600 bg-neutral-100",
+  proposal: "text-signal-procurement bg-signal-procurement/10",
+  negotiation: "text-signal-trend bg-signal-trend/10",
+  won: "text-signal-covered bg-signal-covered/10",
+  lost: "text-neutral-500 bg-neutral-100 line-through",
 };
 
 export function DealRow({ deal, requestedSkills = [] }: DealRowProps) {
   return (
     <TableRow>
-      <TableCell className="font-medium">{deal.title}</TableCell>
+      <TableCell className="font-medium text-neutral-800">
+        {deal.title}
+      </TableCell>
       <TableCell>
-        <span className="text-xs text-muted-foreground">
+        <span className="text-xs text-neutral-500">
           {deal.client_name ?? "—"}
         </span>
       </TableCell>
@@ -44,12 +46,12 @@ export function DealRow({ deal, requestedSkills = [] }: DealRowProps) {
         </span>
       </TableCell>
       <TableCell>
-        <span className="text-xs font-medium">
+        <span className="text-xs font-medium font-mono tabular text-neutral-700">
           {Math.round(deal.probability * 100)}%
         </span>
       </TableCell>
       <TableCell>
-        <span className="text-xs text-muted-foreground">
+        <span className="text-xs text-neutral-500 font-mono tabular">
           {formatDate(deal.expected_start)}
         </span>
       </TableCell>

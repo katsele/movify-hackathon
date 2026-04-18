@@ -35,17 +35,37 @@ export function DemandCurve({ data, height = 260 }: DemandCurveProps) {
             <stop offset="100%" stopColor="#DC2626" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-        <XAxis dataKey="week" tick={{ fontSize: 11, fill: "#6B7280" }} />
-        <YAxis tick={{ fontSize: 11, fill: "#6B7280" }} />
+        <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E1" />
+        <XAxis
+          dataKey="week"
+          tick={{
+            fontSize: 11,
+            fill: "#78736A",
+            fontFamily: "var(--font-mono)",
+          }}
+        />
+        <YAxis
+          tick={{
+            fontSize: 11,
+            fill: "#78736A",
+            fontFamily: "var(--font-mono)",
+          }}
+        />
         <Tooltip
           contentStyle={{
             fontSize: 12,
             borderRadius: 6,
-            border: "1px solid #E5E7EB",
+            border: "1px solid #E7E5E1",
+            backgroundColor: "#1A1814",
+            color: "#F4F3F1",
           }}
+          labelStyle={{ color: "#F4F3F1" }}
+          itemStyle={{ color: "#F4F3F1" }}
         />
-        <Legend iconType="line" wrapperStyle={{ fontSize: 12 }} />
+        <Legend
+          iconType="line"
+          wrapperStyle={{ fontSize: 12, color: "#3D3A33" }}
+        />
         <Area
           type="monotone"
           dataKey="confidenceHigh"
@@ -58,7 +78,7 @@ export function DemandCurve({ data, height = 260 }: DemandCurveProps) {
           type="monotone"
           dataKey="confidenceLow"
           stroke="none"
-          fill="#F9FAFB"
+          fill="#FAFAF9"
           stackId="confidence"
           legendType="none"
         />

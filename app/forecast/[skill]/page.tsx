@@ -15,13 +15,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
 
+// Colours map to the locked semantic signal palette (spec §6.3).
 const WEIGHTS: SignalWeightDatum[] = [
-  { source: "Pipeline (CRM)", weight: 0.35, color: "#059669" },
-  { source: "Procurement", weight: 0.25, color: "#2563EB" },
-  { source: "Historical", weight: 0.15, color: "#64748B" },
-  { source: "Trend", weight: 0.1, color: "#7C3AED" },
-  { source: "Job postings", weight: 0.1, color: "#0891B2" },
-  { source: "News", weight: 0.05, color: "#6B7280" },
+  { source: "Pipeline (CRM)", weight: 0.35, color: "#059669" }, // signal-covered
+  { source: "Procurement", weight: 0.25, color: "#2563EB" }, // signal-procurement
+  { source: "Historical", weight: 0.15, color: "#78736A" }, // neutral-500
+  { source: "Trend", weight: 0.1, color: "#7C3AED" }, // signal-trend
+  { source: "Job postings", weight: 0.1, color: "#0891B2" }, // signal-posting
+  { source: "News", weight: 0.05, color: "#A8A39A" }, // neutral-400
 ];
 
 export default function SkillDrilldownPage({
