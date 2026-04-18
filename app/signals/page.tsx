@@ -47,6 +47,7 @@ export default function SignalsPage() {
     : (MOCK_SIGNALS as RecentSignal[]);
 
   const filtered = combined.filter((s) => {
+    if (active.source && s.source !== active.source) return false;
     if (active.discipline && s.discipline !== active.discipline) return false;
     return true;
   });
