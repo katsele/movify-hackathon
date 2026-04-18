@@ -1,7 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ForecastFactorKey, SignalSource } from "@/lib/types";
 import {
+  CONVERGENCE_WINDOW_DAYS,
+  SIGNAL_RECENCY_WINDOW_DAYS,
   computeConfidence,
+  countActive,
   FTE_PER_NEWS,
   FTE_PER_POSTING,
   FTE_PER_TENDER,
@@ -10,8 +13,6 @@ import {
 } from "@/lib/server/forecast-constants";
 
 const FORECAST_MONTHS = 12;
-const CONVERGENCE_WINDOW_DAYS = 28;
-const SIGNAL_RECENCY_WINDOW_DAYS = 90;
 const UPSERT_BATCH_SIZE = 500;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const MS_PER_YEAR = 365.25 * MS_PER_DAY;
@@ -586,9 +587,11 @@ export async function generateAndPersistForecasts(
 
       const rawDemand = predictDemand(scores, weights);
 
-      const activeSignals = Object.values(scores).filter((score) => score > 0).length;
       const converging = convergentSources(signalRows, targetMonth).size >= 2;
-      const confidence = computeConfidence(activeSignals, converging);
+      const confidence = computeConfidence(
+        countActive(Object.values(scores)),
+        converging,
+      );
 
       const supply = getSupply(consultantRows, targetMonth);
 

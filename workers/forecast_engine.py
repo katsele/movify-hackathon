@@ -1,8 +1,11 @@
 """Forecasting engine — weighted signal aggregation (V1).
 
-Combines CRM pipeline, news intelligence, procurement notices and historical
-patterns into a rolling 12-month demand forecast per skill. Trend and job-posting
-weights are zeroed for the hackathon cut (those connectors ship in V1).
+Canonical spec: `docs/forecast-formula.md`. Must stay in lockstep with
+`lib/server/forecast-engine.ts`; the parity test asserts identical
+outputs on a shared fixture.
+
+Per-source scorers emit headcount-equivalent values; the demand is a
+trust-weighted average over sources that contributed.
 """
 from __future__ import annotations
 
@@ -15,22 +18,23 @@ from typing import Any
 
 from supabase import Client, create_client
 
-from connectors.forecast_constants import (
+from forecast_constants import (
+    CONVERGENCE_WINDOW_DAYS,
     FTE_PER_NEWS,
     FTE_PER_POSTING,
     FTE_PER_TENDER,
     FTE_PER_TREND,
+    SIGNAL_RECENCY_WINDOW_DAYS,
     compute_confidence,
+    count_active,
     predict_demand,
 )
 
 log = logging.getLogger(__name__)
 
-CONVERGENCE_WINDOW_DAYS = 28
-SIGNAL_RECENCY_WINDOW_DAYS = 90
 MIN_PERSISTED_DEMAND = 0.1
 
-# Historical pattern constants -------------------------------------------------
+# Historical pattern constants (inherited from PR #22) -----------------------
 HALF_LIFE_YEARS = 2.0
 BENCH_PRESSURE_GAIN = 0.5
 MIN_HISTORY_WEIGHTED_STARTS = 6.0
@@ -128,15 +132,32 @@ class ForecastEngine:
     ) -> list[dict]:
         results: list[dict] = []
         stamp = generated_at or datetime.now(timezone.utc).isoformat()
+        signal_rows = self._fetch_signal_skill_rows(skill_id)
 
         for offset in range(1, months_ahead + 1):
             target_month = _add_months(_start_of_month(date.today()), offset)
 
             crm = self._score_crm_pipeline(skill_id, target_month)
-            procurement = self._score_procurement(skill_id, target_month)
-            news = self._score_news_events(skill_id, target_month)
-            trend = self._score_trends(skill_id, target_month)
-            postings = self._score_job_postings(skill_id, target_month)
+            procurement = (
+                self._score_signal_source(signal_rows, ("ted_procurement",), target_month)
+                * FTE_PER_TENDER
+            )
+            news = (
+                self._score_signal_source(
+                    signal_rows, ("news_intelligence", "news"), target_month
+                )
+                * FTE_PER_NEWS
+            )
+            trend = (
+                self._score_signal_source(signal_rows, ("google_trends",), target_month)
+                * FTE_PER_TREND
+            )
+            postings = (
+                self._score_signal_source(
+                    signal_rows, ("ats_greenhouse", "ats_lever"), target_month
+                )
+                * FTE_PER_POSTING
+            )
             has_current_signal = (
                 crm > 0 or procurement > 0 or news > 0 or trend > 0 or postings > 0
             )
@@ -153,10 +174,13 @@ class ForecastEngine:
                 "job_posting": postings,
             }
             raw_demand = predict_demand(estimates, self.weights)
-
-            active_factors = sum(1 for v in estimates.values() if v > 0)
-            converging = len(self._convergent_sources(skill_id, target_month)) >= 2
-            confidence = round(compute_confidence(active_factors, converging), 2)
+            converging = (
+                len(self._convergent_sources(signal_rows, target_month)) >= 2
+            )
+            confidence = compute_confidence(
+                count_active(estimates.values()),
+                converging,
+            )
             supply = self._get_supply(skill_id, target_month)
 
             results.append(
@@ -169,7 +193,7 @@ class ForecastEngine:
                     "gap": round(raw_demand - supply, 2),
                     "confidence": round(confidence, 2),
                     "contributing_signals": self._contributing_signal_ids(
-                        skill_id, target_month
+                        signal_rows, target_month
                     ),
                     "notes": self._explain(
                         skill_id,
@@ -199,29 +223,6 @@ class ForecastEngine:
             for forecast in forecasts
         )
 
-    def _convergent_sources(self, skill_id: str, target_month: date) -> set[str]:
-        """Distinct signal `source` values with activity within CONVERGENCE_WINDOW_DAYS."""
-        rows = (
-            self.db.table("signal_skills")
-            .select("signals(detected_at, source)")
-            .eq("skill_id", skill_id)
-            .execute()
-            .data
-            or []
-        )
-        sources: set[str] = set()
-        for row in rows:
-            sig = row.get("signals") or {}
-            src = sig.get("source")
-            if not isinstance(src, str):
-                continue
-            detected = _parse_detected_at(sig.get("detected_at"))
-            if detected is None:
-                continue
-            if abs((target_month - detected).days) <= CONVERGENCE_WINDOW_DAYS:
-                sources.add(src)
-        return sources
-
     def _score_crm_pipeline(self, skill_id: str, target_month: date) -> float:
         deals = (
             self.db.table("deal_profiles")
@@ -248,54 +249,27 @@ class ForecastEngine:
             score += row["quantity"] * probability * proximity
         return score
 
-    def _score_procurement(self, skill_id: str, target_month: date) -> float:
-        return FTE_PER_TENDER * self._score_signal_sources(
-            skill_id,
-            sources=("ted_procurement",),
-            target_month=target_month,
-            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
-        )
-
-    def _score_news_events(self, skill_id: str, target_month: date) -> float:
-        return FTE_PER_NEWS * self._score_signal_sources(
-            skill_id,
-            sources=("news_intelligence", "news"),
-            target_month=target_month,
-            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
-        )
-
-    def _score_trends(self, skill_id: str, target_month: date) -> float:
-        return FTE_PER_TREND * self._score_signal_sources(
-            skill_id,
-            sources=("google_trends",),
-            target_month=target_month,
-            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
-        )
-
-    def _score_job_postings(self, skill_id: str, target_month: date) -> float:
-        return FTE_PER_POSTING * self._score_signal_sources(
-            skill_id,
-            sources=("ats_greenhouse", "ats_lever"),
-            target_month=target_month,
-            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
-        )
-
-    def _score_signal_sources(
-        self,
-        skill_id: str,
-        *,
-        sources: tuple[str, ...],
-        target_month: date,
-        window_days: int,
-    ) -> float:
-        rows = (
+    def _fetch_signal_skill_rows(self, skill_id: str) -> list[dict]:
+        return (
             self.db.table("signal_skills")
-            .select("confidence, signals(detected_at, source)")
+            .select("signal_id, confidence, signals(detected_at, source)")
             .eq("skill_id", skill_id)
             .execute()
             .data
             or []
         )
+
+    @staticmethod
+    def _score_signal_source(
+        rows: list[dict],
+        sources: tuple[str, ...],
+        target_month: date,
+    ) -> float:
+        """Return Σ confidence × decay for signals whose source matches.
+
+        Callers multiply by the appropriate `FTE_PER_*` constant to get
+        headcount-equivalent units.
+        """
         score = 0.0
         allowed = set(sources)
         for row in rows:
@@ -306,10 +280,10 @@ class ForecastEngine:
             if detected is None:
                 continue
             days_age = abs((target_month - detected).days)
-            if days_age > window_days:
+            if days_age > SIGNAL_RECENCY_WINDOW_DAYS:
                 continue
-            decay = max(0.0, 1.0 - days_age / window_days)
-            score += row["confidence"] * decay
+            decay = max(0.0, 1.0 - days_age / SIGNAL_RECENCY_WINDOW_DAYS)
+            score += (row.get("confidence") or 0.0) * decay
         return score
 
     def _score_historical_pattern(self, skill_id: str, target_month: date) -> float:
@@ -470,25 +444,39 @@ class ForecastEngine:
             available += 1
         return available
 
+    @staticmethod
     def _contributing_signal_ids(
-        self, skill_id: str, target_month: date
+        signal_rows: list[dict], target_month: date
     ) -> list[str]:
-        rows = (
-            self.db.table("signal_skills")
-            .select("signal_id, signals(detected_at)")
-            .eq("skill_id", skill_id)
-            .execute()
-            .data
-            or []
-        )
         ids: list[str] = []
-        for row in rows:
-            detected = _parse_detected_at((row.get("signals") or {}).get("detected_at"))
+        for row in signal_rows:
+            sig = row.get("signals") or {}
+            detected = _parse_detected_at(sig.get("detected_at"))
             if detected is None:
                 continue
             if abs((target_month - detected).days) <= CONVERGENCE_WINDOW_DAYS:
                 ids.append(row["signal_id"])
         return sorted(set(ids))
+
+    @staticmethod
+    def _convergent_sources(signal_rows: list[dict], target_month: date) -> set[str]:
+        """Distinct signal *sources* with a signal inside the convergence window.
+
+        Mirrors `convergentSources` in lib/server/forecast-engine.ts so both
+        engines agree on when a forecast is "converging".
+        """
+        sources: set[str] = set()
+        for row in signal_rows:
+            sig = row.get("signals") or {}
+            source = sig.get("source")
+            if not source:
+                continue
+            detected = _parse_detected_at(sig.get("detected_at"))
+            if detected is None:
+                continue
+            if abs((target_month - detected).days) <= CONVERGENCE_WINDOW_DAYS:
+                sources.add(source)
+        return sources
 
     def _explain(
         self,

@@ -20,7 +20,7 @@ const DEFAULT_WEIGHTS: Record<ForecastFactorKey, number> = {
   job_posting: 0.1,
 };
 
-describe("forecast-constants parity with workers/connectors/forecast_constants.py", () => {
+describe("forecast-constants parity with workers/forecast_constants.py", () => {
   it("FTE multipliers match Python", () => {
     expect(FTE_PER_TENDER).toBe(2.0);
     expect(FTE_PER_NEWS).toBe(0.5);

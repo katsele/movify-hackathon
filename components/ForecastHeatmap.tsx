@@ -237,14 +237,14 @@ function ContributingSignalList({
 
 function Legend() {
   return (
-      <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px] text-neutral-500">
+    <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px] text-neutral-500">
       <div className="flex items-center gap-1.5">
         <span className="inline-block h-3 w-3 rounded bg-signal-gap" />
         Consultant gap ≥ 3 — act now
       </div>
       <div className="flex items-center gap-1.5">
         <span className="inline-block h-3 w-3 rounded bg-signal-watch" />
-        Gap 1–2 — watch
+        Gap 1–3 — watch
       </div>
       <div className="flex items-center gap-1.5">
         <span className="inline-block h-3 w-3 rounded bg-signal-covered" />

@@ -1,17 +1,26 @@
-/**
- * Display helper: integers for |v| ≥ 1 (whole consultants), one decimal for |v| < 1
- * so sub-unit gaps are not misread as 0 or 1.
- */
+const SUB_UNIT_THRESHOLD = 1;
+
 export function roundConsultantCount(value: number): number {
-  const abs = Math.abs(value);
-  if (abs >= 1) return Math.round(value);
-  return Math.round(value * 10) / 10;
+  if (Math.abs(value) < SUB_UNIT_THRESHOLD) {
+    return Math.round(value * 10) / 10;
+  }
+  return Math.round(value);
+}
+
+export function formatConsultantCount(value: number): string {
+  const rounded = roundConsultantCount(value);
+  if (Math.abs(rounded) < SUB_UNIT_THRESHOLD) {
+    return rounded.toFixed(1);
+  }
+  return `${rounded}`;
 }
 
 export function formatSignedConsultantGap(value: number): string {
   const rounded = roundConsultantCount(value);
 
-  if (rounded > 0) return `+${rounded}`;
-  if (rounded < 0) return `${rounded}`;
-  return "0";
+  if (rounded === 0) return "0";
+
+  const formatted =
+    Math.abs(rounded) < SUB_UNIT_THRESHOLD ? rounded.toFixed(1) : `${rounded}`;
+  return rounded > 0 ? `+${formatted}` : formatted;
 }

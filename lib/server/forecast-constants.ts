@@ -1,10 +1,11 @@
 /**
- * Shared forecast calibration — keep in sync with workers/connectors/forecast_constants.py
+ * Shared constants and helpers for the forecasting engine.
+ *
+ * The canonical spec lives in docs/forecast-formula.md. Both this module
+ * and workers/forecast_constants.py must stay in lockstep — the parity
+ * test asserts both engines produce identical numbers.
  */
 
-import type { ForecastFactorKey } from "@/lib/types";
-
-/** Raw Σ(confidence × decay) scaled to headcount-equivalent FTE. */
 export const FTE_PER_TENDER = 2.0;
 export const FTE_PER_NEWS = 0.5;
 export const FTE_PER_TREND = 0.3;
@@ -12,26 +13,53 @@ export const FTE_PER_POSTING = 1.0;
 
 export const CONFIDENCE_DIVISOR = 4;
 export const CONVERGENCE_BONUS = 0.2;
+export const CONFIDENCE_MAX = 1.0;
 
+export const CONVERGENCE_WINDOW_DAYS = 28;
+export const SIGNAL_RECENCY_WINDOW_DAYS = 90;
+
+/**
+ * Weighted average over active sources. Every estimate must already be
+ * in FTE units. Weights represent trust in each source's headcount
+ * estimate. Sources with a zero estimate are excluded (no contribution,
+ * no denominator share).
+ */
 export function predictDemand(
-  estimates: Record<ForecastFactorKey, number>,
-  weights: Record<ForecastFactorKey, number>,
+  estimates: Record<string, number>,
+  weights: Record<string, number>,
 ): number {
-  const active = Object.entries(estimates).filter(([, v]) => v > 0) as Array<
-    [ForecastFactorKey, number]
-  >;
-  if (!active.length) return 0;
-  const totalWeight = active.reduce((sum, [k]) => sum + weights[k], 0);
-  if (totalWeight <= 0) return 0;
-  return (
-    active.reduce((sum, [k, v]) => sum + v * weights[k], 0) / totalWeight
+  const activeEntries = Object.entries(estimates).filter(([, value]) => value > 0);
+  if (activeEntries.length === 0) return 0;
+
+  const totalWeight = activeEntries.reduce(
+    (sum, [source]) => sum + (weights[source] ?? 0),
+    0,
   );
+  if (totalWeight <= 0) return 0;
+
+  const weightedSum = activeEntries.reduce(
+    (sum, [source, value]) => sum + value * (weights[source] ?? 0),
+    0,
+  );
+  return weightedSum / totalWeight;
 }
 
+/**
+ * Simple, legible confidence formula (see docs/forecast-formula.md §4).
+ *
+ * `activeSources` is the number of scorers that produced a non-zero estimate.
+ * Callers derive this with `countActive(...)` — keeping the helper
+ * parameter-small makes the parity test with Python trivial.
+ */
 export function computeConfidence(
-  activeFactorCount: number,
+  activeSources: number,
   converging: boolean,
 ): number {
-  const base = Math.min(activeFactorCount / CONFIDENCE_DIVISOR, 1);
-  return Math.min(base + (converging ? CONVERGENCE_BONUS : 0), 1);
+  const base = Math.min(activeSources / CONFIDENCE_DIVISOR, CONFIDENCE_MAX);
+  const bonus = converging ? CONVERGENCE_BONUS : 0;
+  return Math.min(base + bonus, CONFIDENCE_MAX);
+}
+
+export function countActive(values: number[]): number {
+  return values.reduce((total, value) => (value > 0 ? total + 1 : total), 0);
 }

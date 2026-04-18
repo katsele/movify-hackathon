@@ -14,7 +14,7 @@ _ROOT = Path(__file__).resolve().parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from connectors.forecast_constants import (  # noqa: E402
+from forecast_constants import (  # noqa: E402
     CONFIDENCE_DIVISOR,
     CONVERGENCE_BONUS,
     FTE_PER_NEWS,

@@ -1,77 +1,111 @@
-# Forecast formula (V1)
+# Forecast formula — canonical spec
 
-This document is the canonical spec for how `predicted_demand`, `confidence`, and `gap` are computed. Both runtimes must match:
+This doc is the single source of truth for how `predicted_demand` and
+`confidence` are computed. Both the Python cron engine
+(`workers/forecast_engine.py`) and the TypeScript settings-recalc engine
+(`lib/server/forecast-engine.ts`) implement this spec and are asserted
+equal by a parity test.
 
-- **Python:** `workers/forecast_engine.py` (cron / `python -m workers.run_forecast`)
-- **TypeScript:** `lib/server/forecast-engine.ts` (settings recalc via `PUT /api/settings/source-weights`)
+---
 
-## Semantics
+## 1. Units
 
-| Column | Meaning |
-|--------|---------|
-| `predicted_demand` | Expected **consultant headcount** (FTE-equivalent) needed for that skill in that forecast month. |
-| `current_supply` | Count of consultants with that skill who are available (not on mission) by that month. |
-| `gap` | `predicted_demand - current_supply` (same units). |
+`predicted_demand` is expressed in **consultants (FTE-equivalent)**. Every
+per-source scorer must return a headcount-equivalent number, never a raw
+confidence score. `current_supply` is a head count of available
+consultants. `gap = predicted_demand − current_supply` is therefore a
+real consultants delta that the UI can label as such.
 
-External signal rows store `confidence ∈ [0, 1]` and recency decay. Raw scores `Σ confidence × decay` are **not** headcount; we multiply by source-specific **FTE calibration constants** so procurement/news/trends/postings contribute plausible consultant-scale numbers before aggregation.
+---
 
-`historical_pattern` is already in headcount units (weighted project starts per month × seasonality × bench pressure) — see PR #22.
+## 2. Per-source scorers (FTE units)
 
-## FTE calibration (external signals)
+| Source | Formula | Constant | Rationale |
+|---|---|---|---|
+| `crm_pipeline` | `Σ quantity × probability × proximity` | — | Already in FTE; a deal row literally says "we want N consultants". |
+| `procurement_notice` | `Σ confidence × decay × FTE_PER_TENDER` | `FTE_PER_TENDER = 2.0` | Federal/Belgian tenders explicitly ask for ~2 ETP on average (`docs/research/per-source-heuristics.md`). |
+| `news_event` | `Σ confidence × decay × FTE_PER_NEWS` | `FTE_PER_NEWS = 0.5` | Qualitative — one news item implies "some" uplift, conservative. |
+| `trend_spike` | `Σ confidence × decay × FTE_PER_TREND` | `FTE_PER_TREND = 0.3` | Lagging market-interest signal, weakest FTE predictor. |
+| `job_posting` | `Σ confidence × decay × FTE_PER_POSTING` | `FTE_PER_POSTING = 1.0` | Each public posting ≈ one role at one client. |
+| `historical_pattern` | `baseline_monthly × seasonal_index × (1 + BENCH_PRESSURE_GAIN × max(0, tightness))` | inherited from PR #22 | Weighted project starts / month, already FTE-equivalent. |
 
-After summing `confidence × decay` for each source family, multiply:
+`proximity` and `decay` are in [0, 1] and act as time-based dampeners.
+Multiplying by the FTE constant converts the signal-count/confidence
+into expected headcount at the target month.
 
-| Factor key | Multiplier | Rationale |
-|------------|------------|-----------|
-| `procurement_notice` | `FTE_PER_TENDER = 2.0` | Public tenders often request ~2 ETP; see `docs/research/per-source-heuristics.md`. |
-| `news_event` | `FTE_PER_NEWS = 0.5` | Qualitative press — weak implied headcount. |
-| `trend_spike` | `FTE_PER_TREND = 0.3` | Search interest lags and does not map 1:1 to roles. |
-| `job_posting` | `FTE_PER_POSTING = 1.0` | One live posting ≈ one role at one employer. |
+---
 
-`crm_pipeline` is already in headcount units: `Σ quantity × probability × proximity(month)`.
+## 3. Aggregation — weighted average over active sources
 
-## Source weights
-
-Weights are stored in `source_weights` (and defaults in code). They sum to **1.0** and represent **trust** in each factor’s headcount estimate, not a partition of a fixed budget.
-
-## Aggregation: weighted average over active sources
-
-Let `estimates[k]` be the headcount estimate for factor `k` (0 if inactive). Let `w[k]` be the configured weight.
-
-```
-active = { k | estimates[k] > 0 }
-if active is empty → predicted_demand = 0
-else
-  predicted_demand = Σ (estimates[k] × w[k]) / Σ w[k]  for k in active
-```
-
-So a single active source contributes its full estimate (no shrinkage from unused weights). Multiple sources contribute a trust-weighted average.
-
-When there is no “current” external/CRM signal, `historical_pattern` is still computed but multiplied by `HISTORY_DAMPEN_WITHOUT_CURRENT_SIGNAL` (0.5) before entering `estimates`.
-
-## Confidence
-
-Aligned across engines:
+Once each scorer emits FTE units, the demand is a **trust-weighted
+average over sources that contributed**, not a partition-weighted sum:
 
 ```
-activeFactors = count of factors with estimate > 0
-baseConfidence = min(activeFactors / 4, 1)
-converging = at least two distinct signal sources have detected_at within 28 days of the target month
-confidence = min(baseConfidence + (converging ? 0.2 : 0), 1)
+active = { source: estimate for source, estimate in estimates.items() if estimate > 0 }
+if not active:
+    predicted_demand = 0
+else:
+    total_weight     = Σ weights[source] for source in active
+    predicted_demand = Σ estimates[source] × weights[source] for source in active
+                     ────────────────────────────────────────
+                                      total_weight
 ```
 
-Signal **sources** use `signals.source` (e.g. `ted_procurement`, `news`). `historical_pattern` and `crm_pipeline` are not signal rows; convergence is based on external signal diversity only (same as TS `convergentSources`).
+Properties:
 
-## Rounding
+- **One source active** → `demand = that_source_estimate × 1.0`. No
+  artificial shrinkage when only CRM has fired.
+- **Multiple active** → trust-weighted blend; high-trust sources
+  dominate without drowning out others.
+- **Result is in FTE units** (dimensionally consistent with inputs).
 
-Persisted `predicted_demand`, `gap`, and `confidence` are rounded to 2 decimal places in storage. UI may show one decimal for values with `|x| < 1` to avoid rounding noise to 0 or 1.
+The historical dampening `HISTORY_DAMPEN_WITHOUT_CURRENT_SIGNAL = 0.5`
+(from PR #22) still applies: if no current signal fired, the historical
+estimate passed into the average is halved before the aggregation.
 
-## Regenerating forecasts (backfill)
+---
 
-After changing formula constants or weights, regenerate rows so both runtimes stay aligned:
+## 4. Confidence
 
-1. **TypeScript (settings path):** `PUT /api/settings/source-weights` with a valid body (weights summing to 100). This runs `generateAndPersistForecasts` in `lib/server/forecast-engine.ts`.
+```
+active_sources = count of scorers that produced a non-zero estimate
+base           = min(active_sources / 4, 1.0)
+converging     = at least 2 *different* signal sources detected within
+                 CONVERGENCE_WINDOW_DAYS of target month
+confidence     = min(base + (0.2 if converging else 0), 1.0)
+```
 
-2. **Python (worker path):** from `workers/`, with `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` set and dependencies installed (`pip install -r requirements.txt`), run `python run_forecast.py`.
+This is the simple, legible formula Sebastiaan can reason about. Both
+engines must implement this exact formula — no source-confidence caps,
+no exponential squashing, no product combination.
 
-Both upsert `forecasts` on `(forecast_month, skill_id)`; the latest run wins.
+---
+
+## 5. Shared constants (import from the constants modules)
+
+| Constant | Value | Used by |
+|---|---|---|
+| `FTE_PER_TENDER` | 2.0 | procurement scorer |
+| `FTE_PER_NEWS` | 0.5 | news scorer |
+| `FTE_PER_TREND` | 0.3 | trend scorer |
+| `FTE_PER_POSTING` | 1.0 | job-posting scorer |
+| `CONFIDENCE_DIVISOR` | 4 | confidence base |
+| `CONVERGENCE_BONUS` | 0.2 | confidence uplift |
+| `CONFIDENCE_MAX` | 1.0 | confidence cap |
+| `CONVERGENCE_WINDOW_DAYS` | 28 | convergence detection |
+| `SIGNAL_RECENCY_WINDOW_DAYS` | 90 | signal decay horizon |
+
+Historical-pattern constants (`HALF_LIFE_YEARS`, `BASELINE_WINDOW_MONTHS`,
+`BENCH_PRESSURE_GAIN`, `MIN_HISTORY_WEIGHTED_STARTS`,
+`BENCH_DURATION_WINDOW_MONTHS`, `HISTORY_DAMPEN_WITHOUT_CURRENT_SIGNAL`)
+are inherited unchanged from PR #22.
+
+---
+
+## 6. Parity test
+
+Both engines are exercised against an identical in-memory fixture
+(3 skills, 1 CRM deal, 1 TED signal, 1 news item, 1 historical project)
+and their `predicted_demand`, `confidence`, and `gap` outputs must match
+within a `1e-6` float tolerance. If this test fails, one engine drifted
+from the spec — fix the engine, not the test.
