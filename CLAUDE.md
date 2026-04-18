@@ -164,6 +164,10 @@ The forecast engine combines five signal types with configurable weights:
 
 **Output:** A rolling 12-week forecast per skill, with predicted demand, current supply, gap, confidence, contributing signal IDs, and a human-readable explanation.
 
+### Signal skill tagging
+
+Text-heavy connectors (`news_intelligence`, `ted_procurement`, `google_trends`) tag each signal's skills via `LLMSkillExtractor` — a Claude Haiku call that takes the signal text plus per-source context and returns `{skill_id, confidence}` entries constrained to the existing taxonomy. The handcrafted PRIORS (client × event_type → skills) are embedded in the system prompt as interpretive guidance; the LLM grounds its tags in the article text rather than blindly applying priors. Requires `ANTHROPIC_API_KEY` in env — without it, connectors run but emit no skill tags.
+
 ## Connector pattern
 
 All Python connectors follow the same interface (see `docs/architecture.md` Section 4):
