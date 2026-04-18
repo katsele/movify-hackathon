@@ -3,10 +3,10 @@
 Fetches notices from `POST /v3/notices/search` using the Expert Search query
 syntax. One request per CPV code (the search parameter takes a scalar). Each
 response notice is transformed into a `signals` row plus `signal_skills`
-entries extracted by the shared `SkillExtractor`.
+entries tagged by the shared `LLMSkillExtractor` (Claude Haiku).
 
-Confidence is post-processed down to 0.8 per `docs/research/per-source-heuristics.md §2`
-(CPV-anchored procurement text sits at 0.75–0.85). The upsert on `url` makes
+Confidence is judged per-signal by the LLM against the taxonomy and CPV
+context, replacing the old fixed `0.80` override. The upsert on `url` makes
 reruns idempotent.
 """
 from __future__ import annotations
@@ -18,7 +18,7 @@ from typing import Any, Iterable
 import httpx
 
 from .base import BaseConnector
-from .skill_extractor import SkillExtractor
+from .llm_skill_extractor import LLMSkillExtractor
 
 log = logging.getLogger(__name__)
 
@@ -31,8 +31,7 @@ CPV_LABELS: dict[str, str] = {
     "73220000": "Development consultancy",
 }
 
-TED_PROCUREMENT_CONFIDENCE = 0.80  # per per-source-heuristics.md §2
-LOOKBACK_DAYS = 60                  # generous window → Story 4 AC6 wants ≥5 hits
+LOOKBACK_DAYS = 60  # generous window → Story 4 AC6 wants ≥5 hits
 
 
 class TEDProcurementConnector(BaseConnector):
@@ -60,7 +59,7 @@ class TEDProcurementConnector(BaseConnector):
 
     def __init__(self, supabase_url: str, supabase_key: str) -> None:
         super().__init__(supabase_url, supabase_key)
-        self.extractor = SkillExtractor(self.db)
+        self.extractor = LLMSkillExtractor(self.db)
 
     # -- fetch --------------------------------------------------------------
 
@@ -110,17 +109,22 @@ class TEDProcurementConnector(BaseConnector):
                 title = self._pick_lang(notice.get("BT-21-Lot")) or f"TED notice {pub_number}"
 
             skill_text = self._build_skill_text(notice)
-            extracted = [
-                {"skill_id": m["skill_id"], "confidence": TED_PROCUREMENT_CONFIDENCE}
-                for m in self.extractor.extract(skill_text)
-            ]
-            # Keep notices without matched skills — Sebastiaan reviews them to
-            # spot taxonomy gaps. recent_signals LEFT-joins signal_skills so
-            # skill-less notices still surface on the feed.
-
             cpv_codes = notice.get("classification-cpv") or []
             primary_cpv = self._primary_cpv(cpv_codes, notice.get("_matched_cpv"))
             buyer_name = self._first(notice.get("organisation-name-buyer"))
+            extracted = self.extractor.extract(
+                skill_text,
+                {
+                    "source_type": "procurement",
+                    "cpv_code": primary_cpv,
+                    "cpv_label": CPV_LABELS.get(primary_cpv or "", None),
+                    "buyer": buyer_name,
+                    "notice_type": notice.get("notice-type"),
+                },
+            )
+            # Keep notices without matched skills — Sebastiaan reviews them to
+            # spot taxonomy gaps. recent_signals LEFT-joins signal_skills so
+            # skill-less notices still surface on the feed.
 
             raw_data: dict[str, Any] = {
                 "contracting_authority": buyer_name,
@@ -177,7 +181,7 @@ class TEDProcurementConnector(BaseConnector):
                     {
                         "signal_id": signal_id,
                         "skill_id": match["skill_id"],
-                        "confidence": match.get("confidence", TED_PROCUREMENT_CONFIDENCE),
+                        "confidence": match.get("confidence", 0.5),
                     }
                 ).execute()
             loaded += 1

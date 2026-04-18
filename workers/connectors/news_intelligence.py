@@ -1,26 +1,19 @@
 """News-intelligence connector — Belgian corporate announcements → skill priors.
 
-Two-pass pipeline (Tier D per `docs/research/per-source-heuristics.md §8`):
+Two-pass pipeline:
 
-  Pass 1 — entity + event extraction:
-    - Regex-match each entry's (title + summary) against the target-client
-      alias list. First client match wins.
-    - Regex-match against the event-type lexicon. Multiple event types are
-      allowed per entry.
+  Pass 1 — entity + event extraction (regex):
+    - Match each entry's (title + summary) against the target-client alias list
+      and the event-type lexicon. Triage: any entry matching either passes through.
 
-  Pass 2 — priors lookup (inference, not extraction):
-    - For each matched (client, event_type), look up likely-skill-demand in
-      `PRIORS[(client_key, event_type)]`.
-    - Fall back to `PRIORS[(industry, event_type)]`, then to `PRIORS[("*", event_type)]`.
-    - If a client matched but no event did, fall back to *all* priors registered
-      for that client/industry, capped at 0.4 confidence.
-    - Resolve skill names to skill IDs via a one-shot skills table load.
-
-  Triage (instead of hard filter):
-    - Any entry matching *either* a client or an event passes through.
-    - A `score` in [0, 1] is written to raw_data so the UI can rank/threshold.
-    - Entries that resolve to zero skills are still dropped — without a skill
-      tag, a signal cannot inform the forecast.
+  Pass 2 — LLM skill tagging (Claude Haiku):
+    - Delegate skill extraction to `LLMSkillExtractor`, which combines the
+      taxonomy, the handcrafted PRIORS table, and the article text. The LLM
+      grounds its tags in what the article actually says rather than relying
+      purely on industry priors.
+    - A `score` in [0, 1] is still written to raw_data so the UI can rank.
+    - Entries that resolve to zero skills are dropped — without a skill tag,
+      a signal cannot inform the forecast.
 """
 from __future__ import annotations
 
@@ -32,10 +25,10 @@ from typing import Any
 import feedparser
 
 from .base import BaseConnector
+from .llm_skill_extractor import LLMSkillExtractor
 from .news_clients import TARGET_CLIENTS, TargetClient
 from .news_events import EVENT_KEYWORDS
 from .news_feeds import NEWS_FEEDS, NewsFeed
-from .news_priors import PRIORS
 
 log = logging.getLogger(__name__)
 
@@ -46,15 +39,11 @@ class NewsIntelligenceConnector(BaseConnector):
 
     def __init__(self, supabase_url: str, supabase_key: str) -> None:
         super().__init__(supabase_url, supabase_key)
-        self._skill_name_to_id = self._load_skill_index()
+        self._llm_extractor = LLMSkillExtractor(self.db)
         self._client_patterns = self._compile_client_patterns()
         self._event_patterns = self._compile_event_patterns()
 
     # -- index preloading ---------------------------------------------------
-
-    def _load_skill_index(self) -> dict[str, str]:
-        response = self.db.table("skills").select("id, name").execute()
-        return {row["name"].lower(): row["id"] for row in (response.data or [])}
 
     @staticmethod
     def _compile_client_patterns() -> list[tuple[TargetClient, re.Pattern[str]]]:
@@ -118,14 +107,28 @@ class NewsIntelligenceConnector(BaseConnector):
             if client is None and not event_types:
                 dropped_neither += 1
                 continue
-            extracted, priors_tier = self._infer_skills(client, event_types)
+
+            llm_context: dict[str, Any] = {
+                "source_type": "news",
+                "outlet": entry["outlet"],
+                "language": entry["language"],
+                "event_type": event_types[0] if event_types else None,
+                "matched_events": event_types,
+            }
+            if client is not None:
+                llm_context["client"] = client.legal_name
+                llm_context["client_key"] = client.key
+                llm_context["industry"] = client.industry
+            extracted = self._llm_extractor.extract(text, llm_context)
             if not extracted:
                 dropped_no_skills += 1
                 continue
+
+            match_tier = self._match_tier(client, event_types)
             score = self._score_signal(
                 client=client,
                 event_types=event_types,
-                priors_tier=priors_tier,
+                match_tier=match_tier,
                 detected_at=entry["published"],
             )
             raw_data: dict[str, Any] = {
@@ -134,7 +137,8 @@ class NewsIntelligenceConnector(BaseConnector):
                 "summary": entry["summary"][:500],
                 "event_type": event_types[0] if event_types else None,
                 "matched_events": event_types,
-                "priors_tier": priors_tier,
+                "priors_tier": match_tier,
+                "tagger": "llm_haiku",
                 "score": round(score, 3),
             }
             if client is not None:
@@ -172,61 +176,24 @@ class NewsIntelligenceConnector(BaseConnector):
                 hits.append(event_type)
         return hits
 
-    def _infer_skills(
-        self, client: TargetClient | None, event_types: list[str]
-    ) -> tuple[list[dict], str]:
-        """Return (extracted_skills, tier).
+    @staticmethod
+    def _match_tier(client: TargetClient | None, event_types: list[str]) -> str:
+        """Summarise how specific the Pass 1 match was — fed to raw_data and scoring.
 
-        `tier` describes which priors layer fired — useful for scoring and
-        surfaced in raw_data so the eval panel can explain the confidence.
-        Values: "exact" | "industry" | "wildcard" | "client_default" | "none".
+        Values: "exact" (client + event) | "client_default" (client only) |
+        "wildcard" (event only).
         """
-        seen: dict[str, float] = {}  # skill_id -> best confidence
-        tier = "none"
-        tier_rank = {"none": 0, "client_default": 1, "wildcard": 2, "industry": 3, "exact": 4}
-
-        def _record(priors: list[tuple[str, float]], hit_tier: str, cap: float | None = None) -> None:
-            nonlocal tier
-            for skill_name, confidence in priors:
-                skill_id = self._skill_name_to_id.get(skill_name.lower())
-                if skill_id is None:
-                    log.debug("priors reference unknown skill %r", skill_name)
-                    continue
-                effective = min(confidence, cap) if cap is not None else confidence
-                if seen.get(skill_id, 0.0) < effective:
-                    seen[skill_id] = effective
-                if tier_rank[hit_tier] > tier_rank[tier]:
-                    tier = hit_tier
-
         if client is not None and event_types:
-            for event_type in event_types:
-                if (client.key, event_type) in PRIORS:
-                    _record(PRIORS[(client.key, event_type)], "exact")
-                elif (client.industry, event_type) in PRIORS:
-                    _record(PRIORS[(client.industry, event_type)], "industry")
-                elif ("*", event_type) in PRIORS:
-                    _record(PRIORS[("*", event_type)], "wildcard", cap=0.4)
-        elif client is not None:
-            # Client hit but no event matched — sweep every prior registered
-            # for this client or industry, capped because there's no event
-            # context narrowing it.
-            for (key, _event), priors in PRIORS.items():
-                if key == client.key or key == client.industry:
-                    _record(priors, "client_default", cap=0.4)
-        elif event_types:
-            # Event hit but no client — only wildcard priors can help.
-            for event_type in event_types:
-                if ("*", event_type) in PRIORS:
-                    _record(PRIORS[("*", event_type)], "wildcard", cap=0.4)
-
-        extracted = [{"skill_id": sid, "confidence": conf} for sid, conf in seen.items()]
-        return extracted, tier
+            return "exact"
+        if client is not None:
+            return "client_default"
+        return "wildcard"
 
     @staticmethod
     def _score_signal(
         client: TargetClient | None,
         event_types: list[str],
-        priors_tier: str,
+        match_tier: str,
         detected_at: str,
     ) -> float:
         """Compose a 0-1 relevance score for the UI to rank/threshold on.
@@ -234,7 +201,7 @@ class NewsIntelligenceConnector(BaseConnector):
         Weights:
           - client matched: 0.4
           - event matched:  0.3
-          - priors tier:    0.2 exact / 0.15 industry / 0.10 wildcard|client_default
+          - match tier:     0.2 exact / 0.1 client_default|wildcard
           - recency:        up to 0.1 (linear decay over 14 days)
         """
         score = 0.0
@@ -242,7 +209,7 @@ class NewsIntelligenceConnector(BaseConnector):
             score += 0.4
         if event_types:
             score += 0.3
-        score += {"exact": 0.2, "industry": 0.15}.get(priors_tier, 0.1)
+        score += 0.2 if match_tier == "exact" else 0.1
 
         try:
             published = datetime.fromisoformat(detected_at.replace("Z", "+00:00"))
