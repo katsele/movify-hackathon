@@ -183,7 +183,7 @@ CREATE TABLE signal_skills (
 CREATE TABLE forecasts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   generated_at TIMESTAMPTZ DEFAULT now(),
-  forecast_week DATE NOT NULL,           -- the week being predicted
+  forecast_month DATE NOT NULL,          -- first day of the month being predicted
   skill_id UUID REFERENCES skills(id),
   predicted_demand FLOAT,                -- predicted # of profiles needed
   current_supply INT,                    -- bench + rolling-off in that period
@@ -191,7 +191,7 @@ CREATE TABLE forecasts (
   confidence FLOAT,                      -- 0.0–1.0
   contributing_signals UUID[],           -- signal IDs that drove this prediction
   notes TEXT,                            -- human-readable explanation
-  UNIQUE(generated_at, forecast_week, skill_id)
+  UNIQUE(generated_at, forecast_month, skill_id)
 );
 
 -- Forecast accuracy tracking (retrospective validation)
@@ -210,7 +210,7 @@ CREATE TABLE forecast_actuals (
 CREATE INDEX idx_signals_source ON signals(source);
 CREATE INDEX idx_signals_detected_at ON signals(detected_at);
 CREATE INDEX idx_signals_region ON signals(region);
-CREATE INDEX idx_forecasts_week ON forecasts(forecast_week);
+CREATE INDEX idx_forecasts_month ON forecasts(forecast_month);
 CREATE INDEX idx_forecasts_skill ON forecasts(skill_id);
 CREATE INDEX idx_deals_status ON deals(status);
 CREATE INDEX idx_consultants_status ON consultants(current_status);
@@ -575,7 +575,7 @@ The V1 forecasting engine does **not** use ML. It uses a transparent, debuggable
 ```python
 class ForecastEngine:
     """
-    Produces a 12-week rolling forecast per skill.
+    Produces a 12-month rolling forecast per skill.
     Combines internal signals (CRM) with external signals using weighted scoring.
     """
 
@@ -589,17 +589,17 @@ class ForecastEngine:
         "news_event":          0.05,   # Qualitative signal
     }
 
-    def generate_forecast(self, skill_id: str, weeks_ahead: int = 12):
+    def generate_forecast(self, skill_id: str, months_ahead: int = 12):
         """Generate demand forecast for a specific skill."""
 
-        weekly_scores = []
-        for week_offset in range(1, weeks_ahead + 1):
-            target_week = self._week_from_now(week_offset)
+        monthly_scores = []
+        for month_offset in range(1, months_ahead + 1):
+            target_month = self._month_from_now(month_offset)
 
             # Score each signal type
-            crm_score = self._score_crm_pipeline(skill_id, target_week)
-            procurement_score = self._score_procurement(skill_id, target_week)
-            historical_score = self._score_historical_pattern(skill_id, target_week)
+            crm_score = self._score_crm_pipeline(skill_id, target_month)
+            procurement_score = self._score_procurement(skill_id, target_month)
+            historical_score = self._score_historical_pattern(skill_id, target_month)
             trend_score = self._score_trends(skill_id)
             posting_score = self._score_job_postings(skill_id)
 
@@ -620,31 +620,31 @@ class ForecastEngine:
             confidence = min(active_signals / 4.0, 1.0)
 
             # Current supply
-            supply = self._get_supply(skill_id, target_week)
+            supply = self._get_supply(skill_id, target_month)
 
-            weekly_scores.append({
-                "forecast_week": target_week,
+            monthly_scores.append({
+                "forecast_month": target_month,
                 "skill_id": skill_id,
                 "predicted_demand": raw_demand,
                 "current_supply": supply,
                 "gap": raw_demand - supply,
                 "confidence": confidence,
                 "contributing_signals": self._get_contributing_signal_ids(
-                    skill_id, target_week
+                    skill_id, target_month
                 ),
                 "notes": self._generate_explanation(
-                    skill_id, target_week,
+                    skill_id, target_month,
                     crm_score, procurement_score, historical_score,
                     trend_score, posting_score
                 )
             })
 
-        return weekly_scores
+        return monthly_scores
 
-    def _score_crm_pipeline(self, skill_id, target_week):
+    def _score_crm_pipeline(self, skill_id, target_month):
         """
         Score based on pipeline deals requesting this skill,
-        weighted by deal probability and proximity to target week.
+        weighted by deal probability and proximity to target month.
         """
         deals = self.db.table("deal_profiles") \
             .select("deals(expected_start, probability), quantity") \
@@ -653,16 +653,16 @@ class ForecastEngine:
 
         score = 0
         for deal in deals.data:
-            weeks_until_start = self._weeks_between(
+            months_until_start = self._months_between(
                 datetime.now(), deal["deals"]["expected_start"]
             )
-            # Higher score if deal starts near target week
-            proximity = max(0, 1 - abs(weeks_until_start - target_week) / 12)
+            # Higher score if deal starts near target month
+            proximity = max(0, 1 - abs(months_until_start - target_month) / 12)
             score += deal["quantity"] * deal["deals"]["probability"] * proximity
 
         return score
 
-    def _score_procurement(self, skill_id, target_week):
+    def _score_procurement(self, skill_id, target_month):
         """
         Score based on recent procurement notices mentioning this skill.
         Procurement notices are leading indicators (3-6 months ahead).
@@ -681,12 +681,12 @@ class ForecastEngine:
         )
         return score
 
-    def _score_historical_pattern(self, skill_id, target_week):
+    def _score_historical_pattern(self, skill_id, target_month):
         """
         Score based on historical seasonality.
         E.g., if Q1 historically has high demand for this skill.
         """
-        target_month = target_week.month
+        month_of_year = target_month.month
         historical = self.db.table("project_skills") \
             .select("projects(started_at)") \
             .eq("skill_id", skill_id) \
@@ -699,9 +699,9 @@ class ForecastEngine:
             month_counts[month] = month_counts.get(month, 0) + 1
 
         total = sum(month_counts.values()) or 1
-        return month_counts.get(target_month, 0) / total
+        return month_counts.get(month_of_year, 0) / total
 
-    def _generate_explanation(self, skill_id, target_week, *scores):
+    def _generate_explanation(self, skill_id, target_month, *scores):
         """Generate human-readable explanation for the forecast."""
         skill = self.db.table("skills").select("name").eq("id", skill_id).single().execute()
         parts = []
@@ -730,7 +730,7 @@ forecaster-app/
 │   ├── layout.tsx                # Root layout with sidebar nav
 │   ├── page.tsx                  # Dashboard home (forecast overview)
 │   ├── forecast/
-│   │   ├── page.tsx              # 12-week heatmap view
+│   │   ├── page.tsx              # 12-month heatmap view
 │   │   └── [skillId]/page.tsx    # Skill drill-down
 │   ├── bench/
 │   │   └── page.tsx              # Current bench + pipeline view
@@ -759,20 +759,20 @@ forecaster-app/
 ### Key pages
 
 **Dashboard home (`/`)** — The Monday morning view:
-- 12-week forecast heatmap (top, full width)
+- 12-month forecast heatmap (top, full width)
 - Top 3 gap alerts (skills with largest predicted shortfall)
 - Recent high-confidence signals
 - Quick stats: bench size, pipeline value, forecast accuracy trend
 
 **Forecast heatmap (`/forecast`)** — The core visualization:
-- X-axis: weeks 1–12
+- X-axis: months 1–12
 - Y-axis: skills grouped by discipline
 - Cell color: demand intensity (green → yellow → red)
 - Cell overlay: bench coverage (hatched = covered, solid = gap)
 - Click cell → drill down to `/forecast/[skillId]`
 
 **Skill drill-down (`/forecast/[skillId]`)** — Signal explainability:
-- Demand curve (12 weeks) with confidence band
+- Demand curve (12 months) with confidence band
 - Current supply overlay
 - Contributing signals list (each clickable to source)
 - Historical pattern chart (same skill, past 12 months)
@@ -882,12 +882,12 @@ What to build in what order, optimised for a 1-day sprint:
 
 ### Block 3: Forecast + Dashboard (1.5h)
 
-7. **Run the forecast engine** — Generate 12-week forecasts, write to `forecasts` table
+7. **Run the forecast engine** — Generate 12-month forecasts, write to `forecasts` table
 8. **Scaffold Next.js app** — Create the basic layout with sidebar navigation
 9. **Build the forecast heatmap** — Recharts heatmap reading from `forecasts` table via Supabase
 10. **Build the bench overlay** — Show current supply vs. predicted demand per skill
 
-**Exit criteria:** A visible dashboard showing a 12-week forecast with bench gaps.
+**Exit criteria:** A visible dashboard showing a 12-month forecast with bench gaps.
 
 ### Block 4: Polish + demo (1.5h)
 

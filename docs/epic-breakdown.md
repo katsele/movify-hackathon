@@ -7,7 +7,7 @@
 
 ## Epic
 
-**Build a working Skills Demand Forecaster prototype** that ingests real Boond CRM data, listens to Belgian news and corporate announcements, and cross-references public procurement signals to produce a visible 12-week skill demand forecast with bench gap indicators, passing the "Sebastiaan sniff test."
+**Build a working Skills Demand Forecaster prototype** that ingests real Boond CRM data, listens to Belgian news and corporate announcements, and cross-references public procurement signals to produce a visible 12-month skill demand forecast with bench gap indicators, passing the "Sebastiaan sniff test."
 
 ### Epic hypothesis
 
@@ -39,7 +39,7 @@ We believe that combining Boond CRM pipeline data with **news and corporate anno
 
 **Why not step-by-step?** "Set up database" → "Write connectors" → "Build frontend" would produce stories that don't deliver value individually. Instead, each story delivers a visible, demo-able increment.
 
-**Why news before procurement?** Procurement is a higher-confidence signal; news is a higher-drama signal. A news-led demo ("KBC announces €200M AI investment → here's the AI engineer gap opening in week 6") lands faster than procurement alone. Procurement then corroborates the news hit — convergence across two independent sources is what the forecast engine is designed to weight heavily (per `docs/research/per-source-heuristics.md §8`).
+**Why news before procurement?** Procurement is a higher-confidence signal; news is a higher-drama signal. A news-led demo ("KBC announces €200M AI investment → here's the AI engineer gap opening in 6 months") lands faster than procurement alone. Procurement then corroborates the news hit — convergence across two independent sources is what the forecast engine is designed to weight heavily (per `docs/research/per-source-heuristics.md §8`).
 
 ---
 
@@ -58,7 +58,7 @@ We believe that combining Boond CRM pipeline data with **news and corporate anno
 - [ ] Supabase project created with core schema tables: `skills`, `consultants`, `consultant_skills`, `forecasts`
 - [ ] One skill manually seeded (e.g., "AI Engineering")
 - [ ] One consultant manually seeded with that skill, status "on_bench"
-- [ ] One forecast row manually inserted (week +4, predicted_demand=3, current_supply=1, gap=2)
+- [ ] One forecast row manually inserted (month +4, predicted_demand=3, current_supply=1, gap=2)
 - [ ] Next.js app deployed on Vercel, connected to Supabase
 - [ ] Dashboard page shows: skill name, forecast demand, current supply, gap — even if it's just a table or card
 - [ ] Live: data changes in Supabase → visible in dashboard
@@ -113,7 +113,7 @@ We believe that combining Boond CRM pipeline data with **news and corporate anno
 
 **Simple / complex split inside this story.** Per `per-source-heuristics.md §8`, the robust version requires LLM-based entity extraction plus a curated `client_industry_priors` table with an explicit review cadence. For the hackathon we ship the **simple version**: RSS + regex client matching + hand-authored priors for the demo set. The **complex version** (LLM two-pass entity+event extraction, priors editor UI, scheduled review cadence) is a V1 follow-up. If the 1h box overflows, ship the simple version and stop — the narrative still lands with 8 tagged news items.
 
-**Why third:** News is the most narratively compelling external layer and the demo-defining one. The "KBC announces AI push → AI engineer gap opens in week 6 on the heatmap" story is how the intelligence forecaster earns its name in front of Sebastiaan. It also anchors the **convergence pattern** that the forecast engine depends on: single news hits are low-confidence, but when a news hit, a procurement notice, and a pipeline deal all point at the same skill + client within a few weeks, that triangulation is what the forecast weights heavily.
+**Why third:** News is the most narratively compelling external layer and the demo-defining one. The "KBC announces AI push → AI engineer gap opens 6 months out on the heatmap" story is how the intelligence forecaster earns its name in front of Sebastiaan. It also anchors the **convergence pattern** that the forecast engine depends on: single news hits are low-confidence, but when a news hit, a procurement notice, and a pipeline deal all point at the same skill + client within a few months, that triangulation is what the forecast weights heavily.
 
 **Estimated effort:** 1 hour
 
@@ -135,28 +135,28 @@ We believe that combining Boond CRM pipeline data with **news and corporate anno
 - [ ] Extracted skills linked in `signal_skills` table
 - [ ] Dashboard: procurement notices appear in the same "Signals" feed as news, distinguishable by source badge, with title, contracting authority, detected skills, and link to TED
 - [ ] At least 5+ real procurement notices visible
-- [ ] **Convergence indicator:** where a skill appears in both a news signal and a procurement signal within a 4-week window, both signals render with a "converging" marker and are flagged for the forecast engine to weight up
+- [ ] **Convergence indicator:** where a skill appears in both a news signal and a procurement signal within a 1-month window, both signals render with a "converging" marker and are flagged for the forecast engine to weight up
 
-**Why fourth:** Procurement alone was the unique differentiator in the original plan; procurement *after news* is more valuable because it gives the forecaster a second independent source to cross-reference. The demo moment becomes "News said KBC is investing in AI. Procurement shows Smals just floated a federal AI framework contract. Forecast says: here's the aggregate AI-engineer gap in week 6." Convergence is the product, not any one source.
+**Why fourth:** Procurement alone was the unique differentiator in the original plan; procurement *after news* is more valuable because it gives the forecaster a second independent source to cross-reference. The demo moment becomes "News said KBC is investing in AI. Procurement shows Smals just floated a federal AI framework contract. Forecast says: here's the aggregate AI-engineer gap peaking in 6 months." Convergence is the product, not any one source.
 
 **Estimated effort:** 1 hour
 
 ---
 
-### Story 5: The forecast — 12-week heatmap with bench gap overlay (1.5h)
+### Story 5: The forecast — 12-month heatmap with bench gap overlay (1.5h)
 
 **The core deliverable. Turns CRM + news + procurement into a prediction.**
 
 **As a** talent lead,
-**I want to** see a 12-week rolling forecast heatmap showing predicted skill demand vs. my current bench coverage, with explicit signal-source contributions per cell,
-**so that** I can spot staffing gaps 6–8 weeks before they become urgent and understand *why* each prediction exists — which news hit, which procurement notice, which deal.
+**I want to** see a 12-month rolling forecast heatmap showing predicted skill demand vs. my current bench coverage, with explicit signal-source contributions per cell,
+**so that** I can spot staffing gaps 3–6 months before they become urgent and understand *why* each prediction exists — which news hit, which procurement notice, which deal.
 
 **Acceptance criteria:**
 
 - [ ] Forecast engine written (`workers/forecast_engine.py`): weighted aggregation of CRM pipeline, news intelligence signals, procurement signals, and a seasonal heuristic. Weights come from `docs/architecture.md` Section 5. Trend and ATS-posting weights are set to zero for the hackathon (activated in V1 when those connectors ship).
-- [ ] Confidence boost for convergence: when a skill is supported by signals from ≥2 independent sources within a 4-week window, its confidence score is raised (capped at 1.0). A cell backed only by CRM pipeline is clearly marked as lower-confidence.
-- [ ] Engine run once → `forecasts` table populated for all skills with signal coverage, including the `contributing_signals` JSONB with explicit signal IDs per week
-- [ ] Dashboard: heatmap visualization (recharts) — X-axis = weeks 1–12, Y-axis = skills by discipline
+- [ ] Confidence boost for convergence: when a skill is supported by signals from ≥2 independent sources within a 1-month window, its confidence score is raised (capped at 1.0). A cell backed only by CRM pipeline is clearly marked as lower-confidence.
+- [ ] Engine run once → `forecasts` table populated for all skills with signal coverage, including the `contributing_signals` JSONB with explicit signal IDs per month
+- [ ] Dashboard: heatmap visualization (recharts) — X-axis = months 1–12, Y-axis = skills by discipline
 - [ ] Cell colour = demand intensity (green → yellow → red). Low-confidence cells use reduced opacity + hatched pattern — never hide uncertainty.
 - [ ] Bench overlay: shows current supply vs. predicted demand per skill
 - [ ] Gap alerts: top 3 skills where predicted demand > available supply, highlighted prominently
@@ -183,7 +183,7 @@ We believe that combining Boond CRM pipeline data with **news and corporate anno
 - [ ] Demo script prepared:
   - bench view → "here's the capacity we have today"
   - signals view → "KBC just announced an AI push — here's the news hit, and here's the TED notice from Smals that corroborates it"
-  - forecast view → "here's the AI-engineer gap opening in week 6, with high confidence because two independent sources agree"
+  - forecast view → "here's the AI-engineer gap opening 6 months out, with high confidence because two independent sources agree"
   - drill into a gap → "here's what to do: hire, train, or subcontract"
 - [ ] Any broken UI elements or empty states handled gracefully
 - [ ] README in repo explaining what the prototype does and how to run it
@@ -202,7 +202,7 @@ We believe that combining Boond CRM pipeline data with **news and corporate anno
 | **1:00–2:30** | Story 2: Real bench | Real Movify data from Boond in the dashboard |
 | **2:30–3:30** | Story 3: News intelligence | Belgian news RSS + client priors → news signals with inferred skills |
 | **3:30–4:30** | Story 4: Procurement | TED procurement notices with skill extraction and convergence markers |
-| **4:30–6:00** | Story 5: Forecast | 12-week heatmap with bench gaps and convergence-boosted confidence |
+| **4:30–6:00** | Story 5: Forecast | 12-month heatmap with bench gaps and convergence-boosted confidence |
 | **6:00–6:30** | Story 6: Polish | Demo-ready, clean flow, narrative prepared |
 
 **Buffer:** Story 6 is the most cuttable if time runs short. Story 3 has an internal simple/complex split — if news extraction overflows the 1h box, ship the RSS + regex version immediately and defer the LLM entity pass to V1. The **minimum viable demo** is Stories 1–5 (skeleton + real bench + news + procurement + forecast). Trying to fit Story 6 at the expense of Story 4 or 5 would hollow out the narrative.

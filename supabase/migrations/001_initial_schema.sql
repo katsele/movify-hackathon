@@ -108,7 +108,7 @@ create table if not exists signal_skills (
 create table if not exists forecasts (
   id                    uuid primary key default gen_random_uuid(),
   generated_at          timestamptz default now(),
-  forecast_week         date not null,
+  forecast_month        date not null,
   skill_id              uuid references skills(id) on delete cascade,
   predicted_demand      float,
   current_supply        int,
@@ -116,7 +116,7 @@ create table if not exists forecasts (
   confidence            float,
   contributing_signals  uuid[],
   notes                 text,
-  unique (forecast_week, skill_id)
+  unique (forecast_month, skill_id)
 );
 
 -- Forecast accuracy tracking (retrospective validation)
@@ -132,7 +132,7 @@ create table if not exists forecast_actuals (
 create index if not exists idx_signals_source       on signals(source);
 create index if not exists idx_signals_detected_at  on signals(detected_at);
 create index if not exists idx_signals_region       on signals(region);
-create index if not exists idx_forecasts_week       on forecasts(forecast_week);
+create index if not exists idx_forecasts_month      on forecasts(forecast_month);
 create index if not exists idx_forecasts_skill      on forecasts(skill_id);
 create index if not exists idx_deals_status         on deals(status);
 create index if not exists idx_consultants_status   on consultants(current_status);

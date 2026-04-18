@@ -18,9 +18,9 @@ select
 on conflict (consultant_id, skill_id) do nothing;
 
 -- Forecast row ---------------------------------------------------------------
--- week +4, predicted_demand=3, current_supply=1, gap=2
+-- month +4, predicted_demand=3, current_supply=1, gap=2
 insert into forecasts (
-  forecast_week,
+  forecast_month,
   skill_id,
   predicted_demand,
   current_supply,
@@ -29,11 +29,11 @@ insert into forecasts (
   notes
 )
 select
-  (date_trunc('week', current_date) + interval '4 weeks')::date,
+  (date_trunc('month', current_date) + interval '4 months')::date,
   (select id from skills where name = 'AI Engineering'),
   3,
   1,
   2,
   0.5,
   'Story 1 seed'
-on conflict (forecast_week, skill_id) do nothing;
+on conflict (forecast_month, skill_id) do nothing;

@@ -7,7 +7,7 @@ import {
   formatSignedConsultantGap,
   roundConsultantCount,
 } from "@/lib/consultant-counts";
-import { summarizeForecastCells } from "@/lib/forecast-display";
+import { monthLabel, summarizeForecastCells } from "@/lib/forecast-display";
 import type { ForecastCell } from "@/lib/mock-data";
 import type { SignalLookup } from "@/lib/hooks/useSignalsByIds";
 import type { SignalSource } from "@/lib/types";
@@ -19,7 +19,7 @@ import {
 
 interface ForecastHeatmapProps {
   cells: ForecastCell[];
-  weeks?: number;
+  months?: number;
   interactive?: boolean;
   signalsById?: Record<string, SignalLookup>;
   limitSkills?: number;
@@ -49,7 +49,7 @@ function confidenceOpacity(confidence: number) {
 
 export function ForecastHeatmap({
   cells,
-  weeks = 12,
+  months = 12,
   interactive = true,
   signalsById,
   limitSkills,
@@ -60,13 +60,16 @@ export function ForecastHeatmap({
     supply: roundConsultantCount(cell.supply),
     gap: roundConsultantCount(cell.gap),
   }));
-  const visibleRows = summarizeForecastCells(displayCells, weeks);
+  const visibleRows = summarizeForecastCells(displayCells, months);
   const rows =
     typeof limitSkills === "number"
       ? visibleRows.slice(0, limitSkills)
       : visibleRows;
 
-  const weekLabels = Array.from({ length: weeks }, (_, i) => `W${i + 1}`);
+  const monthHeaders = Array.from({ length: months }, (_, i) => ({
+    offset: i + 1,
+    label: monthLabel(i + 1),
+  }));
 
   if (rows.length === 0) {
     return (
@@ -84,9 +87,9 @@ export function ForecastHeatmap({
             <th className="sticky left-0 bg-transparent text-left font-medium text-neutral-500 pr-3 min-w-[180px]">
               Skill
             </th>
-            {weekLabels.map((label) => (
+            {monthHeaders.map(({ offset, label }) => (
               <th
-                key={label}
+                key={offset}
                 className="text-center font-mono text-[11px] font-normal text-neutral-500 w-10 tabular"
               >
                 {label}
@@ -107,6 +110,7 @@ export function ForecastHeatmap({
                   </div>
                 </td>
                 {skill.cells.map((cell) => {
+                  const cellMonth = monthLabel(cell.month);
                   const cellNode = (
                     <div
                       className={cn(
@@ -122,13 +126,13 @@ export function ForecastHeatmap({
                     </div>
                   );
                   return (
-                    <td key={cell.week} className="p-0">
+                    <td key={cell.month} className="p-0">
                       <Tooltip>
                         <TooltipTrigger asChild>
                           {interactive ? (
                             <Link
                               href={`/forecast/${encodeURIComponent(skill.skill)}`}
-                              aria-label={`${skill.skill} week ${cell.week}`}
+                              aria-label={`${skill.skill} ${cellMonth}`}
                             >
                               {cellNode}
                             </Link>
@@ -139,7 +143,7 @@ export function ForecastHeatmap({
                         <TooltipContent side="top" className="max-w-xs">
                           <div className="space-y-0.5">
                             <div className="font-semibold">
-                              {skill.skill} · W{cell.week}
+                              {skill.skill} · {cellMonth}
                             </div>
                             <div className="tabular">
                               Demand: <span className="font-mono">{cell.demand}</span>

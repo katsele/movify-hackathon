@@ -102,7 +102,7 @@ A broad set of forward-looking signals, far beyond vacancy scraping:
 **Layer 3 — Forecasting engine**
 Combines Layers 1 and 2 using GenAI-powered pattern extraction to produce:
 
-- A rolling **12-week heatmap** of anticipated skill demand vs. current bench coverage
+- A rolling **12-month heatmap** of anticipated skill demand vs. current bench coverage
 - **Gap alerts**: skills where demand is likely to outpace your supply
 - **Confidence scores** per prediction based on signal strength and convergence
 - **Actionable triggers**: recruit now / upskill now / activate freelancer network / flag for cross-firm sharing
@@ -115,7 +115,7 @@ Product management, service design, UX research, UX/UI design, AI strategy, AI/M
 
 | Feature | What it does |
 |---|---|
-| **12-week demand forecast** | Rolling prediction of which skills clients will request, with confidence scores and bench gap indicators |
+| **12-month demand forecast** | Rolling prediction of which skills clients will request, with confidence scores and bench gap indicators |
 | **Consulting demand pulse** | Real-time feed from TED/e-Procurement filtered by relevant CPV codes — a 3–6 month leading indicator no competitor offers |
 | **Market shift alerts** | Automated detection of demand inflections: "AI strategy demand up 34% QoQ in Brussels, driven by 4 new public-sector frameworks + KBC and BNP Paribas Fortis AI investment announcements" |
 | **Skill-level granularity** | Not just "developer" but React vs. Angular, AWS vs. Azure, LangChain vs. dbt — via NLP on multilingual posting text and tender documents |
@@ -157,7 +157,7 @@ Your firm becomes the one that walks into client meetings saying *"we see AI str
 
 ### What becomes possible
 
-- **Yield-managed staffing meetings** replace "what are you hearing?" anecdotes — with a 12-week forecast, confidence scores, and recommended actions on the table
+- **Yield-managed staffing meetings** replace "what are you hearing?" anecdotes — with a 12-month forecast, confidence scores, and recommended actions on the table
 - **Proactive client conversations** about upcoming skill needs, backed by procurement pipeline intelligence and industry signal analysis
 - **Targeted freelancer sourcing** for skills the model predicts will trend up, activated before the demand wave hits
 - **Evidence-based training budgets** directed at skills with demonstrable rising forecast demand — not gut feeling
@@ -199,7 +199,7 @@ Every PSA tool stops at resource scheduling. Every market intelligence tool stop
 
 ## Positioning statement
 
-> **For** managing partners and talent leads at Belgian digital consultancies **who** need to make proactive hiring and upskilling decisions months ahead of demand, **the Skills Demand Forecaster is** a predictive talent intelligence engine **that** combines CRM pipeline data with broad market signals to produce a rolling 12-week skill demand forecast with actionable staffing recommendations. **Unlike** Kantata, LinkedIn Talent Insights, Lightcast, or annual salary guides, **our product** is the first tool to bring yield management to IT consultancy staffing — fusing proprietary pipeline data with procurement intelligence, international market trends, and regulatory signals to predict demand rather than just describe it — at mid-market pricing, purpose-built for Belgium's fragmented labour market.
+> **For** managing partners and talent leads at Belgian digital consultancies **who** need to make proactive hiring and upskilling decisions months ahead of demand, **the Skills Demand Forecaster is** a predictive talent intelligence engine **that** combines CRM pipeline data with broad market signals to produce a rolling 12-month skill demand forecast with actionable staffing recommendations. **Unlike** Kantata, LinkedIn Talent Insights, Lightcast, or annual salary guides, **our product** is the first tool to bring yield management to IT consultancy staffing — fusing proprietary pipeline data with procurement intelligence, international market trends, and regulatory signals to predict demand rather than just describe it — at mid-market pricing, purpose-built for Belgium's fragmented labour market.
 
 ---
 

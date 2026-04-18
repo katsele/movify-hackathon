@@ -29,9 +29,9 @@ const STATIC_FILTERS: FilterDefinition[] = [
     id: "timeframe",
     label: "Timeframe",
     options: [
-      { value: "4", label: "4 weeks" },
-      { value: "8", label: "8 weeks" },
-      { value: "12", label: "12 weeks" },
+      { value: "3", label: "3 months" },
+      { value: "6", label: "6 months" },
+      { value: "12", label: "12 months" },
     ],
   },
 ];
@@ -66,7 +66,7 @@ export default function ForecastPage() {
   const filtered = active.discipline
     ? cells.filter((c) => c.discipline === active.discipline)
     : cells;
-  const weeks = active.timeframe ? Number(active.timeframe) : 12;
+  const months = active.timeframe ? Number(active.timeframe) : 12;
 
   const signalIds = filtered.flatMap((c) => c.contributingSignalIds ?? []);
   const signalsLookup = useSignalsByIds(signalIds);
@@ -75,7 +75,7 @@ export default function ForecastPage() {
     <div className="space-y-6">
       <PageHeader
         title="Forecast"
-        subtitle="Rolling 12-week demand heatmap. Click a cell to drill down."
+        subtitle="Rolling 12-month demand heatmap. Click a cell to drill down."
         lastUpdated="2 hours ago"
       />
       <FilterBar
@@ -101,7 +101,7 @@ export default function ForecastPage() {
           ) : (
             <ForecastHeatmap
               cells={filtered}
-              weeks={weeks}
+              months={months}
               signalsById={signalsLookup.data}
             />
           )}
