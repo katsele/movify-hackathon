@@ -22,7 +22,8 @@ export function useSignals(filters: SignalFilters = {}) {
         .limit(100);
 
       if (filters.source) query = query.eq("source", filters.source);
-      if (filters.skill) query = query.eq("skill_name", filters.skill);
+      if (filters.skill) query = query.contains("skill_names", [filters.skill]);
+      if (filters.region) query = query.eq("region", filters.region);
 
       const { data, error } = await query;
       if (error) throw error;

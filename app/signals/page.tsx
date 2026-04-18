@@ -4,14 +4,18 @@ import { useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { FilterBar, type FilterDefinition } from "@/components/FilterBar";
 import { SignalCard } from "@/components/SignalCard";
+import { SignalEvaluationPanel } from "@/components/SignalEvaluationPanel";
 import { Card, CardContent } from "@/components/ui/card";
+import { useSignals } from "@/lib/hooks/useSignals";
 import { MOCK_SIGNALS } from "@/lib/mock-data";
+import type { RecentSignal, SignalSource } from "@/lib/types";
 
 const FILTERS: FilterDefinition[] = [
   {
     id: "source",
     label: "Source",
     options: [
+      { value: "news_intelligence", label: "News" },
       { value: "ted_procurement", label: "Procurement" },
       { value: "google_trends", label: "Google Trends" },
       { value: "ats_greenhouse", label: "Job postings" },
@@ -32,7 +36,17 @@ const FILTERS: FilterDefinition[] = [
 export default function SignalsPage() {
   const [active, setActive] = useState<Record<string, string | undefined>>({});
 
-  const filtered = MOCK_SIGNALS.filter((s) => {
+  const live = useSignals({
+    source: active.source as SignalSource | undefined,
+  });
+
+  // Fall back to mocks when live data is empty (e.g. migration not applied).
+  const liveData = live.data ?? [];
+  const combined: RecentSignal[] = liveData.length
+    ? liveData
+    : (MOCK_SIGNALS as RecentSignal[]);
+
+  const filtered = combined.filter((s) => {
     if (active.source && s.source !== active.source) return false;
     if (active.discipline && s.discipline !== active.discipline) return false;
     return true;
@@ -43,7 +57,7 @@ export default function SignalsPage() {
       <PageHeader
         title="Signals"
         subtitle="Every ingested market intelligence signal, filterable."
-        lastUpdated="2 hours ago"
+        lastUpdated={liveData.length ? "live" : "mock data"}
       />
       <FilterBar
         filters={FILTERS}
@@ -52,14 +66,30 @@ export default function SignalsPage() {
       />
       <Card>
         <CardContent className="space-y-2 pt-4">
-          {filtered.length === 0 && (
+          {live.isLoading && (
+            <p className="text-xs text-muted-foreground">Loading signals…</p>
+          )}
+          {live.error && (
+            <p className="text-xs text-red-600">
+              Failed to load live signals: {live.error.message}
+            </p>
+          )}
+          {!live.isLoading && filtered.length === 0 && (
             <p className="text-xs text-muted-foreground">
               No signals match the current filters.
             </p>
           )}
-          {filtered.map((s) => (
-            <SignalCard key={s.title ?? ""} signal={s} />
+          {filtered.map((s, i) => (
+            <SignalCard
+              key={s.signal_id ?? `${s.title ?? "signal"}-${i}`}
+              signal={s}
+            />
           ))}
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="pt-4">
+          <SignalEvaluationPanel signals={liveData} />
         </CardContent>
       </Card>
     </div>

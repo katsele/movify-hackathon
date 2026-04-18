@@ -16,7 +16,9 @@ import {
 } from "@/components/ui/table";
 import { useForecast } from "@/lib/hooks/useForecast";
 import { useConsultants } from "@/lib/hooks/useBench";
+import { useSignals } from "@/lib/hooks/useSignals";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
+import type { RecentSignal } from "@/lib/types";
 
 export default function DashboardPage() {
   const cells = buildMockForecast();
@@ -34,6 +36,10 @@ export default function DashboardPage() {
   const topGapSkill = topGaps[0];
 
   const liveForecast = useForecast();
+  const liveSignals = useSignals();
+  const recentSignals: RecentSignal[] = liveSignals.data?.length
+    ? liveSignals.data
+    : (MOCK_SIGNALS as RecentSignal[]);
 
   return (
     <div className="space-y-6">
@@ -67,8 +73,8 @@ export default function DashboardPage() {
         />
         <KPICard
           label="New signals"
-          value={MOCK_SIGNALS.length}
-          unit="last 7 days"
+          value={recentSignals.length}
+          unit="last 30 days"
           delta={-4}
           deltaLabel="vs last week"
         />
@@ -158,8 +164,11 @@ export default function DashboardPage() {
             <CardTitle>Recent signals</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 pt-0">
-            {MOCK_SIGNALS.slice(0, 4).map((s) => (
-              <SignalCard key={s.title ?? ""} signal={s} />
+            {recentSignals.slice(0, 4).map((s, i) => (
+              <SignalCard
+                key={s.signal_id ?? `${s.title ?? "signal"}-${i}`}
+                signal={s}
+              />
             ))}
           </CardContent>
         </Card>
