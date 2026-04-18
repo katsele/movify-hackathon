@@ -21,6 +21,10 @@ import { useSignals } from "@/lib/hooks/useSignals";
 import { useSourceWeightsSettings } from "@/lib/hooks/useSourceWeightsSettings";
 import { useSkillByName } from "@/lib/hooks/useSkillByName";
 import { forecastToCells } from "@/lib/forecast-adapter";
+import {
+  formatSignedConsultantGap,
+  roundConsultantCount,
+} from "@/lib/consultant-counts";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
 import type { RecentSignal } from "@/lib/types";
 
@@ -44,13 +48,19 @@ export default function SkillDrilldownPage({
   const cells = usingMock
     ? buildMockForecast().filter((c) => c.skill === skillName)
     : liveCells;
+  const displayCells = cells.map((cell) => ({
+    ...cell,
+    demand: roundConsultantCount(cell.demand),
+    supply: roundConsultantCount(cell.supply),
+    gap: roundConsultantCount(cell.gap),
+  }));
 
   const relatedSignals: RecentSignal[] =
     liveSignals.data && liveSignals.data.length > 0
       ? liveSignals.data
       : (MOCK_SIGNALS.filter((s) => s.skill_name === skillName) as RecentSignal[]);
 
-  const curveData = cells
+  const curveData = displayCells
     .sort((a, b) => a.week - b.week)
     .map((c) => ({
       week: `W${c.week}`,
@@ -62,7 +72,7 @@ export default function SkillDrilldownPage({
 
   const avgConfidence =
     cells.reduce((s, c) => s + c.confidence, 0) / (cells.length || 1);
-  const totalGap = cells.reduce((s, c) => s + Math.max(0, c.gap), 0);
+  const totalGap = displayCells.reduce((s, c) => s + Math.max(0, c.gap), 0);
   const weightRows =
     sourceWeights.data?.settings ?? buildSourceWeightSettingsRows(undefined);
 
@@ -79,7 +89,7 @@ export default function SkillDrilldownPage({
       <PageHeader
         title={skillName}
         subtitle={
-          cells[0]?.discipline ??
+          displayCells[0]?.discipline ??
           skillLookup.data?.discipline ??
           "Skill drill-down"
         }
@@ -94,7 +104,7 @@ export default function SkillDrilldownPage({
             <span className="text-xs text-muted-foreground">
               Cumulative 12w gap:{" "}
               <span className="font-semibold text-foreground">
-                +{totalGap.toFixed(0)}
+                {formatSignedConsultantGap(totalGap)}
               </span>
             </span>
           </div>
@@ -143,7 +153,7 @@ export default function SkillDrilldownPage({
         </Card>
         <ActionCard
           title={`Start sourcing ${skillName} now`}
-          explanation={`Gap accumulates to +${totalGap.toFixed(0)} over 12 weeks. Convergence across pipeline, news and procurement signals points to sustained demand. Start referral outreach and earmark rolling-off profiles.`}
+          explanation={`Gap accumulates to ${formatSignedConsultantGap(totalGap)} over 12 weeks. Convergence across pipeline, news and procurement signals points to sustained demand. Start referral outreach and earmark rolling-off profiles.`}
           primaryAction={{ label: "Open referral brief" }}
           secondaryAction={{ label: "Pin to weekly digest" }}
         />
