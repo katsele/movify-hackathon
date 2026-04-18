@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import logging
 import math
-from datetime import date, datetime, timezone
+import statistics
+from dataclasses import dataclass, field
+from datetime import date, datetime, timedelta, timezone
 from typing import Any
 
 from supabase import Client, create_client
@@ -22,10 +24,31 @@ SOURCE_CONFIDENCE_CAPS: dict[str, float] = {
     "crm_pipeline": 0.50,
     "procurement_notice": 0.75,
     "news_event": 0.55,
-    "historical_pattern": 0.25,
+    "historical_pattern": 0.40,
     "trend_spike": 0.40,
     "job_posting": 0.55,
 }
+
+# Historical pattern constants -------------------------------------------------
+HALF_LIFE_YEARS = 2.0
+BENCH_PRESSURE_GAIN = 0.5
+MIN_HISTORY_WEIGHTED_STARTS = 6.0
+BASELINE_WINDOW_MONTHS = 24
+BENCH_DURATION_WINDOW_MONTHS = 18
+HISTORY_DAMPEN_WITHOUT_CURRENT_SIGNAL = 0.5
+
+
+@dataclass
+class HistoricalAggregate:
+    seasonal_index: dict[int, float] = field(
+        default_factory=lambda: {m: 1.0 for m in range(1, 13)}
+    )
+    weighted_monthly: dict[int, float] = field(
+        default_factory=lambda: {m: 0.0 for m in range(1, 13)}
+    )
+    baseline_monthly: float = 0.0
+    tightness: float = 0.0
+    skill_median_duration: float | None = None
 
 
 class ForecastEngine:
@@ -48,6 +71,8 @@ class ForecastEngine:
         self.db: Client = create_client(supabase_url, supabase_key)
         persisted = self._load_source_weights()
         self.weights = {**self.DEFAULT_WEIGHTS, **persisted, **(weights or {})}
+        self._history_cache: dict[str, HistoricalAggregate] | None = None
+        self._global_median_duration: float | None = None
 
     def _load_source_weights(self) -> dict[str, float]:
         try:
@@ -114,11 +139,9 @@ class ForecastEngine:
             has_current_signal = (
                 crm > 0 or procurement > 0 or news > 0 or trend > 0 or postings > 0
             )
-            historical = (
-                self._score_historical_pattern(skill_id, target_month)
-                if has_current_signal
-                else 0.0
-            )
+            historical = self._score_historical_pattern(skill_id, target_month)
+            if not has_current_signal:
+                historical *= HISTORY_DAMPEN_WITHOUT_CURRENT_SIGNAL
 
             raw_demand = (
                 crm * self.weights["crm_pipeline"]
@@ -169,6 +192,7 @@ class ForecastEngine:
                     ),
                     "notes": self._explain(
                         skill_id,
+                        target_month,
                         crm,
                         procurement,
                         news,
@@ -311,25 +335,142 @@ class ForecastEngine:
         return score
 
     def _score_historical_pattern(self, skill_id: str, target_month: date) -> float:
+        agg = self._get_historical_aggregate(skill_id)
+        if agg is None or agg.baseline_monthly <= 0:
+            return 0.0
+        pressure_mult = 1.0 + BENCH_PRESSURE_GAIN * max(0.0, agg.tightness)
+        return (
+            agg.baseline_monthly
+            * agg.seasonal_index.get(target_month.month, 1.0)
+            * pressure_mult
+        )
+
+    # -------------------------------------------------- historical aggregate --
+
+    def _get_historical_aggregate(self, skill_id: str) -> HistoricalAggregate | None:
+        if self._history_cache is None:
+            self._load_historical_aggregates()
+        assert self._history_cache is not None
+        return self._history_cache.get(skill_id)
+
+    def _load_historical_aggregates(self) -> None:
+        today = date.today()
+        starts_by_skill = self._fetch_historical_starts()
+        durations_by_skill = self._fetch_bench_durations(today)
+
+        all_durations = [d for ds in durations_by_skill.values() for d in ds]
+        self._global_median_duration = (
+            statistics.median(all_durations) if all_durations else None
+        )
+
+        cache: dict[str, HistoricalAggregate] = {}
+        skill_ids = set(starts_by_skill) | set(durations_by_skill)
+        for skill_id in skill_ids:
+            cache[skill_id] = self._build_historical_aggregate(
+                starts_by_skill.get(skill_id, []),
+                durations_by_skill.get(skill_id, []),
+                today,
+            )
+        self._history_cache = cache
+
+    def _fetch_historical_starts(self) -> dict[str, list[date]]:
         rows = (
             self.db.table("project_skills")
-            .select("headcount, projects(started_at)")
-            .eq("skill_id", skill_id)
+            .select("skill_id, projects(started_at, source_kind)")
             .execute()
             .data
             or []
         )
-        if not rows:
-            return 0.0
-        month_counts: dict[int, int] = {}
+        out: dict[str, list[date]] = {}
         for row in rows:
-            started_at = (row.get("projects") or {}).get("started_at")
-            if not started_at:
+            project = row.get("projects") or {}
+            if project.get("source_kind") != "history":
                 continue
-            month = date.fromisoformat(started_at).month
-            month_counts[month] = month_counts.get(month, 0) + row["headcount"]
-        total = sum(month_counts.values()) or 1
-        return month_counts.get(target_month.month, 0) / total
+            started = project.get("started_at")
+            if not started:
+                continue
+            try:
+                start_date = date.fromisoformat(started)
+            except (ValueError, TypeError):
+                continue
+            out.setdefault(row["skill_id"], []).append(start_date)
+        return out
+
+    def _fetch_bench_durations(self, today: date) -> dict[str, list[int]]:
+        rows = (
+            self.db.table("consultant_bench_history_skills")
+            .select(
+                "skill_id, consultant_bench_history(duration_days, bench_ended_at)"
+            )
+            .execute()
+            .data
+            or []
+        )
+        cutoff = today - timedelta(days=BENCH_DURATION_WINDOW_MONTHS * 30)
+        out: dict[str, list[int]] = {}
+        for row in rows:
+            spell = row.get("consultant_bench_history") or {}
+            duration = spell.get("duration_days")
+            ended_raw = spell.get("bench_ended_at")
+            if duration is None or not ended_raw:
+                continue
+            try:
+                end_date = date.fromisoformat(ended_raw)
+            except (ValueError, TypeError):
+                continue
+            if end_date < cutoff:
+                continue
+            try:
+                out.setdefault(row["skill_id"], []).append(int(duration))
+            except (TypeError, ValueError):
+                continue
+        return out
+
+    def _build_historical_aggregate(
+        self,
+        starts: list[date],
+        durations: list[int],
+        today: date,
+    ) -> HistoricalAggregate:
+        agg = HistoricalAggregate()
+        if not starts and not durations:
+            return agg
+
+        baseline_cutoff = today - timedelta(days=BASELINE_WINDOW_MONTHS * 30)
+        total_weighted = 0.0
+        baseline_weighted = 0.0
+        for start in starts:
+            years_ago = (today - start).days / 365.25
+            if years_ago < 0:
+                continue
+            weight = math.exp(-years_ago / HALF_LIFE_YEARS)
+            agg.weighted_monthly[start.month] += weight
+            total_weighted += weight
+            if start >= baseline_cutoff:
+                baseline_weighted += weight
+
+        if total_weighted >= MIN_HISTORY_WEIGHTED_STARTS:
+            avg = total_weighted / 12.0
+            if avg > 0:
+                agg.seasonal_index = {
+                    m: agg.weighted_monthly[m] / avg for m in range(1, 13)
+                }
+
+        agg.baseline_monthly = baseline_weighted / float(BASELINE_WINDOW_MONTHS)
+
+        if durations:
+            skill_median = float(statistics.median(durations))
+            agg.skill_median_duration = skill_median
+            if (
+                self._global_median_duration is not None
+                and self._global_median_duration > 0
+            ):
+                tightness = (
+                    self._global_median_duration - skill_median
+                ) / self._global_median_duration
+                agg.tightness = max(-1.0, min(1.0, tightness))
+
+        return agg
 
     def _get_supply(self, skill_id: str, target_month: date) -> int:
         rows = (
@@ -374,6 +515,7 @@ class ForecastEngine:
     def _explain(
         self,
         skill_id: str,
+        target_month: date,
         crm: float,
         procurement: float,
         news: float,
@@ -400,7 +542,19 @@ class ForecastEngine:
         if news > 0:
             parts.append(f"Belgian news coverage signals demand for {name}")
         if historical > 0:
-            parts.append("Seasonality: demand typically rises this quarter")
+            agg = self._get_historical_aggregate(skill_id)
+            if agg is not None:
+                index = agg.seasonal_index.get(target_month.month, 1.0)
+                if index > 1.2:
+                    parts.append(f"Historically busier than average this month for {name}")
+                elif index < 0.8:
+                    parts.append(f"Historically quieter than average this month for {name}")
+                else:
+                    parts.append(f"Baseline historical demand for {name}")
+                if agg.tightness > 0.4:
+                    parts.append(f"Bench clears fast for {name} — market is tight")
+            else:
+                parts.append(f"Historical baseline for {name}")
         if trend > 0:
             parts.append(f"Trend signals show growing attention around {name}")
         if postings > 0:

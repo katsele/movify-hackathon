@@ -8,6 +8,7 @@ import { DemandCurve } from "@/components/DemandCurve";
 import { SignalCard } from "@/components/SignalCard";
 import { ActionCard } from "@/components/ActionCard";
 import { ConfidenceIndicator } from "@/components/ConfidenceIndicator";
+import { SeasonalityStrip } from "@/components/SeasonalityStrip";
 import {
   SignalWeightChart,
 } from "@/components/SignalWeightChart";
@@ -20,6 +21,7 @@ import { useForecast } from "@/lib/hooks/useForecast";
 import { useSignals } from "@/lib/hooks/useSignals";
 import { useSourceWeightsSettings } from "@/lib/hooks/useSourceWeightsSettings";
 import { useSkillByName } from "@/lib/hooks/useSkillByName";
+import { useSkillHistory } from "@/lib/hooks/useSkillHistory";
 import { forecastToCells } from "@/lib/forecast-adapter";
 import { monthLabel } from "@/lib/forecast-display";
 import {
@@ -41,6 +43,7 @@ export default function SkillDrilldownPage({
   const liveForecast = useForecast(skillLookup.data?.id);
   const liveSignals = useSignals({ skill: skillName });
   const sourceWeights = useSourceWeightsSettings();
+  const skillHistory = useSkillHistory();
 
   const liveCells = liveForecast.data
     ? forecastToCells(liveForecast.data)
@@ -61,15 +64,29 @@ export default function SkillDrilldownPage({
       ? liveSignals.data
       : (MOCK_SIGNALS.filter((s) => s.skill_name === skillName) as RecentSignal[]);
 
+  const history = skillLookup.data?.id
+    ? skillHistory.data?.skills[skillLookup.data.id]
+    : undefined;
+  const now = new Date();
+  const currentMonthIndex = now.getUTCMonth();
+
   const curveData = displayCells
     .sort((a, b) => a.month - b.month)
-    .map((c) => ({
-      month: monthLabel(c.month),
-      demand: c.demand,
-      supply: c.supply,
-      confidenceLow: Math.max(0, c.demand - 1),
-      confidenceHigh: c.demand + 1,
-    }));
+    .map((c) => {
+      const calendarMonth = ((currentMonthIndex + c.month) % 12) + 1;
+      const range = history?.monthly_history_range?.[calendarMonth];
+      return {
+        month: monthLabel(c.month),
+        demand: c.demand,
+        supply: c.supply,
+        confidenceLow: Math.max(0, c.demand - 1),
+        confidenceHigh: c.demand + 1,
+        historicalMin: range?.min,
+        historicalMax: range?.max,
+      };
+    });
+
+  const nextForecastMonth = ((currentMonthIndex + 1) % 12) + 1;
 
   const avgConfidence =
     cells.reduce((s, c) => s + c.confidence, 0) / (cells.length || 1);
@@ -118,7 +135,7 @@ export default function SkillDrilldownPage({
             <CardTitle>Demand vs supply — next 12 months</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <DemandCurve data={curveData} />
+            <DemandCurve data={curveData} showHistoricalBand />
           </CardContent>
         </Card>
         <Card>
@@ -132,6 +149,53 @@ export default function SkillDrilldownPage({
           </CardContent>
         </Card>
       </div>
+
+      {history ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Historical pattern</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 pt-0">
+            <SeasonalityStrip
+              seasonalIndex={history.seasonal_index_by_month}
+              weightedMonthly={history.weighted_monthly}
+              highlightMonth={nextForecastMonth}
+            />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-[11px]">
+              <div>
+                <div className="text-muted-foreground">Baseline</div>
+                <div className="font-mono text-sm">
+                  {history.baseline_monthly.toFixed(2)} / mo
+                </div>
+              </div>
+              <div>
+                <div className="text-muted-foreground">Bench tightness</div>
+                <div className="font-mono text-sm">
+                  {history.tightness > 0 ? "+" : ""}
+                  {history.tightness.toFixed(2)}
+                </div>
+              </div>
+              <div>
+                <div className="text-muted-foreground">Skill bench median</div>
+                <div className="font-mono text-sm">
+                  {history.skill_median_duration !== null
+                    ? `${Math.round(history.skill_median_duration)}d`
+                    : "—"}
+                </div>
+              </div>
+              <div>
+                <div className="text-muted-foreground">Market bench median</div>
+                <div className="font-mono text-sm">
+                  {skillHistory.data?.global_median_duration !== null &&
+                  skillHistory.data?.global_median_duration !== undefined
+                    ? `${Math.round(skillHistory.data.global_median_duration)}d`
+                    : "—"}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
