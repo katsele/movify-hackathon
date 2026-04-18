@@ -1,8 +1,15 @@
 """Boond CSV connector — loads from mockdata/ when the live API is sandboxed.
 
-Writes to the same internal tables as BoondConnector (consultants,
-consultant_skills, projects, project_skills) via CSV-aware transforms.
-No deal/pipeline data in the CSVs, so `deals` + `deal_profiles` are untouched.
+Reads four CSVs:
+
+- mock-boond-bench-data.csv     current consultants on/near the bench
+- mock-boond-project-data.csv   current active projects (and their assignees)
+- mock-boond-bench-history.csv  historical bench spells (storage-only)
+- mock-boond-project-history.csv historical completed projects
+
+Writes to consultants, consultant_skills, projects, project_skills and the
+consultant_bench_history / consultant_bench_history_skills tables (added in
+migration 008). Deal/pipeline data is not present in the CSVs.
 """
 from __future__ import annotations
 
@@ -11,6 +18,7 @@ import logging
 import os
 import re
 import unicodedata
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -26,7 +34,11 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 class BoondCsvConnector(BaseConnector):
     BENCH_FILE = "mock-boond-bench-data.csv"
     PROJECT_FILE = "mock-boond-project-data.csv"
+    BENCH_HISTORY_FILE = "mock-boond-bench-history.csv"
+    PROJECT_HISTORY_FILE = "mock-boond-project-history.csv"
     ID_PREFIX = "boond_csv"
+
+    REPLACE_SCOPES = ("none", "source", "all_boond")
 
     _STATUS_MAP = {
         "available": "on_bench",
@@ -46,12 +58,19 @@ class BoondCsvConnector(BaseConnector):
         supabase_key: str,
         *,
         csv_dir: Path | str | None = None,
+        replace_scope: str = "none",
     ) -> None:
         super().__init__(supabase_url, supabase_key)
         resolved = csv_dir or os.environ.get("BOOND_CSV_DIR") or (PROJECT_ROOT / "mockdata")
         self.csv_dir = Path(resolved)
+        if replace_scope not in self.REPLACE_SCOPES:
+            raise ValueError(
+                f"replace_scope must be one of {self.REPLACE_SCOPES}, got {replace_scope!r}"
+            )
+        self.replace_scope = replace_scope
         self._extractor: SkillExtractor | None = None
         self._skill_index: dict[str, str] | None = None
+        self._unmatched_tokens: Counter[str] = Counter()
 
     def _source_name(self) -> str:
         return "boond_csv"
@@ -61,11 +80,27 @@ class BoondCsvConnector(BaseConnector):
     def fetch_raw(self) -> dict[str, list[dict]]:
         bench = self._read_csv(self.csv_dir / self.BENCH_FILE)
         projects = self._read_csv(self.csv_dir / self.PROJECT_FILE)
-        log.info("boond_csv: %d bench rows, %d project rows", len(bench), len(projects))
-        return {"bench": bench, "projects": projects}
+        project_history = self._read_csv(self.csv_dir / self.PROJECT_HISTORY_FILE)
+        bench_history = self._read_csv(self.csv_dir / self.BENCH_HISTORY_FILE)
+        log.info(
+            "boond_csv: %d bench rows, %d project rows, %d project-history rows, %d bench-history rows",
+            len(bench),
+            len(projects),
+            len(project_history),
+            len(bench_history),
+        )
+        return {
+            "bench": bench,
+            "projects": projects,
+            "project_history": project_history,
+            "bench_history": bench_history,
+        }
 
     @staticmethod
     def _read_csv(path: Path) -> list[dict]:
+        if not path.exists():
+            log.warning("boond_csv: %s not found, skipping", path)
+            return []
         with path.open("r", encoding="utf-8-sig", newline="") as f:
             reader = csv.DictReader(f, delimiter=";")
             return [dict(row) for row in reader]
@@ -75,20 +110,43 @@ class BoondCsvConnector(BaseConnector):
     def transform(self, raw_data: Any) -> dict[str, list[dict]]:
         bench_rows = raw_data.get("bench", [])
         project_rows = raw_data.get("projects", [])
+        project_history_rows = raw_data.get("project_history", [])
+        bench_history_rows = raw_data.get("bench_history", [])
 
         bench_consultants = [self._map_bench_consultant(r) for r in bench_rows]
         consultant_skills = self._bench_consultant_skills(bench_rows, bench_consultants)
 
-        projects = [self._map_project(r) for r in project_rows]
+        current_projects = [self._map_project(r, source_kind="current") for r in project_rows]
+        historical_projects = [
+            self._map_project(r, source_kind="history") for r in project_history_rows
+        ]
+        projects = current_projects + historical_projects
         on_mission = self._on_mission_consultants(project_rows)
-        project_skills = self._project_skills(project_rows, projects)
+
+        project_skills = self._project_skills(project_rows, current_projects)
+        project_skills += self._project_skills(project_history_rows, historical_projects)
+
+        bench_history = [self._map_bench_history(r) for r in bench_history_rows]
+        bench_history_skills = self._bench_history_skills(bench_history_rows, bench_history)
+
+        if self._unmatched_tokens:
+            top = ", ".join(f"{tok} ({n})" for tok, n in self._unmatched_tokens.most_common(10))
+            log.info(
+                "boond_csv: %d skill tokens not in taxonomy (top: %s)",
+                sum(self._unmatched_tokens.values()),
+                top,
+            )
 
         return {
             "consultants": bench_consultants + on_mission,
             "consultant_skills": consultant_skills,
             "projects": projects,
             "project_skills": project_skills,
+            "bench_history": bench_history,
+            "bench_history_skills": bench_history_skills,
         }
+
+    # ---- Mappers ----------------------------------------------------------
 
     def _map_bench_consultant(self, row: dict) -> dict:
         status_raw = (row.get("Status") or "").strip().lower()
@@ -106,42 +164,27 @@ class BoondCsvConnector(BaseConnector):
     def _bench_consultant_skills(
         self, rows: list[dict], consultants: list[dict]
     ) -> list[dict]:
-        index = self._build_skill_index()
         out: list[dict] = []
-        misses: list[str] = []
         for row, mapped in zip(rows, consultants):
             seniority_raw = (row.get("Seniority") or "").strip().lower()
             proficiency = self._SENIORITY_MAP.get(seniority_raw, "mid")
-            raw_skills = row.get("Primary Skills") or ""
-            seen: set[str] = set()
-            for token in (s.strip() for s in raw_skills.split(",")):
-                if not token:
-                    continue
-                skill_id = index.get(token.lower())
-                if not skill_id:
-                    misses.append(token)
-                    continue
-                if skill_id in seen:
-                    continue
-                seen.add(skill_id)
+            tokens = _parse_token_list(row.get("Primary Skills"))
+            for skill_id in self._match_skill_ids(tokens):
                 out.append({
                     "external_consultant_id": mapped["external_id"],
                     "skill_id": skill_id,
                     "proficiency": proficiency,
                 })
-        if misses:
-            log.info(
-                "boond_csv: %d Primary Skills tokens not in taxonomy (e.g. %s)",
-                len(misses),
-                ", ".join(sorted(set(misses))[:10]),
-            )
         return out
 
-    def _map_project(self, row: dict) -> dict:
+    def _map_project(self, row: dict, *, source_kind: str) -> dict:
         ref = (row.get("Internal reference") or "").strip()
         title = (row.get("Opportunity - Title") or "").strip() or f"Project {ref}"
         client = (row.get("Company - Name") or "").strip() or None
         sector = (row.get("Company - Sector activity") or "").strip() or None
+        state = (row.get("State") or "").strip() or None
+        project_type = (row.get("Type") or "").strip() or None
+        top_tokens = _parse_token_list(row.get("Top Skills"))
         return {
             "external_id": f"{self.ID_PREFIX}:{ref}",
             "title": title,
@@ -149,6 +192,10 @@ class BoondCsvConnector(BaseConnector):
             "sector": sector,
             "started_at": _parse_date(row.get("Start")),
             "ended_at": _parse_date(row.get("End")),
+            "source_kind": source_kind,
+            "project_state": state,
+            "project_type": project_type,
+            "top_skill_tokens": top_tokens,
         }
 
     def _on_mission_consultants(self, rows: list[dict]) -> list[dict]:
@@ -183,14 +230,88 @@ class BoondCsvConnector(BaseConnector):
         extractor = self._skill_extractor()
         out: list[dict] = []
         for row, mapped in zip(rows, projects):
-            title = row.get("Opportunity - Title") or ""
-            for match in extractor.extract(title):
+            tokens = _parse_token_list(row.get("Top Skills"))
+            skill_ids = self._match_skill_ids(tokens)
+            if not skill_ids:
+                # Fall back to title-based extraction when Top Skills is empty
+                # or entirely untaxonomised.
+                title = row.get("Opportunity - Title") or ""
+                skill_ids = [m["skill_id"] for m in extractor.extract(title)]
+            seen: set[str] = set()
+            for skill_id in skill_ids:
+                if skill_id in seen:
+                    continue
+                seen.add(skill_id)
                 out.append({
                     "external_project_id": mapped["external_id"],
-                    "skill_id": match["skill_id"],
+                    "skill_id": skill_id,
                     "headcount": 1,
                 })
         return out
+
+    def _map_bench_history(self, row: dict) -> dict:
+        ref = (row.get("Internal reference") or "").strip()
+        first = (row.get("First Name") or "").strip()
+        last = (row.get("Last Name") or "").strip()
+        name = f"{first} {last}".strip() or f"Consultant {ref}"
+        duration_raw = (row.get("Duration (days)") or "").strip()
+        try:
+            duration = int(duration_raw) if duration_raw else None
+        except ValueError:
+            duration = None
+        return {
+            "external_id": f"{self.ID_PREFIX}:history:{ref}",
+            "consultant_name": name,
+            "consultant_slug": _slugify(name),
+            "job_title": (row.get("Job Title") or "").strip() or None,
+            "seniority": (row.get("Seniority") or "").strip() or None,
+            "bench_started_at": _parse_date(row.get("Bench Start")),
+            "bench_ended_at": _parse_date(row.get("Bench End")),
+            "duration_days": duration,
+            "previous_client_name": (row.get("Previous Client") or "").strip() or None,
+            "previous_project_title": (row.get("Previous Project") or "").strip() or None,
+            "previous_project_ended_at": _parse_date(row.get("Previous Project End")),
+            "next_client_name": (row.get("Next Client") or "").strip() or None,
+            "next_project_title": (row.get("Next Project") or "").strip() or None,
+            "next_project_started_at": _parse_date(row.get("Next Project Start")),
+            "outcome": (row.get("Outcome") or "").strip() or None,
+            "primary_skill_tokens": _parse_token_list(row.get("Primary Skills")),
+            "agency": (row.get("Agency") or "").strip() or None,
+            "country": (row.get("Country") or "").strip() or None,
+        }
+
+    def _bench_history_skills(
+        self, rows: list[dict], history: list[dict]
+    ) -> list[dict]:
+        out: list[dict] = []
+        for row, mapped in zip(rows, history):
+            seniority_raw = (row.get("Seniority") or "").strip().lower()
+            proficiency = self._SENIORITY_MAP.get(seniority_raw, "mid")
+            tokens = _parse_token_list(row.get("Primary Skills"))
+            for skill_id in self._match_skill_ids(tokens):
+                out.append({
+                    "external_history_id": mapped["external_id"],
+                    "skill_id": skill_id,
+                    "proficiency": proficiency,
+                })
+        return out
+
+    # ---- Taxonomy helpers -------------------------------------------------
+
+    def _match_skill_ids(self, tokens: list[str]) -> list[str]:
+        index = self._build_skill_index()
+        seen: set[str] = set()
+        ids: list[str] = []
+        for token in tokens:
+            skill_id = index.get(token.lower())
+            if not skill_id:
+                self._unmatched_tokens[token] += 1
+                continue
+            if skill_id in seen:
+                continue
+            seen.add(skill_id)
+            ids.append(skill_id)
+        return ids
 
     def _skill_extractor(self) -> SkillExtractor:
         if self._extractor is None:
@@ -209,9 +330,64 @@ class BoondCsvConnector(BaseConnector):
             self._skill_index = idx
         return self._skill_index
 
+    # ---- Purge ------------------------------------------------------------
+
+    def purge(self) -> None:
+        """Delete existing Boond-derived rows according to replace_scope.
+
+        - 'none':        no deletes (default — preserves prior behaviour)
+        - 'source':      only rows written by this connector (boond_csv:%)
+        - 'all_boond':   both boond:% and boond_csv:% rows, plus the Story 1
+                         seed consultant, plus a wipe of consultant_bench_history
+        """
+        if self.replace_scope == "none":
+            return
+
+        scopes: list[str]
+        if self.replace_scope == "source":
+            scopes = [f"{self.ID_PREFIX}:%"]
+        else:  # all_boond
+            scopes = [f"{self.ID_PREFIX}:%", "boond:%"]
+
+        log.info("boond_csv: purging scopes %s", scopes)
+
+        for pattern in scopes:
+            # Clear deal_profiles before deals (FK).
+            deal_ids = [
+                row["id"]
+                for row in (
+                    self.db.table("deals")
+                    .select("id")
+                    .like("external_id", pattern)
+                    .execute()
+                    .data
+                    or []
+                )
+            ]
+            if deal_ids:
+                self.db.table("deal_profiles").delete().in_("deal_id", deal_ids).execute()
+                self.db.table("deals").delete().in_("id", deal_ids).execute()
+
+            # consultant_skills and project_skills cascade on delete.
+            self.db.table("consultants").delete().like("external_id", pattern).execute()
+            self.db.table("projects").delete().like("external_id", pattern).execute()
+
+        if self.replace_scope == "all_boond":
+            # Full history wipe; bench_history_skills cascades.
+            self.db.table("consultant_bench_history").delete().neq(
+                "id", "00000000-0000-0000-0000-000000000000"
+            ).execute()
+            # Drop the Story 1 seed consultant so the bench reflects only
+            # real/mock Boond data after the refresh.
+            self.db.table("consultants").delete().eq(
+                "external_id", "seed-story1-c1"
+            ).execute()
+
     # ---- Load -------------------------------------------------------------
 
     def load(self, data: Any) -> int:  # type: ignore[override]
+        self.purge()
+
         loaded = 0
         for c in data.get("consultants", []):
             self.db.table("consultants").upsert(c, on_conflict="external_id").execute()
@@ -258,6 +434,33 @@ class BoondCsvConnector(BaseConnector):
                     "headcount": row["headcount"],
                 }).execute()
 
+        bh_rows = data.get("bench_history", [])
+        for row in bh_rows:
+            self.db.table("consultant_bench_history").upsert(
+                row, on_conflict="external_id"
+            ).execute()
+            loaded += 1
+
+        bhs_rows = data.get("bench_history_skills", [])
+        if bhs_rows:
+            lookup = self._lookup_ids(
+                "consultant_bench_history",
+                sorted({r["external_history_id"] for r in bhs_rows}),
+            )
+            for history_id in set(lookup.values()):
+                self.db.table("consultant_bench_history_skills").delete().eq(
+                    "bench_history_id", history_id
+                ).execute()
+            for row in bhs_rows:
+                hid = lookup.get(row["external_history_id"])
+                if not hid:
+                    continue
+                self.db.table("consultant_bench_history_skills").insert({
+                    "bench_history_id": hid,
+                    "skill_id": row["skill_id"],
+                    "proficiency": row["proficiency"],
+                }).execute()
+
         return loaded
 
     def _lookup_ids(self, table: str, external_ids: list[str]) -> dict[str, str]:
@@ -285,6 +488,23 @@ def _parse_date(raw: Any) -> str | None:
     except ValueError:
         log.warning("boond_csv: unparseable date %r", value)
         return None
+
+
+def _parse_token_list(raw: Any) -> list[str]:
+    if not raw:
+        return []
+    tokens: list[str] = []
+    seen: set[str] = set()
+    for token in str(raw).split(","):
+        cleaned = token.strip()
+        if not cleaned:
+            continue
+        key = cleaned.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        tokens.append(cleaned)
+    return tokens
 
 
 def _slugify(value: str) -> str:

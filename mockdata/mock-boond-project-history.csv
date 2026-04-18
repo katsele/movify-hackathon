@@ -1,0 +1,554 @@
+Internal reference;Start;End;Reference;Type;State;Opportunity - Title;Contact - Last Name;Contact - First Name;Consultant - Last Name;Consultant - First Name;Top Skills;Company - Name;Currency;Agency;Country;Company - Sector activity
+PRJ10553;31/03/2026;17/04/2026;ML Engineer - Orange Belgium;P1;Completed;JOB119190 - ML Engineer;;;De Backer;Bram;Python, PyTorch, MLflow, Kubeflow;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10552;27/03/2026;17/04/2026;Back-End Developer - Alpha Credit;P1;Completed;Back-End Developer;;;De Smet;Lars;Java, Spring Boot, PostgreSQL, REST API, Docker;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10551;24/03/2026;17/04/2026;Data Engineer - P&V Assurances;P1;Completed;Data Engineer;;;Leclercq;Charlotte;Python, SQL, Airflow, dbt, Snowflake;P&V Assurances;Euro;Movify SRL;Belgium;Finance
+PRJ10550;21/03/2026;17/04/2026;BI Analyst - Alpha Credit;P1;Completed;8141489 - BI Analyst;;;Verhoeven;Sander;Power BI, Tableau, SQL, DAX;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10549;21/03/2026;17/04/2026;Product Manager - Colruyt;P1;Completed;Product Manager;;;Charlier;Yannick;Roadmapping, User Research, Analytics, Strategy;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10548;15/03/2026;17/04/2026;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;De Smet;Lars;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Mediahuis;Euro;Movify SRL;Belgium;Media
+PRJ10547;13/03/2026;17/04/2026;Front-End Developer;P1;Completed;JOB173289 - Front-End Developer;;;Chen;Dmitri;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10546;13/03/2026;17/04/2026;Full-Stack Developer - Alpha Credit;P1;Completed;JC8099 - Full-Stack Developer;;;Dethier;François;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10545;06/03/2026;17/04/2026;.NET Developer;P1;Completed;.NET Developer;;;Peeters;Karel;.NET, C#, ASP.NET, SQL Server, Azure;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10544;06/03/2026;17/04/2026;Data Engineer - FPS BOSA;P1;Completed;JOB125440 - Data Engineer;;;Faure;Romain;Python, SQL, Airflow, dbt, Snowflake;FPS BOSA;Euro;Movify SRL;Belgium;Public
+PRJ10543;04/03/2026;17/04/2026;Technical Analyst - BNP Paribas Fortis;P1;Completed;Technical Analyst;;;Luyten;Katrien;SQL, UML, Architecture, Documentation;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10542;03/03/2026;17/04/2026;Front-End Developer;P1;Completed;JC3779 - Front-End Developer;;;Pauwels;Tim;JavaScript, TypeScript, HTML/CSS, React, Tailwind;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10541;03/03/2026;17/04/2026;Scrum Master - STIB-MIVB;P1;Completed;JOB189346 - Scrum Master;;;Wauters;Noémie;Scrum, Agile, Jira, Facilitation;STIB-MIVB;Euro;Movify SRL;Belgium;Public
+PRJ10540;28/02/2026;17/04/2026;Data Scientist;P1;Completed;Data Scientist;;;Pauwels;Lotte;Python, scikit-learn, Pandas, Statistics, SQL;Crelan;Euro;Movify SRL;Belgium;Finance
+PRJ10539;27/02/2026;17/04/2026;Agile Coach - Proximus;P1;Completed;Agile Coach;;;Segers;Maarten;SAFe, Agile, Coaching, Change Management;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10538;26/02/2026;17/04/2026;Data Engineer;P1;Completed;JC8576 - Data Engineer;;;Faure;Romain;Python, SQL, Airflow, dbt, Snowflake;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10537;25/02/2026;17/04/2026;Solution Architect;P1;Completed;JOB197383 - Solution Architect;;;Michel;Romain;Architecture, Cloud, Integration, TOGAF;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10536;23/02/2026;17/04/2026;AI Engineer;P1;Completed;JOB148724 - AI Engineer;;;Moreau;Alexandre;Python, LangChain, OpenAI API, RAG, Vector DB;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10535;20/02/2026;17/04/2026;Data Scientist - Belfius;P1;Completed;JOB146562 - Data Scientist;;;Leclercq;Charlotte;Python, scikit-learn, Pandas, Statistics, SQL;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10534;20/02/2026;17/04/2026;Back-End Developer - ING;P1;Completed;Back-End Developer;;;Lemaire;François;Java, Spring Boot, PostgreSQL, REST API, Docker;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10533;18/02/2026;17/04/2026;AI Engineer - KBC;P1;Completed;AI Engineer;;;Moreau;Alexandre;Python, LangChain, OpenAI API, RAG, Vector DB;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10532;15/02/2026;17/04/2026;Python Developer;P1;Completed;Python Developer;;;Van Damme;Lisa;Python, Django, FastAPI, PostgreSQL, pytest;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10531;13/02/2026;17/04/2026;Angular Developer;P1;Completed;JOB113494 - Angular Developer;;;Silva;Sofia;Angular, TypeScript, RxJS, NgRx, Jasmine;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10530;10/02/2026;17/04/2026;ML Engineer;P1;Completed;ML Engineer;;;Maes;Jonas;Python, PyTorch, MLflow, Kubeflow;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10529;06/02/2026;17/04/2026;Scrum Master - Proximus;P1;Completed;JOB195725 - Scrum Master;;;Lefebvre;Benoît;Scrum, Agile, Jira, Facilitation;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10528;01/02/2026;17/04/2026;Cloud Engineer (Azure);P1;Completed;JC2521 - Cloud Engineer (Azure);;;Morel;Antoine;Azure, Terraform, Azure DevOps, ARM Templates;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10527;28/01/2026;17/04/2026;Technical Analyst;P1;Completed;Technical Analyst;;;Claes;Sara;SQL, UML, Architecture, Documentation;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10526;28/01/2026;17/04/2026;Cloud Engineer (AWS);P1;Completed;Cloud Engineer (AWS);;;De Backer;Bram;AWS, Terraform, Lambda, CloudFormation, S3;P&V Assurances;Euro;Movify SRL;Belgium;Finance
+PRJ10525;25/01/2026;17/04/2026;UX/UI Designer - Euroclear;P1;Completed;JC2488 - UX/UI Designer;;;Dupont;Noémie;Figma, Design Systems, User Research, Prototyping;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10524;25/01/2026;17/04/2026;iOS Developer - Orange Belgium;P1;Completed;iOS Developer;;;Silva;Andrei;Swift, SwiftUI, iOS, Xcode, Combine;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10523;24/01/2026;17/04/2026;Angular Developer;P1;Completed;Angular Developer;;;Wauters;Noémie;Angular, TypeScript, RxJS, NgRx, Jasmine;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10522;24/01/2026;17/04/2026;Data Analyst - Colruyt;P1;Completed;Data Analyst;;;Chen;Lucas;SQL, Excel, Tableau, Python;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10521;24/01/2026;17/04/2026;Tech Lead;P1;Completed;JOB152428 - Tech Lead;;;Segers;Inge;Architecture, Code Review, Mentoring, System Design;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10520;18/01/2026;17/04/2026;Full-Stack Developer;P1;Completed;JOB187936 - Full-Stack Developer;;;Moreau;Alexandre;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Smals;Euro;Movify SRL;Belgium;Public
+PRJ10519;10/01/2026;17/04/2026;React Developer;P1;Completed;7606332 - React Developer;;;Roux;Elise;React, TypeScript, Next.js, Tailwind, Jest;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10518;10/01/2026;17/04/2026;UX/UI Designer - Proximus;P1;Completed;UX/UI Designer;;;Wauters;Céline;Figma, Design Systems, User Research, Prototyping;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10517;08/01/2026;17/04/2026;Security Engineer - Luminus;P1;Completed;8703278 - Security Engineer;;;De Backer;Julie;NIS2, Penetration Testing, OWASP, SIEM;Luminus;Euro;Movify SRL;Belgium;Energy
+PRJ10516;05/01/2026;17/04/2026;Angular Developer - Proximus;P1;Completed;JOB176977 - Angular Developer;;;De Backer;Bram;Angular, TypeScript, RxJS, NgRx, Jasmine;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10515;30/12/2025;17/04/2026;Senior Product Owner - Brussels Mobility;P1;Completed;Senior Product Owner;;;Van Hove;Emma;Agile, Scrum, Jira, Product Discovery, OKRs;Brussels Mobility;Euro;Movify SRL;Belgium;Public
+PRJ10514;26/12/2025;17/04/2026;Security Engineer;P1;Completed;JC3244 - Security Engineer;;;Leclercq;Sarah;NIS2, Penetration Testing, OWASP, SIEM;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10513;26/12/2025;17/04/2026;DevOps Engineer;P1;Completed;JOB112400 - DevOps Engineer;;;Vermeersch;Tim;AWS, Kubernetes, Terraform, CI/CD, Docker;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10512;24/12/2025;29/03/2026;Technical Analyst - BNP Paribas Fortis;P1;Completed;Technical Analyst;;;Luyten;Katrien;SQL, UML, Architecture, Documentation;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10511;16/12/2025;17/04/2026;Back-End Developer - UCB;P1;Completed;Back-End Developer;;;Fournier;Justine;Java, Spring Boot, PostgreSQL, REST API, Docker;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10510;14/12/2025;17/04/2026;Python Developer;P1;Completed;Python Developer;;;Aerts;Leen;Python, Django, FastAPI, PostgreSQL, pytest;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10509;01/12/2025;17/04/2026;Product Designer - VRT;P1;Completed;Product Designer;;;Aerts;Leen;Figma, Design Systems, Prototyping, User Research;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10508;29/11/2025;17/04/2026;Product Owner - Belfius;P1;Completed;8355981 - Product Owner;;;Stevens;Katrien;Scrum, Jira, User Stories, Roadmapping;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10507;27/11/2025;17/04/2026;Business Analyst;P1;Completed;JC9686 - Business Analyst;;;Maes;Jonas;Business Analysis, BPMN, SQL, Requirements;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10506;26/11/2025;17/04/2026;ML Engineer - DPG Media;P1;Completed;JOB114324 - ML Engineer;;;Verhoeven;Griet;Python, PyTorch, MLflow, Kubeflow;DPG Media;Euro;Movify SRL;Belgium;Media
+PRJ10505;21/11/2025;17/04/2026;Project Manager - Orange Belgium;P1;Completed;8061713 - Project Manager;;;De Backer;Maarten;Prince2, MS Project, Stakeholder Management, Risk Management;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10504;15/11/2025;17/04/2026;Functional Analyst - TotalEnergies;P1;Completed;Functional Analyst;;;Peeters;Seppe;Functional Analysis, UML, Requirements, Jira;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10503;14/11/2025;17/04/2026;React Developer;P1;Completed;React Developer;;;Ahmed;Ana;React, TypeScript, Next.js, Tailwind, Jest;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10502;12/11/2025;17/04/2026;Technical Analyst;P1;Completed;Technical Analyst;;;Verstraete;Pieter;SQL, UML, Architecture, Documentation;STIB-MIVB;Euro;Movify SRL;Belgium;Public
+PRJ10501;11/11/2025;17/04/2026;Business Analyst - Proximus;P1;Completed;Business Analyst;;;Wauters;Céline;Business Analysis, BPMN, SQL, Requirements;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10500;09/11/2025;23/02/2026;Android Developer;P1;Completed;JOB119432 - Android Developer;;;De Clercq;Sara;Kotlin, Android, Jetpack Compose, Gradle;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10499;07/11/2025;17/04/2026;Data Engineer - AXA Belgium;P1;Completed;JOB139321 - Data Engineer;;;Faure;Romain;Python, SQL, Airflow, dbt, Snowflake;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10498;06/11/2025;12/02/2026;UX/UI Designer - Alpha Credit;P1;Completed;8768769 - UX/UI Designer;;;Luyten;Dries;Figma, Design Systems, User Research, Prototyping;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10497;01/11/2025;17/04/2026;Design System Lead;P1;Completed;Design System Lead;;;Van Damme;Lisa;Figma, Design Tokens, Storybook, Accessibility;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10496;28/10/2025;17/04/2026;Full-Stack Developer - Colruyt;P1;Completed;Full-Stack Developer;;;Chen;Lucas;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10495;24/10/2025;17/04/2026;Cloud Engineer (AWS);P1;Completed;JOB106813 - Cloud Engineer (AWS);;;Nguyen;Daniel;AWS, Terraform, Lambda, CloudFormation, S3;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10494;23/10/2025;17/04/2026;Service Designer;P1;Completed;JOB118494 - Service Designer;;;Dethier;François;Service Blueprinting, Journey Mapping, Co-creation;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10493;21/10/2025;17/04/2026;UI Designer - Securex;P1;Completed;UI Designer;;;Verhoeven;Griet;Figma, Visual Design, Typography, Design Systems;Securex;Euro;Movify SRL;Belgium;Services
+PRJ10492;16/10/2025;17/04/2026;Project Manager - Ageas;P1;Completed;JOB191561 - Project Manager;;;Coppens;Robin;Prince2, MS Project, Stakeholder Management, Risk Management;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10491;14/10/2025;17/04/2026;Digital Product Owner - UCB;P1;Completed;Digital Product Owner;;;Fournier;Justine;Scrum, Jira, Analytics, A/B Testing;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10490;13/10/2025;17/04/2026;Full-Stack Developer;P1;Completed;JOB196179 - Full-Stack Developer;;;Morel;Antoine;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10489;11/10/2025;24/03/2026;DevOps Engineer - Delhaize;P1;Completed;8943648 - DevOps Engineer;;;Nguyen;Daniel;AWS, Kubernetes, Terraform, CI/CD, Docker;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10488;06/10/2025;17/04/2026;Business Analyst - Colruyt;P1;Completed;Business Analyst;;;Segers;Maarten;Business Analysis, BPMN, SQL, Requirements;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10487;06/10/2025;31/03/2026;Scrum Master;P1;Completed;Scrum Master;;;Maes;Jonas;Scrum, Agile, Jira, Facilitation;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10486;03/10/2025;17/04/2026;UX/UI Designer - Decathlon;P1;Completed;JOB168011 - UX/UI Designer;;;Hassani;Yasmina;Figma, Design Systems, User Research, Prototyping;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10485;01/10/2025;17/04/2026;Cloud Engineer (AWS);P1;Completed;JOB146607 - Cloud Engineer (AWS);;;Nguyen;Daniel;AWS, Terraform, Lambda, CloudFormation, S3;P&V Assurances;Euro;Movify SRL;Belgium;Finance
+PRJ10484;24/09/2025;20/03/2026;UI Designer;P1;Completed;UI Designer;;;Verhoeven;Sander;Figma, Visual Design, Typography, Design Systems;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10483;24/09/2025;17/04/2026;UX/UI Designer;P1;Completed;UX/UI Designer;;;De Backer;Eva;Figma, Design Systems, User Research, Prototyping;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ10482;22/09/2025;17/04/2026;UX/UI Designer - D'Ieteren;P1;Completed;UX/UI Designer;;;De Wit;Wout;Figma, Design Systems, User Research, Prototyping;D'Ieteren;Euro;Movify SRL;Belgium;Other
+PRJ10481;22/09/2025;17/04/2026;UX Designer - Elia;P1;Completed;JC3943 - UX Designer;;;De Backer;Julie;Figma, User Research, Journey Mapping, Usability Testing;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10480;19/09/2025;17/04/2026;Product Manager - UCB;P1;Completed;Product Manager;;;Leroy;Elise;Roadmapping, User Research, Analytics, Strategy;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10479;17/09/2025;17/04/2026;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;Leclercq;Charlotte;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10478;13/09/2025;17/04/2026;Business Analyst;P1;Completed;JOB153292 - Business Analyst;;;Verstraete;Pieter;Business Analysis, BPMN, SQL, Requirements;Ores;Euro;Movify SRL;Belgium;Energy
+PRJ10477;13/09/2025;02/12/2025;Front-End Developer - FPS BOSA;P1;Completed;JOB151936 - Front-End Developer;;;Cools;Ine;JavaScript, TypeScript, HTML/CSS, React, Tailwind;FPS BOSA;Euro;Movify SRL;Belgium;Public
+PRJ10476;08/09/2025;17/04/2026;UI Designer - VRT;P1;Completed;8942398 - UI Designer;;;Verhoeven;Sander;Figma, Visual Design, Typography, Design Systems;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10475;07/09/2025;17/04/2026;Tech Lead - Proximus;P1;Completed;JC2621 - Tech Lead;;;Segers;Inge;Architecture, Code Review, Mentoring, System Design;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10474;06/09/2025;17/04/2026;React Developer;P1;Completed;React Developer;;;Gérard;Antoine;React, TypeScript, Next.js, Tailwind, Jest;P&V Assurances;Euro;Movify SRL;Belgium;Finance
+PRJ10473;05/09/2025;17/04/2026;UX/UI Designer;P1;Completed;UX/UI Designer;;;Hubert;Mélanie;Figma, Design Systems, User Research, Prototyping;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10472;30/08/2025;16/03/2026;Solution Architect;P1;Completed;JOB144508 - Solution Architect;;;Verstraete;Pieter;Architecture, Cloud, Integration, TOGAF;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10471;28/08/2025;17/04/2026;Business Analyst - Elia;P1;Completed;Business Analyst;;;Vermeersch;Tim;Business Analysis, BPMN, SQL, Requirements;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10470;26/08/2025;17/04/2026;Data Analyst;P1;Completed;Data Analyst;;;Van Hove;Tom;SQL, Excel, Tableau, Python;FOD Financiën;Euro;Movify SRL;Belgium;Public
+PRJ10469;20/08/2025;17/04/2026;BI Analyst - Delhaize;P1;Completed;BI Analyst;;;Dumont;Cédric;Power BI, Tableau, SQL, DAX;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10468;13/08/2025;17/04/2026;UX Designer - Acerta;P1;Completed;UX Designer;;;Wauters;Céline;Figma, User Research, Journey Mapping, Usability Testing;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10467;10/08/2025;17/04/2026;Back-End Developer;P1;Completed;Back-End Developer;;;Lemaire;François;Java, Spring Boot, PostgreSQL, REST API, Docker;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10466;02/08/2025;17/04/2026;React Developer - Elia;P1;Completed;7820509 - React Developer;;;Ahmed;Ana;React, TypeScript, Next.js, Tailwind, Jest;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10465;26/07/2025;11/01/2026;Site Reliability Engineer - TotalEnergies;P1;Completed;JOB124480 - Site Reliability Engineer;;;Verstraete;Tim;Kubernetes, Prometheus, Grafana, Incident response;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10464;22/07/2025;17/04/2026;Business Analyst;P1;Completed;JC9494 - Business Analyst;;;Charlier;Hugo;Business Analysis, BPMN, SQL, Requirements;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10463;17/07/2025;17/04/2026;Back-End Developer;P1;Completed;Back-End Developer;;;Willems;Nele;Java, Spring Boot, PostgreSQL, REST API, Docker;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10462;10/07/2025;17/04/2026;Back-End Developer - Euroclear;P1;Completed;JOB128027 - Back-End Developer;;;De Backer;Bram;Java, Spring Boot, PostgreSQL, REST API, Docker;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10461;09/07/2025;28/12/2025;Functional Analyst;P1;Completed;JC0366 - Functional Analyst;;;Maes;Niels;Functional Analysis, UML, Requirements, Jira;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10460;09/07/2025;03/04/2026;Front-End Developer;P1;Completed;Front-End Developer;;;Henry;Loïc;JavaScript, TypeScript, HTML/CSS, React, Tailwind;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10459;02/07/2025;17/04/2026;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;Chen;Lucas;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10458;25/06/2025;12/03/2026;Senior Product Owner;P1;Completed;Senior Product Owner;;;Verhoeven;Dieter;Agile, Scrum, Jira, Product Discovery, OKRs;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10457;21/06/2025;10/03/2026;Business Analyst - Colruyt;P1;Completed;JOB138903 - Business Analyst;;;Charlier;Hugo;Business Analysis, BPMN, SQL, Requirements;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10456;21/06/2025;24/03/2026;Full-Stack Developer - UCB;P1;Completed;JOB167956 - Full-Stack Developer;;;De Smet;Lars;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10455;20/06/2025;14/12/2025;iOS Developer;P1;Completed;iOS Developer;;;De Backer;Maarten;Swift, SwiftUI, iOS, Xcode, Combine;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10454;14/06/2025;25/03/2026;Product Owner;P1;Completed;JOB138653 - Product Owner;;;Charlier;Mélanie;Scrum, Jira, User Stories, Roadmapping;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10453;10/06/2025;30/11/2025;React Developer;P1;Completed;JOB115654 - React Developer;;;Verhoeven;Dieter;React, TypeScript, Next.js, Tailwind, Jest;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10452;04/06/2025;20/12/2025;Technical Analyst;P1;Completed;Technical Analyst;;;Verstraete;Katrien;SQL, UML, Architecture, Documentation;Mediahuis;Euro;Movify SRL;Belgium;Media
+PRJ10451;01/06/2025;17/04/2026;Test Automation Engineer - Acerta;P1;Completed;JOB175208 - Test Automation Engineer;;;Costa;Priya;Cypress, Playwright, CI/CD, Python;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10450;28/05/2025;17/04/2026;iOS Developer - KBC;P1;Completed;JOB105613 - iOS Developer;;;Maes;Tim;Swift, SwiftUI, iOS, Xcode, Combine;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10449;20/05/2025;17/04/2026;DevOps Engineer;P1;Completed;7044493 - DevOps Engineer;;;Mercier;Noémie;AWS, Kubernetes, Terraform, CI/CD, Docker;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10448;17/05/2025;07/11/2025;Business Analyst - Colruyt;P1;Completed;JOB152822 - Business Analyst;;;Nguyen;Priya;Business Analysis, BPMN, SQL, Requirements;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10447;16/05/2025;17/04/2026;Agile Coach - Fluvius;P1;Completed;8838777 - Agile Coach;;;Rousseau;Sophie;SAFe, Agile, Coaching, Change Management;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10446;15/05/2025;25/02/2026;UI Designer - UCB;P1;Completed;UI Designer;;;Desmet;Lotte;Figma, Visual Design, Typography, Design Systems;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10445;06/05/2025;04/08/2025;Back-End Developer - ING;P1;Completed;Back-End Developer;;;De Wit;Wout;Java, Spring Boot, PostgreSQL, REST API, Docker;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10444;04/05/2025;17/04/2026;Cloud Engineer (Azure) - AXA Belgium;P1;Completed;JOB119178 - Cloud Engineer (Azure);;;Simon;Romain;Azure, Terraform, Azure DevOps, ARM Templates;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10443;04/05/2025;23/01/2026;Tech Lead;P1;Completed;JC6106 - Tech Lead;;;Silva;Sofia;Architecture, Code Review, Mentoring, System Design;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10442;03/05/2025;09/01/2026;BI Analyst - Proximus;P1;Completed;JOB158730 - BI Analyst;;;Lefebvre;Benoît;Power BI, Tableau, SQL, DAX;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10441;03/05/2025;18/10/2025;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;Jacobs;Lore;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10440;01/05/2025;17/04/2026;Front-End Developer - Fluvius;P1;Completed;JOB172937 - Front-End Developer;;;Rousseau;Sophie;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10439;27/04/2025;12/04/2026;Front-End Developer - Solvay;P1;Completed;JOB123720 - Front-End Developer;;;Henry;Loïc;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10438;21/04/2025;03/02/2026;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;Desmet;Lotte;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Mediahuis;Euro;Movify SRL;Belgium;Media
+PRJ10437;20/04/2025;08/04/2026;Back-End Developer - ING;P1;Completed;Back-End Developer;;;Fournier;Justine;Java, Spring Boot, PostgreSQL, REST API, Docker;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10436;14/04/2025;17/04/2026;Python Developer;P1;Completed;JC2459 - Python Developer;;;De Wit;Lisa;Python, Django, FastAPI, PostgreSQL, pytest;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10435;13/04/2025;17/04/2026;Solution Architect - TotalEnergies;P1;Completed;JOB188539 - Solution Architect;;;Henry;Loïc;Architecture, Cloud, Integration, TOGAF;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10434;13/04/2025;17/04/2026;Data Engineer - Alpha Credit;P1;Completed;JC3867 - Data Engineer;;;Leroy;Céline;Python, SQL, Airflow, dbt, Snowflake;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10433;11/04/2025;27/06/2025;Data Scientist;P1;Completed;JC1887 - Data Scientist;;;Lenoir;Mélanie;Python, scikit-learn, Pandas, Statistics, SQL;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10432;10/04/2025;17/04/2026;Back-End Developer - Elia;P1;Completed;Back-End Developer;;;Cools;Febe;Java, Spring Boot, PostgreSQL, REST API, Docker;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10431;03/04/2025;11/10/2025;BI Analyst - Decathlon;P1;Completed;BI Analyst;;;Hassani;Yasmina;Power BI, Tableau, SQL, DAX;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10430;03/04/2025;17/04/2026;Business Analyst - P&V Assurances;P1;Completed;Business Analyst;;;Verheyden;Karolien;Business Analysis, BPMN, SQL, Requirements;P&V Assurances;Euro;Movify SRL;Belgium;Finance
+PRJ10429;01/04/2025;12/03/2026;Design System Lead - Colruyt;P1;Completed;Design System Lead;;;Van Damme;Lisa;Figma, Design Tokens, Storybook, Accessibility;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10428;31/03/2025;17/04/2026;Business Analyst;P1;Completed;JOB172402 - Business Analyst;;;Charlier;Hugo;Business Analysis, BPMN, SQL, Requirements;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10427;29/03/2025;05/01/2026;Cloud Engineer (AWS);P1;Completed;JOB179051 - Cloud Engineer (AWS);;;Claes;Sara;AWS, Terraform, Lambda, CloudFormation, S3;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10426;28/03/2025;22/06/2025;Agile Coach - BNP Paribas Fortis;P1;Completed;Agile Coach;;;De Wit;Pieter-Jan;SAFe, Agile, Coaching, Change Management;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10425;28/03/2025;26/03/2026;React Developer;P1;Completed;7758796 - React Developer;;;Dupont;Noémie;React, TypeScript, Next.js, Tailwind, Jest;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10424;22/03/2025;12/06/2025;DevOps Engineer - ING;P1;Completed;DevOps Engineer;;;Henry;Cédric;AWS, Kubernetes, Terraform, CI/CD, Docker;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10423;16/03/2025;23/03/2026;DevOps Engineer - Solvay;P1;Completed;DevOps Engineer;;;Rousseau;Sophie;AWS, Kubernetes, Terraform, CI/CD, Docker;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10422;11/03/2025;18/09/2025;Android Developer - Proximus;P1;Completed;JOB153361 - Android Developer;;;Rossi;Karim;Kotlin, Android, Jetpack Compose, Gradle;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10421;09/03/2025;31/08/2025;Senior Product Owner;P1;Completed;JOB186257 - Senior Product Owner;;;Delvaux;Sophie;Agile, Scrum, Jira, Product Discovery, OKRs;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10420;05/03/2025;17/04/2026;Front-End Developer - FPS BOSA;P1;Completed;7002582 - Front-End Developer;;;Cools;Ine;JavaScript, TypeScript, HTML/CSS, React, Tailwind;FPS BOSA;Euro;Movify SRL;Belgium;Public
+PRJ10419;03/03/2025;17/04/2026;Tech Lead;P1;Completed;Tech Lead;;;Charlier;Yannick;Architecture, Code Review, Mentoring, System Design;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10418;25/02/2025;21/02/2026;Back-End Developer - Solvay;P1;Completed;Back-End Developer;;;Poncelet;Sarah;Java, Spring Boot, PostgreSQL, REST API, Docker;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10417;23/02/2025;15/05/2025;Functional Analyst;P1;Completed;Functional Analyst;;;Peeters;Seppe;Functional Analysis, UML, Requirements, Jira;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10416;21/02/2025;29/01/2026;DevOps Engineer;P1;Completed;DevOps Engineer;;;Goossens;Sara;AWS, Kubernetes, Terraform, CI/CD, Docker;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10415;18/02/2025;14/08/2025;Data Engineer - UCB;P1;Completed;Data Engineer;;;Fournier;Justine;Python, SQL, Airflow, dbt, Snowflake;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10414;16/02/2025;19/08/2025;Test Automation Engineer;P1;Completed;JOB193407 - Test Automation Engineer;;;Mertens;Wout;Cypress, Playwright, CI/CD, Python;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10413;15/02/2025;17/04/2026;Scrum Master - KBC;P1;Completed;Scrum Master;;;Willems;Nele;Scrum, Agile, Jira, Facilitation;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10412;14/02/2025;28/11/2025;Cloud Engineer (AWS);P1;Completed;Cloud Engineer (AWS);;;Verhoeven;Sander;AWS, Terraform, Lambda, CloudFormation, S3;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ10411;11/02/2025;30/01/2026;Product Owner;P1;Completed;JOB102123 - Product Owner;;;Desmet;Stijn;Scrum, Jira, User Stories, Roadmapping;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10410;10/02/2025;25/07/2025;Python Developer;P1;Completed;JOB155782 - Python Developer;;;Vermeersch;Tim;Python, Django, FastAPI, PostgreSQL, pytest;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10409;10/02/2025;24/08/2025;Front-End Developer;P1;Completed;JC7337 - Front-End Developer;;;Wouters;Seppe;JavaScript, TypeScript, HTML/CSS, React, Tailwind;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10408;06/02/2025;17/08/2025;.NET Developer - Telenet;P1;Completed;.NET Developer;;;Janssens;Katrien;.NET, C#, ASP.NET, SQL Server, Azure;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10407;04/02/2025;31/07/2025;Technical Analyst;P1;Completed;JOB179116 - Technical Analyst;;;Verstraete;Pieter;SQL, UML, Architecture, Documentation;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10406;01/02/2025;10/08/2025;Cloud Engineer (Azure) - Ores;P1;Completed;Cloud Engineer (Azure);;;Dethier;François;Azure, Terraform, Azure DevOps, ARM Templates;Ores;Euro;Movify SRL;Belgium;Energy
+PRJ10405;31/01/2025;17/04/2026;iOS Developer;P1;Completed;JOB176961 - iOS Developer;;;Silva;Andrei;Swift, SwiftUI, iOS, Xcode, Combine;D'Ieteren;Euro;Movify SRL;Belgium;Other
+PRJ10404;31/01/2025;26/04/2025;Java Developer - Ageas;P1;Completed;8957869 - Java Developer;;;Kowalski;Andrei;Java, Spring Boot, Maven, PostgreSQL, JUnit;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10403;29/01/2025;26/10/2025;Security Engineer;P1;Completed;Security Engineer;;;Leclercq;Sarah;NIS2, Penetration Testing, OWASP, SIEM;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10402;27/01/2025;05/08/2025;Data Engineer;P1;Completed;Data Engineer;;;De Clercq;Sara;Python, SQL, Airflow, dbt, Snowflake;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10401;21/01/2025;17/04/2026;Back-End Developer - ING;P1;Completed;JOB130034 - Back-End Developer;;;Massart;Elise;Java, Spring Boot, PostgreSQL, REST API, Docker;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10400;19/01/2025;31/10/2025;Agile Coach - Proximus;P1;Completed;JOB182985 - Agile Coach;;;Segers;Maarten;SAFe, Agile, Coaching, Change Management;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10399;17/01/2025;24/09/2025;Test Automation Engineer - SD Worx;P1;Completed;JOB106158 - Test Automation Engineer;;;Ahmed;Ana;Cypress, Playwright, CI/CD, Python;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ10398;17/01/2025;19/10/2025;DevOps Engineer;P1;Completed;DevOps Engineer;;;Lenoir;Mélanie;AWS, Kubernetes, Terraform, CI/CD, Docker;Carrefour Belgium;Euro;Movify SRL;Belgium;Retail
+PRJ10397;15/01/2025;17/04/2026;Back-End Developer - Proximus;P1;Completed;JC2819 - Back-End Developer;;;Massart;Elise;Java, Spring Boot, PostgreSQL, REST API, Docker;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10396;13/01/2025;05/01/2026;Product Owner - Alpha Credit;P1;Completed;Product Owner;;;Charlier;Mélanie;Scrum, Jira, User Stories, Roadmapping;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10395;11/01/2025;23/06/2025;Cloud Engineer (Azure);P1;Completed;Cloud Engineer (Azure);;;De Backer;Bram;Azure, Terraform, Azure DevOps, ARM Templates;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10394;31/12/2024;16/07/2025;UI Designer;P1;Completed;JC0026 - UI Designer;;;Desmet;Lotte;Figma, Visual Design, Typography, Design Systems;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10393;24/12/2024;17/04/2026;Security Engineer - D'Ieteren;P1;Completed;JC7879 - Security Engineer;;;Hubert;Claire;NIS2, Penetration Testing, OWASP, SIEM;D'Ieteren;Euro;Movify SRL;Belgium;Other
+PRJ10392;13/12/2024;31/08/2025;Angular Developer;P1;Completed;Angular Developer;;;Desmet;Niels;Angular, TypeScript, RxJS, NgRx, Jasmine;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10391;08/12/2024;15/09/2025;Cloud Engineer (Azure) - AXA Belgium;P1;Completed;Cloud Engineer (Azure);;;Simon;Romain;Azure, Terraform, Azure DevOps, ARM Templates;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10390;01/12/2024;12/09/2025;Data Engineer - Elia;P1;Completed;Data Engineer;;;Faure;Romain;Python, SQL, Airflow, dbt, Snowflake;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10389;01/12/2024;13/05/2025;.NET Developer - Colruyt;P1;Completed;.NET Developer;;;Charlier;Hugo;.NET, C#, ASP.NET, SQL Server, Azure;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10388;28/11/2024;05/08/2025;UI Designer;P1;Completed;JC7614 - UI Designer;;;Verhoeven;Sander;Figma, Visual Design, Typography, Design Systems;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10387;27/11/2024;25/02/2025;React Developer - Decathlon;P1;Completed;JC3490 - React Developer;;;Willems;Nele;React, TypeScript, Next.js, Tailwind, Jest;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10386;25/11/2024;04/12/2025;Agile Coach - Fluvius;P1;Completed;Agile Coach;;;Rousseau;Sophie;SAFe, Agile, Coaching, Change Management;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10385;24/11/2024;01/09/2025;iOS Developer - VRT;P1;Completed;iOS Developer;;;Verhoeven;Griet;Swift, SwiftUI, iOS, Xcode, Combine;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10384;24/11/2024;12/06/2025;Python Developer;P1;Completed;Python Developer;;;Vermeersch;Tim;Python, Django, FastAPI, PostgreSQL, pytest;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10383;19/11/2024;17/04/2026;Scrum Master - UCB;P1;Completed;JOB162278 - Scrum Master;;;Lefebvre;Benoît;Scrum, Agile, Jira, Facilitation;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10382;18/11/2024;27/05/2025;UX/UI Designer;P1;Completed;UX/UI Designer;;;Nijs;Katrien;Figma, Design Systems, User Research, Prototyping;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10381;16/11/2024;27/04/2025;UX Designer - Golden Palace Casino;P1;Completed;JC3652 - UX Designer;;;Faure;Camille;Figma, User Research, Journey Mapping, Usability Testing;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10380;11/11/2024;17/04/2026;Python Developer;P1;Completed;JOB185472 - Python Developer;;;Aerts;Leen;Python, Django, FastAPI, PostgreSQL, pytest;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10379;08/11/2024;07/05/2025;Business Analyst - Colruyt;P1;Completed;Business Analyst;;;Nguyen;Priya;Business Analysis, BPMN, SQL, Requirements;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10378;03/11/2024;15/04/2025;iOS Developer;P1;Completed;iOS Developer;;;Luyten;Katrien;Swift, SwiftUI, iOS, Xcode, Combine;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10377;03/11/2024;30/01/2025;BI Analyst;P1;Completed;JOB152060 - BI Analyst;;;De Backer;Sofie;Power BI, Tableau, SQL, DAX;Brussels Mobility;Euro;Movify SRL;Belgium;Public
+PRJ10376;28/10/2024;04/05/2025;UX/UI Designer;P1;Completed;8789578 - UX/UI Designer;;;Charlier;Mélanie;Figma, Design Systems, User Research, Prototyping;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10375;25/10/2024;11/07/2025;Security Engineer - Golden Palace Casino;P1;Completed;Security Engineer;;;Leclercq;Sarah;NIS2, Penetration Testing, OWASP, SIEM;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10374;21/10/2024;11/04/2025;Data Engineer - VRT;P1;Completed;Data Engineer;;;Goossens;Sara;Python, SQL, Airflow, dbt, Snowflake;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10373;19/10/2024;17/04/2026;Product Owner - bpost;P1;Completed;Product Owner;;;Fournier;Justine;Scrum, Jira, User Stories, Roadmapping;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10372;19/10/2024;02/04/2026;Product Owner;P1;Completed;JOB149746 - Product Owner;;;Stevens;Katrien;Scrum, Jira, User Stories, Roadmapping;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10371;18/10/2024;17/04/2026;UX/UI Designer - ING;P1;Completed;UX/UI Designer;;;Peeters;Karel;Figma, Design Systems, User Research, Prototyping;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10370;16/10/2024;27/04/2025;Functional Analyst - ING;P1;Completed;Functional Analyst;;;Michel;Romain;Functional Analysis, UML, Requirements, Jira;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10369;09/10/2024;13/07/2025;Business Analyst - Ageas;P1;Completed;Business Analyst;;;Van den Berg;Stefaan;Business Analysis, BPMN, SQL, Requirements;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10368;08/10/2024;30/06/2025;Cloud Engineer (Azure) - AXA Belgium;P1;Completed;JOB160286 - Cloud Engineer (Azure);;;Simon;Romain;Azure, Terraform, Azure DevOps, ARM Templates;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10367;05/10/2024;27/12/2024;Service Designer - VRT;P1;Completed;Service Designer;;;Laurent;Margaux;Service Blueprinting, Journey Mapping, Co-creation;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10366;04/10/2024;14/04/2025;Data Engineer - ING;P1;Completed;Data Engineer;;;Fournier;Justine;Python, SQL, Airflow, dbt, Snowflake;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10365;29/09/2024;09/10/2025;Full-Stack Developer - SPW;P1;Completed;JOB132720 - Full-Stack Developer;;;Dumont;Cédric;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;SPW;Euro;Movify SRL;Belgium;Public
+PRJ10364;26/09/2024;24/12/2024;Full-Stack Developer - Fluvius;P1;Completed;8796987 - Full-Stack Developer;;;Morel;Antoine;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10363;23/09/2024;20/09/2025;Cloud Engineer (Azure) - Alpha Credit;P1;Completed;Cloud Engineer (Azure);;;Leroy;Céline;Azure, Terraform, Azure DevOps, ARM Templates;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10362;23/09/2024;17/04/2026;DevOps Engineer - RTBF;P1;Completed;8900139 - DevOps Engineer;;;Verhoeven;Sander;AWS, Kubernetes, Terraform, CI/CD, Docker;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ10361;19/09/2024;25/03/2026;UX/UI Designer - SD Worx;P1;Completed;UX/UI Designer;;;De Backer;Eva;Figma, Design Systems, User Research, Prototyping;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ10360;19/09/2024;18/12/2024;Back-End Developer;P1;Completed;JOB192890 - Back-End Developer;;;Fournier;Justine;Java, Spring Boot, PostgreSQL, REST API, Docker;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10359;18/09/2024;17/04/2026;Business Analyst - bpost;P1;Completed;Business Analyst;;;Verheyden;Karolien;Business Analysis, BPMN, SQL, Requirements;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10358;09/09/2024;16/09/2025;Analytics Engineer;P1;Completed;Analytics Engineer;;;Verstraete;Tim;dbt, SQL, Snowflake, Looker;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10357;07/09/2024;17/04/2026;Scrum Master;P1;Completed;8347147 - Scrum Master;;;Willems;Nele;Scrum, Agile, Jira, Facilitation;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10356;05/09/2024;06/09/2025;Site Reliability Engineer - Sibelga;P1;Completed;Site Reliability Engineer;;;Costa;Mila;Kubernetes, Prometheus, Grafana, Incident response;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10355;05/09/2024;12/03/2025;Cloud Engineer (AWS);P1;Completed;Cloud Engineer (AWS);;;Cools;Ine;AWS, Terraform, Lambda, CloudFormation, S3;FPS BOSA;Euro;Movify SRL;Belgium;Public
+PRJ10354;27/08/2024;17/08/2025;Android Developer;P1;Completed;8720356 - Android Developer;;;De Clercq;Sara;Kotlin, Android, Jetpack Compose, Gradle;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10353;18/08/2024;21/02/2026;Product Owner;P1;Completed;Product Owner;;;Dethier;François;Scrum, Jira, User Stories, Roadmapping;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10352;16/08/2024;26/01/2025;Product Owner;P1;Completed;JOB159685 - Product Owner;;;Desmet;Stijn;Scrum, Jira, User Stories, Roadmapping;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10351;09/08/2024;01/02/2026;Data Engineer - Acerta;P1;Completed;7536837 - Data Engineer;;;Hubert;Damien;Python, SQL, Airflow, dbt, Snowflake;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10350;08/08/2024;25/01/2026;Full-Stack Developer - Orange Belgium;P1;Completed;JOB143635 - Full-Stack Developer;;;Desmet;Stijn;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10349;08/08/2024;26/10/2024;Senior Product Owner - SPW;P1;Completed;Senior Product Owner;;;Helsen;Hanne;Agile, Scrum, Jira, Product Discovery, OKRs;SPW;Euro;Movify SRL;Belgium;Public
+PRJ10348;02/08/2024;21/07/2025;Functional Analyst;P1;Completed;8306528 - Functional Analyst;;;Hubert;Mélanie;Functional Analysis, UML, Requirements, Jira;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10347;28/07/2024;11/02/2025;BI Analyst - Securex;P1;Completed;BI Analyst;;;De Backer;Sofie;Power BI, Tableau, SQL, DAX;Securex;Euro;Movify SRL;Belgium;Services
+PRJ10346;27/07/2024;24/04/2025;DevOps Engineer;P1;Completed;JOB141073 - DevOps Engineer;;;Leclercq;Charlotte;AWS, Kubernetes, Terraform, CI/CD, Docker;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10345;20/07/2024;27/01/2025;Python Developer - BNP Paribas Fortis;P1;Completed;JC0720 - Python Developer;;;Vermeersch;Tim;Python, Django, FastAPI, PostgreSQL, pytest;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10344;15/07/2024;12/01/2025;Data Scientist - Engie;P1;Completed;Data Scientist;;;Mercier;Noémie;Python, scikit-learn, Pandas, Statistics, SQL;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10343;12/07/2024;29/12/2024;Front-End Developer;P1;Completed;Front-End Developer;;;Cools;Ine;JavaScript, TypeScript, HTML/CSS, React, Tailwind;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10342;11/07/2024;26/06/2025;Product Owner;P1;Completed;Product Owner;;;Hubert;Claire;Scrum, Jira, User Stories, Roadmapping;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10341;03/07/2024;15/03/2025;Python Developer;P1;Completed;Python Developer;;;Janssens;Katrien;Python, Django, FastAPI, PostgreSQL, pytest;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10340;30/06/2024;17/04/2026;Back-End Developer;P1;Completed;JOB114445 - Back-End Developer;;;Massart;Elise;Java, Spring Boot, PostgreSQL, REST API, Docker;D'Ieteren;Euro;Movify SRL;Belgium;Other
+PRJ10339;27/06/2024;12/12/2024;Analytics Engineer - bpost;P1;Completed;Analytics Engineer;;;Dehaene;Febe;dbt, SQL, Snowflake, Looker;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10338;25/06/2024;02/03/2025;Product Manager - Lotus Bakeries;P1;Completed;JOB113422 - Product Manager;;;Noël;Alexandre;Roadmapping, User Research, Analytics, Strategy;Lotus Bakeries;Euro;Movify SRL;Belgium;Other
+PRJ10337;21/06/2024;03/09/2024;Project Manager;P1;Completed;Project Manager;;;Simon;Loïc;Prince2, MS Project, Stakeholder Management, Risk Management;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10336;21/06/2024;03/09/2024;Data Scientist - Fluvius;P1;Completed;Data Scientist;;;Lenoir;Mélanie;Python, scikit-learn, Pandas, Statistics, SQL;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10335;16/06/2024;02/04/2025;Scrum Master - Alpha Credit;P1;Completed;JOB194903 - Scrum Master;;;Collard;François;Scrum, Agile, Jira, Facilitation;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10334;15/06/2024;17/06/2025;iOS Developer - VRT;P1;Completed;iOS Developer;;;Pauwels;Tim;Swift, SwiftUI, iOS, Xcode, Combine;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10333;06/06/2024;23/02/2025;Technical Analyst;P1;Completed;Technical Analyst;;;Verstraete;Katrien;SQL, UML, Architecture, Documentation;Mediahuis;Euro;Movify SRL;Belgium;Media
+PRJ10332;01/06/2024;15/06/2025;Cloud Engineer (AWS) - Acerta;P1;Completed;Cloud Engineer (AWS);;;Costa;Priya;AWS, Terraform, Lambda, CloudFormation, S3;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10331;26/05/2024;11/03/2025;React Developer;P1;Completed;React Developer;;;Aerts;Tine;React, TypeScript, Next.js, Tailwind, Jest;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10330;21/05/2024;31/05/2025;DevOps Engineer - Fluvius;P1;Completed;DevOps Engineer;;;Henry;Cédric;AWS, Kubernetes, Terraform, CI/CD, Docker;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10329;20/05/2024;22/08/2024;Business Analyst;P1;Completed;JOB117748 - Business Analyst;;;Charlier;Mélanie;Business Analysis, BPMN, SQL, Requirements;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10328;19/05/2024;10/02/2025;Back-End Developer - Orange Belgium;P1;Completed;JOB176417 - Back-End Developer;;;Cools;Febe;Java, Spring Boot, PostgreSQL, REST API, Docker;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10327;19/05/2024;17/04/2026;DevOps Engineer - Colruyt;P1;Completed;JC9468 - DevOps Engineer;;;De Smet;Anouk;AWS, Kubernetes, Terraform, CI/CD, Docker;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10326;17/05/2024;28/07/2024;Front-End Developer;P1;Completed;Front-End Developer;;;Goossens;Marieke;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Lotus Bakeries;Euro;Movify SRL;Belgium;Other
+PRJ10325;10/05/2024;25/10/2024;Design System Lead - Fluvius;P1;Completed;JC9728 - Design System Lead;;;Chen;Sofia;Figma, Design Tokens, Storybook, Accessibility;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10324;07/05/2024;05/05/2025;DevOps Engineer - Janssen Pharmaceutica;P1;Completed;JOB160158 - DevOps Engineer;;;Hubert;Damien;AWS, Kubernetes, Terraform, CI/CD, Docker;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10323;05/05/2024;10/04/2025;Data Engineer;P1;Completed;JC0497 - Data Engineer;;;Hubert;Damien;Python, SQL, Airflow, dbt, Snowflake;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10322;02/05/2024;14/11/2024;Site Reliability Engineer - Luminus;P1;Completed;Site Reliability Engineer;;;Mertens;Wout;Kubernetes, Prometheus, Grafana, Incident response;Luminus;Euro;Movify SRL;Belgium;Energy
+PRJ10321;30/04/2024;16/01/2025;Design System Lead;P1;Completed;Design System Lead;;;Smets;Ward;Figma, Design Tokens, Storybook, Accessibility;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10320;23/04/2024;02/07/2024;BI Analyst;P1;Completed;BI Analyst;;;Vermeersch;Karolien;Power BI, Tableau, SQL, DAX;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10319;21/04/2024;18/10/2025;ML Engineer - FOD Financiën;P1;Completed;JOB111162 - ML Engineer;;;Aerts;Stijn;Python, PyTorch, MLflow, Kubeflow;FOD Financiën;Euro;Movify SRL;Belgium;Public
+PRJ10318;20/04/2024;27/10/2025;Platform Engineer;P1;Completed;Platform Engineer;;;David;Maxime;Kubernetes, Terraform, Backstage, GitOps;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10317;09/04/2024;12/01/2025;Cloud Engineer (AWS);P1;Completed;Cloud Engineer (AWS);;;Nguyen;Daniel;AWS, Terraform, Lambda, CloudFormation, S3;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10316;07/04/2024;10/09/2025;Java Developer;P1;Completed;Java Developer;;;Costa;Priya;Java, Spring Boot, Maven, PostgreSQL, JUnit;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10315;04/04/2024;17/04/2026;Senior Product Owner;P1;Completed;Senior Product Owner;;;Delvaux;Sophie;Agile, Scrum, Jira, Product Discovery, OKRs;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10314;03/04/2024;02/04/2025;Product Owner;P1;Completed;JOB132864 - Product Owner;;;Faure;Romain;Scrum, Jira, User Stories, Roadmapping;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10313;01/04/2024;27/09/2024;Java Developer - Golden Palace Casino;P1;Completed;Java Developer;;;Hassani;Fatima;Java, Spring Boot, Maven, PostgreSQL, JUnit;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10312;01/04/2024;20/12/2024;Platform Engineer - Sibelga;P1;Completed;JOB135512 - Platform Engineer;;;Costa;Mila;Kubernetes, Terraform, Backstage, GitOps;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10311;28/03/2024;19/09/2024;Functional Analyst;P1;Completed;8188205 - Functional Analyst;;;Maes;Niels;Functional Analysis, UML, Requirements, Jira;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10310;27/03/2024;27/12/2024;UI Designer - Janssen Pharmaceutica;P1;Completed;UI Designer;;;Willems;Pieter;Figma, Visual Design, Typography, Design Systems;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10309;27/03/2024;12/09/2024;Business Analyst - Ageas;P1;Completed;Business Analyst;;;De Wit;Griet;Business Analysis, BPMN, SQL, Requirements;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10308;26/03/2024;26/03/2025;Product Owner;P1;Completed;Product Owner;;;Desmet;Stijn;Scrum, Jira, User Stories, Roadmapping;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10307;25/03/2024;09/09/2025;Design System Lead;P1;Completed;Design System Lead;;;Chen;Sofia;Figma, Design Tokens, Storybook, Accessibility;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10306;17/03/2024;09/09/2024;Back-End Developer - Solvay;P1;Completed;Back-End Developer;;;Poncelet;Sarah;Java, Spring Boot, PostgreSQL, REST API, Docker;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10305;12/03/2024;13/12/2024;Technical Analyst;P1;Completed;JC5652 - Technical Analyst;;;Willems;Dries;SQL, UML, Architecture, Documentation;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10304;10/03/2024;06/03/2025;Functional Analyst - Telenet;P1;Completed;7805606 - Functional Analyst;;;Peeters;Seppe;Functional Analysis, UML, Requirements, Jira;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10303;09/03/2024;18/11/2024;Data Scientist - Euroclear;P1;Completed;JOB141481 - Data Scientist;;;Henry;Loïc;Python, scikit-learn, Pandas, Statistics, SQL;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10302;01/03/2024;16/08/2024;Front-End Developer - Lotus Bakeries;P1;Completed;Front-End Developer;;;Goossens;Marieke;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Lotus Bakeries;Euro;Movify SRL;Belgium;Other
+PRJ10301;29/02/2024;18/02/2025;Data Engineer;P1;Completed;Data Engineer;;;Aerts;Pieter-Jan;Python, SQL, Airflow, dbt, Snowflake;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10300;25/02/2024;05/08/2024;AI Engineer;P1;Completed;JOB136565 - AI Engineer;;;Vandamme;Ine;Python, LangChain, OpenAI API, RAG, Vector DB;Brussels Mobility;Euro;Movify SRL;Belgium;Public
+PRJ10299;24/02/2024;03/02/2025;Technical Analyst;P1;Completed;JC7214 - Technical Analyst;;;Luyten;Katrien;SQL, UML, Architecture, Documentation;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10298;23/02/2024;05/09/2024;Agile Coach;P1;Completed;JOB101418 - Agile Coach;;;Segers;Maarten;SAFe, Agile, Coaching, Change Management;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10297;22/02/2024;02/11/2024;Front-End Developer - Brussels Mobility;P1;Completed;JC7120 - Front-End Developer;;;Charlier;Noémie;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Brussels Mobility;Euro;Movify SRL;Belgium;Public
+PRJ10296;21/02/2024;06/02/2025;Functional Analyst;P1;Completed;Functional Analyst;;;De Clercq;Jeroen;Functional Analysis, UML, Requirements, Jira;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10295;13/02/2024;13/02/2025;iOS Developer;P1;Completed;iOS Developer;;;Maes;Tim;Swift, SwiftUI, iOS, Xcode, Combine;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10294;11/02/2024;25/11/2024;Back-End Developer;P1;Completed;Back-End Developer;;;Costa;Aïcha;Java, Spring Boot, PostgreSQL, REST API, Docker;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10293;08/02/2024;23/10/2024;Tech Lead - VRT;P1;Completed;JOB113806 - Tech Lead;;;Pauwels;Tim;Architecture, Code Review, Mentoring, System Design;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10292;06/02/2024;08/08/2024;Agile Coach - Proximus;P1;Completed;Agile Coach;;;Segers;Maarten;SAFe, Agile, Coaching, Change Management;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10291;06/02/2024;30/01/2026;Data Scientist - Fluvius;P1;Completed;JOB163634 - Data Scientist;;;Chen;Sofia;Python, scikit-learn, Pandas, Statistics, SQL;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10290;31/01/2024;07/01/2025;Senior Product Owner;P1;Completed;Senior Product Owner;;;Verhoeven;Dieter;Agile, Scrum, Jira, Product Discovery, OKRs;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10289;29/01/2024;14/01/2025;UI Designer - AXA Belgium;P1;Completed;UI Designer;;;Simon;Romain;Figma, Visual Design, Typography, Design Systems;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10288;24/01/2024;25/12/2025;Agile Coach - Fluvius;P1;Completed;Agile Coach;;;Rousseau;Sophie;SAFe, Agile, Coaching, Change Management;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10287;23/01/2024;04/08/2024;UX/UI Designer;P1;Completed;UX/UI Designer;;;Verhoeven;Griet;Figma, Design Systems, User Research, Prototyping;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10286;20/01/2024;03/10/2024;UI Designer - FOD Financiën;P1;Completed;JC2441 - UI Designer;;;Van Loo;Sander;Figma, Visual Design, Typography, Design Systems;FOD Financiën;Euro;Movify SRL;Belgium;Public
+PRJ10285;19/01/2024;06/04/2024;Product Manager - UCB;P1;Completed;Product Manager;;;Leroy;Elise;Roadmapping, User Research, Analytics, Strategy;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10284;19/01/2024;04/01/2026;Front-End Developer - Mediahuis;P1;Completed;JOB116677 - Front-End Developer;;;Charlier;Mélanie;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Mediahuis;Euro;Movify SRL;Belgium;Media
+PRJ10283;11/01/2024;11/10/2024;Full-Stack Developer - Belfius;P1;Completed;Full-Stack Developer;;;Girard;Camille;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10282;10/01/2024;07/10/2024;Product Manager;P1;Completed;JOB120200 - Product Manager;;;Michel;Romain;Roadmapping, User Research, Analytics, Strategy;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10281;10/01/2024;09/04/2024;QA Engineer - Engie;P1;Completed;QA Engineer;;;Morel;Antoine;Test Plans, Selenium, Cypress, Jira;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10280;01/01/2024;17/04/2024;UI Designer;P1;Completed;UI Designer;;;Aerts;Tine;Figma, Visual Design, Typography, Design Systems;DPG Media;Euro;Movify SRL;Belgium;Media
+PRJ10279;29/12/2023;23/06/2025;Analytics Engineer - Delhaize;P1;Completed;JC1085 - Analytics Engineer;;;Vermeersch;Karolien;dbt, SQL, Snowflake, Looker;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10278;23/12/2023;07/04/2024;Back-End Developer - UCB;P1;Completed;Back-End Developer;;;Fournier;Justine;Java, Spring Boot, PostgreSQL, REST API, Docker;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10277;22/12/2023;11/09/2024;Data Analyst - bpost;P1;Completed;Data Analyst;;;Van Hove;Tom;SQL, Excel, Tableau, Python;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10276;10/12/2023;16/09/2024;Scrum Master - UCB;P1;Completed;8502006 - Scrum Master;;;Willems;Nele;Scrum, Agile, Jira, Facilitation;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10275;09/12/2023;29/11/2024;BI Analyst - Janssen Pharmaceutica;P1;Completed;7866298 - BI Analyst;;;Fournier;Grégoire;Power BI, Tableau, SQL, DAX;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10274;28/11/2023;04/09/2024;Cloud Engineer (AWS) - Delhaize;P1;Completed;Cloud Engineer (AWS);;;Nguyen;Daniel;AWS, Terraform, Lambda, CloudFormation, S3;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10273;25/11/2023;22/05/2025;Agile Coach - Proximus;P1;Completed;Agile Coach;;;Segers;Maarten;SAFe, Agile, Coaching, Change Management;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10272;24/11/2023;04/02/2024;Tech Lead;P1;Completed;JOB117806 - Tech Lead;;;Verhoeven;Sander;Architecture, Code Review, Mentoring, System Design;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ10271;20/11/2023;10/02/2024;Product Owner;P1;Completed;JC3971 - Product Owner;;;Collard;François;Scrum, Jira, User Stories, Roadmapping;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10270;16/11/2023;25/05/2025;React Developer - Brussels Mobility;P1;Completed;React Developer;;;Vandamme;Ine;React, TypeScript, Next.js, Tailwind, Jest;Brussels Mobility;Euro;Movify SRL;Belgium;Public
+PRJ10269;12/11/2023;27/04/2025;Data Scientist;P1;Completed;Data Scientist;;;Charlier;Noémie;Python, scikit-learn, Pandas, Statistics, SQL;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10268;11/11/2023;12/11/2024;Data Engineer;P1;Completed;JC4788 - Data Engineer;;;Goossens;Sara;Python, SQL, Airflow, dbt, Snowflake;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10267;10/11/2023;02/11/2024;Back-End Developer - Brussels Mobility;P1;Completed;7276296 - Back-End Developer;;;Mertens;Wout;Java, Spring Boot, PostgreSQL, REST API, Docker;Brussels Mobility;Euro;Movify SRL;Belgium;Public
+PRJ10266;09/11/2023;24/01/2024;Senior Product Owner - BNP Paribas Fortis;P1;Completed;JC7863 - Senior Product Owner;;;Charlier;Mélanie;Agile, Scrum, Jira, Product Discovery, OKRs;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10265;07/11/2023;04/05/2025;BI Analyst - Janssen Pharmaceutica;P1;Completed;JOB163168 - BI Analyst;;;Fournier;Grégoire;Power BI, Tableau, SQL, DAX;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10264;30/10/2023;06/07/2024;Digital Product Owner;P1;Completed;Digital Product Owner;;;Mercier;Noémie;Scrum, Jira, Analytics, A/B Testing;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10263;25/10/2023;07/05/2024;Back-End Developer;P1;Completed;Back-End Developer;;;Massart;Elise;Java, Spring Boot, PostgreSQL, REST API, Docker;Smals;Euro;Movify SRL;Belgium;Public
+PRJ10262;25/10/2023;21/04/2024;Back-End Developer - bpost;P1;Completed;Back-End Developer;;;Lemaire;François;Java, Spring Boot, PostgreSQL, REST API, Docker;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10261;22/10/2023;27/01/2024;Data Scientist;P1;Completed;JOB147117 - Data Scientist;;;Mercier;Noémie;Python, scikit-learn, Pandas, Statistics, SQL;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10260;13/10/2023;24/10/2024;Full-Stack Developer - Colruyt;P1;Completed;Full-Stack Developer;;;Morel;Antoine;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10259;11/10/2023;01/10/2025;BI Analyst - Fluvius;P1;Completed;BI Analyst;;;Vermeulen;Griet;Power BI, Tableau, SQL, DAX;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10258;10/10/2023;05/10/2024;Product Owner;P1;Completed;Product Owner;;;Charlier;Mélanie;Scrum, Jira, User Stories, Roadmapping;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10257;08/10/2023;05/04/2025;Data Scientist - Engie;P1;Completed;Data Scientist;;;Mercier;Noémie;Python, scikit-learn, Pandas, Statistics, SQL;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10256;07/10/2023;13/06/2024;Scrum Master;P1;Completed;Scrum Master;;;David;Maxime;Scrum, Agile, Jira, Facilitation;STIB-MIVB;Euro;Movify SRL;Belgium;Public
+PRJ10255;01/10/2023;04/10/2024;Design System Lead - BNP Paribas Fortis;P1;Completed;Design System Lead;;;Fournier;Grégoire;Figma, Design Tokens, Storybook, Accessibility;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10254;25/09/2023;02/06/2024;ML Engineer;P1;Completed;ML Engineer;;;Nijs;Thomas;Python, PyTorch, MLflow, Kubeflow;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10253;24/09/2023;25/08/2025;Test Automation Engineer - KBC;P1;Completed;JC3308 - Test Automation Engineer;;;De Smet;Sara;Cypress, Playwright, CI/CD, Python;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10252;19/09/2023;04/06/2024;Functional Analyst;P1;Completed;JOB137267 - Functional Analyst;;;Mertens;Peter;Functional Analysis, UML, Requirements, Jira;Lotus Bakeries;Euro;Movify SRL;Belgium;Other
+PRJ10251;19/09/2023;31/03/2024;Business Analyst;P1;Completed;JC3768 - Business Analyst;;;Van den Berg;Stefaan;Business Analysis, BPMN, SQL, Requirements;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10250;19/09/2023;10/06/2024;UX/UI Designer;P1;Completed;8819515 - UX/UI Designer;;;Segers;Maarten;Figma, Design Systems, User Research, Prototyping;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10249;13/09/2023;15/02/2025;Data Scientist;P1;Completed;JC8900 - Data Scientist;;;Henry;Loïc;Python, scikit-learn, Pandas, Statistics, SQL;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10248;11/09/2023;20/08/2025;Product Designer;P1;Completed;8912028 - Product Designer;;;Costa;Leila;Figma, Design Systems, Prototyping, User Research;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10247;09/09/2023;22/02/2024;Back-End Developer;P1;Completed;JOB166899 - Back-End Developer;;;Helsen;Hanne;Java, Spring Boot, PostgreSQL, REST API, Docker;Securex;Euro;Movify SRL;Belgium;Services
+PRJ10246;25/08/2023;04/02/2024;BI Analyst - Fluvius;P1;Completed;JOB131985 - BI Analyst;;;Vermeulen;Griet;Power BI, Tableau, SQL, DAX;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10245;21/08/2023;27/02/2024;React Developer;P1;Completed;8814726 - React Developer;;;Smets;Sara;React, TypeScript, Next.js, Tailwind, Jest;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10244;11/08/2023;21/07/2024;Project Manager;P1;Completed;JOB124703 - Project Manager;;;Silva;Leila;Prince2, MS Project, Stakeholder Management, Risk Management;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10243;10/08/2023;04/05/2024;Back-End Developer;P1;Completed;Back-End Developer;;;Mertens;Wout;Java, Spring Boot, PostgreSQL, REST API, Docker;Luminus;Euro;Movify SRL;Belgium;Energy
+PRJ10242;31/07/2023;11/02/2024;UX Designer;P1;Completed;UX Designer;;;De Backer;Eva;Figma, User Research, Journey Mapping, Usability Testing;Ores;Euro;Movify SRL;Belgium;Energy
+PRJ10241;30/07/2023;05/07/2024;QA Engineer - KBC;P1;Completed;QA Engineer;;;Thiry;Grégoire;Test Plans, Selenium, Cypress, Jira;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10240;26/07/2023;26/10/2023;React Developer;P1;Completed;React Developer;;;Silva;Sofia;React, TypeScript, Next.js, Tailwind, Jest;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10239;14/07/2023;27/01/2024;iOS Developer;P1;Completed;JOB168562 - iOS Developer;;;Vandenbergh;Ine;Swift, SwiftUI, iOS, Xcode, Combine;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ10238;28/06/2023;09/07/2024;Full-Stack Developer;P1;Completed;JC9105 - Full-Stack Developer;;;De Smet;Lars;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10237;24/06/2023;07/03/2024;UI Designer;P1;Completed;8367972 - UI Designer;;;Smets;Ward;Figma, Visual Design, Typography, Design Systems;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10236;21/06/2023;28/12/2023;React Developer;P1;Completed;JC5388 - React Developer;;;Hubert;Virginie;React, TypeScript, Next.js, Tailwind, Jest;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10235;10/06/2023;27/08/2023;Technical Analyst;P1;Completed;Technical Analyst;;;Luyten;Katrien;SQL, UML, Architecture, Documentation;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10234;07/06/2023;01/06/2024;Security Engineer;P1;Completed;Security Engineer;;;Hubert;Claire;NIS2, Penetration Testing, OWASP, SIEM;SPW;Euro;Movify SRL;Belgium;Public
+PRJ10233;22/05/2023;28/11/2023;Android Developer - bpost;P1;Completed;JOB164434 - Android Developer;;;Desmet;Niels;Kotlin, Android, Jetpack Compose, Gradle;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10232;19/05/2023;21/11/2024;React Developer - FPS BOSA;P1;Completed;React Developer;;;Willems;Febe;React, TypeScript, Next.js, Tailwind, Jest;FPS BOSA;Euro;Movify SRL;Belgium;Public
+PRJ10231;15/05/2023;22/02/2024;Data Engineer;P1;Completed;Data Engineer;;;Van Loo;Sander;Python, SQL, Airflow, dbt, Snowflake;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10230;13/05/2023;18/08/2023;UX/UI Designer;P1;Completed;JC6957 - UX/UI Designer;;;Peeters;Karel;Figma, Design Systems, User Research, Prototyping;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10229;13/05/2023;24/05/2024;Product Owner - Acerta;P1;Completed;JC6666 - Product Owner;;;Desmet;Stijn;Scrum, Jira, User Stories, Roadmapping;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10228;12/05/2023;04/11/2024;Front-End Developer - AXA Belgium;P1;Completed;JC3769 - Front-End Developer;;;Wouters;Seppe;JavaScript, TypeScript, HTML/CSS, React, Tailwind;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10227;05/05/2023;04/02/2024;Site Reliability Engineer;P1;Completed;Site Reliability Engineer;;;Moreau;Grégoire;Kubernetes, Prometheus, Grafana, Incident response;SPW;Euro;Movify SRL;Belgium;Public
+PRJ10226;29/04/2023;08/04/2024;Cloud Engineer (Azure) - De Lijn;P1;Completed;7661190 - Cloud Engineer (Azure);;;Van Hove;Inge;Azure, Terraform, Azure DevOps, ARM Templates;De Lijn;Euro;Movify SRL;Belgium;Public
+PRJ10225;20/04/2023;27/10/2023;Project Manager;P1;Completed;JOB191683 - Project Manager;;;Coppens;Robin;Prince2, MS Project, Stakeholder Management, Risk Management;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10224;17/04/2023;27/12/2023;Product Manager;P1;Completed;7667244 - Product Manager;;;Willems;Dries;Roadmapping, User Research, Analytics, Strategy;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10223;15/04/2023;31/12/2023;Front-End Developer;P1;Completed;Front-End Developer;;;Fournier;Grégoire;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10222;13/04/2023;16/01/2024;Front-End Developer;P1;Completed;JOB163225 - Front-End Developer;;;De Wit;Wout;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Smals;Euro;Movify SRL;Belgium;Public
+PRJ10221;13/04/2023;20/07/2023;Product Owner;P1;Completed;Product Owner;;;Vandenbergh;Bert;Scrum, Jira, User Stories, Roadmapping;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10220;31/03/2023;07/03/2024;Design System Lead;P1;Completed;7772907 - Design System Lead;;;Smets;Ward;Figma, Design Tokens, Storybook, Accessibility;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10219;19/03/2023;12/03/2024;Product Manager - Lotus Bakeries;P1;Completed;Product Manager;;;Noël;Alexandre;Roadmapping, User Research, Analytics, Strategy;Lotus Bakeries;Euro;Movify SRL;Belgium;Other
+PRJ10218;19/03/2023;29/03/2024;BI Analyst - Delhaize;P1;Completed;BI Analyst;;;Vermeersch;Karolien;Power BI, Tableau, SQL, DAX;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10217;11/03/2023;19/02/2024;Cloud Engineer (Azure) - AXA Belgium;P1;Completed;Cloud Engineer (Azure);;;Simon;Romain;Azure, Terraform, Azure DevOps, ARM Templates;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10216;04/03/2023;09/02/2024;Front-End Developer - Colruyt;P1;Completed;Front-End Developer;;;Martin;Charlotte;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10215;03/03/2023;11/08/2024;Project Manager;P1;Completed;Project Manager;;;Morel;Antoine;Prince2, MS Project, Stakeholder Management, Risk Management;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10214;02/03/2023;07/12/2023;React Developer;P1;Completed;7919103 - React Developer;;;Nijs;Lieven;React, TypeScript, Next.js, Tailwind, Jest;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10213;27/02/2023;23/05/2023;Agile Coach - SPW;P1;Completed;JOB142650 - Agile Coach;;;Dumont;Mathieu;SAFe, Agile, Coaching, Change Management;SPW;Euro;Movify SRL;Belgium;Public
+PRJ10212;26/02/2023;22/08/2023;Service Designer - Orange Belgium;P1;Completed;Service Designer;;;Henry;Cédric;Service Blueprinting, Journey Mapping, Co-creation;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10211;20/02/2023;02/02/2024;Senior Product Owner - Solvay;P1;Completed;JC1661 - Senior Product Owner;;;Noël;Damien;Agile, Scrum, Jira, Product Discovery, OKRs;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10210;14/02/2023;05/11/2023;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;Boone;Anouk;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Ores;Euro;Movify SRL;Belgium;Energy
+PRJ10209;05/02/2023;08/02/2024;Functional Analyst - Colruyt;P1;Completed;JOB147569 - Functional Analyst;;;Wouters;Seppe;Functional Analysis, UML, Requirements, Jira;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10208;04/02/2023;18/11/2023;Front-End Developer - Delhaize;P1;Completed;8789518 - Front-End Developer;;;Vermeersch;Karolien;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10207;23/01/2023;12/05/2023;UI Designer - RTBF;P1;Completed;UI Designer;;;Verhoeven;Sander;Figma, Visual Design, Typography, Design Systems;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ10206;19/01/2023;04/07/2024;BI Analyst - bpost;P1;Completed;JC6933 - BI Analyst;;;Bogaerts;Gert;Power BI, Tableau, SQL, DAX;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10205;19/01/2023;03/01/2024;Product Designer;P1;Completed;JOB119192 - Product Designer;;;Willems;Febe;Figma, Design Systems, Prototyping, User Research;Crelan;Euro;Movify SRL;Belgium;Finance
+PRJ10204;17/01/2023;28/01/2024;React Developer - VRT;P1;Completed;React Developer;;;Nijs;Lieven;React, TypeScript, Next.js, Tailwind, Jest;VRT;Euro;Movify SRL;Belgium;Media
+PRJ10203;17/01/2023;30/06/2023;Agile Coach - P&V Assurances;P1;Completed;JOB170433 - Agile Coach;;;Simon;Mathieu;SAFe, Agile, Coaching, Change Management;P&V Assurances;Euro;Movify SRL;Belgium;Finance
+PRJ10202;16/01/2023;12/04/2023;Design System Lead - Telenet;P1;Completed;JOB160655 - Design System Lead;;;Smets;Ward;Figma, Design Tokens, Storybook, Accessibility;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10201;13/01/2023;28/10/2023;Java Developer;P1;Completed;JOB174722 - Java Developer;;;Hassani;Fatima;Java, Spring Boot, Maven, PostgreSQL, JUnit;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10200;02/01/2023;30/06/2024;React Developer;P1;Completed;JOB183357 - React Developer;;;Roux;Elise;React, TypeScript, Next.js, Tailwind, Jest;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10199;27/12/2022;22/09/2023;Security Engineer - RTBF;P1;Completed;JOB152566 - Security Engineer;;;Silva;Leila;NIS2, Penetration Testing, OWASP, SIEM;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ10198;13/12/2022;06/06/2023;React Developer - UCB;P1;Completed;React Developer;;;Peeters;Els;React, TypeScript, Next.js, Tailwind, Jest;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10197;10/12/2022;12/05/2025;Android Developer - KBC;P1;Completed;JOB126016 - Android Developer;;;Desmet;Niels;Kotlin, Android, Jetpack Compose, Gradle;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10196;08/12/2022;22/06/2023;Java Developer;P1;Completed;Java Developer;;;Poncelet;Sarah;Java, Spring Boot, Maven, PostgreSQL, JUnit;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10195;06/12/2022;16/12/2023;Tech Lead - SD Worx;P1;Completed;JC3927 - Tech Lead;;;David;Yannick;Architecture, Code Review, Mentoring, System Design;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ10194;27/11/2022;12/05/2023;Design System Lead - Orange Belgium;P1;Completed;JC9124 - Design System Lead;;;Goossens;Sara;Figma, Design Tokens, Storybook, Accessibility;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10193;27/11/2022;06/09/2023;Site Reliability Engineer;P1;Completed;JOB176662 - Site Reliability Engineer;;;David;Florian;Kubernetes, Prometheus, Grafana, Incident response;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10192;27/11/2022;01/12/2023;UX Designer;P1;Completed;7291870 - UX Designer;;;Cools;Stefaan;Figma, User Research, Journey Mapping, Usability Testing;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10191;25/11/2022;26/11/2023;Data Engineer;P1;Completed;8664252 - Data Engineer;;;De Backer;Sofie;Python, SQL, Airflow, dbt, Snowflake;Crelan;Euro;Movify SRL;Belgium;Finance
+PRJ10190;03/11/2022;03/11/2023;Angular Developer - RTBF;P1;Completed;JC4530 - Angular Developer;;;Girard;Margaux;Angular, TypeScript, RxJS, NgRx, Jasmine;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ10189;02/11/2022;30/04/2023;iOS Developer - Sibelga;P1;Completed;JOB104515 - iOS Developer;;;Mercier;Margaux;Swift, SwiftUI, iOS, Xcode, Combine;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10188;02/11/2022;22/04/2023;React Developer;P1;Completed;React Developer;;;Nguyen;Fatima;React, TypeScript, Next.js, Tailwind, Jest;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10187;31/10/2022;31/10/2023;Business Analyst;P1;Completed;Business Analyst;;;Lambert;Romain;Business Analysis, BPMN, SQL, Requirements;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10186;30/10/2022;16/08/2023;Back-End Developer - Acerta;P1;Completed;Back-End Developer;;;Mertens;Wout;Java, Spring Boot, PostgreSQL, REST API, Docker;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10185;29/10/2022;14/04/2023;Full-Stack Developer - Fluvius;P1;Completed;Full-Stack Developer;;;Vermeulen;Griet;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10184;24/10/2022;03/04/2024;Android Developer;P1;Completed;JC0791 - Android Developer;;;Wouters;Seppe;Kotlin, Android, Jetpack Compose, Gradle;DPG Media;Euro;Movify SRL;Belgium;Media
+PRJ10183;23/10/2022;14/04/2023;UX/UI Designer - Ageas;P1;Completed;JC4708 - UX/UI Designer;;;Vandenbergh;Bert;Figma, Design Systems, User Research, Prototyping;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10182;14/10/2022;22/06/2023;iOS Developer - SD Worx;P1;Completed;iOS Developer;;;Vandenbergh;Ine;Swift, SwiftUI, iOS, Xcode, Combine;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ10181;14/10/2022;29/03/2024;Data Analyst;P1;Completed;Data Analyst;;;Verhoeven;Sander;SQL, Excel, Tableau, Python;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10180;12/10/2022;19/06/2023;Product Manager;P1;Completed;Product Manager;;;Van Damme;Lore;Roadmapping, User Research, Analytics, Strategy;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10179;27/09/2022;10/06/2023;Security Engineer - Colruyt;P1;Completed;Security Engineer;;;Hubert;Claire;NIS2, Penetration Testing, OWASP, SIEM;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10178;26/09/2022;16/12/2022;DevOps Engineer - AXA Belgium;P1;Completed;JC7412 - DevOps Engineer;;;De Backer;Bram;AWS, Kubernetes, Terraform, CI/CD, Docker;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10177;24/09/2022;24/06/2023;React Developer - TotalEnergies;P1;Completed;JOB169227 - React Developer;;;Roux;Elise;React, TypeScript, Next.js, Tailwind, Jest;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10176;16/09/2022;26/03/2023;Product Owner;P1;Completed;Product Owner;;;Rossi;Dmitri;Scrum, Jira, User Stories, Roadmapping;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10175;11/09/2022;25/03/2023;Business Analyst - Elia;P1;Completed;Business Analyst;;;Buelens;Wout;Business Analysis, BPMN, SQL, Requirements;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10174;05/09/2022;08/02/2024;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;De Smet;Lars;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10173;04/09/2022;23/03/2023;Business Analyst - AXA Belgium;P1;Completed;Business Analyst;;;Lambert;Romain;Business Analysis, BPMN, SQL, Requirements;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10172;04/09/2022;07/12/2022;Full-Stack Developer - Elia;P1;Completed;Full-Stack Developer;;;Nguyen;Priya;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ10171;03/09/2022;04/09/2023;UI Designer - Plantyn;P1;Completed;JOB133990 - UI Designer;;;Morel;Sébastien;Figma, Visual Design, Typography, Design Systems;Plantyn;Euro;Movify SRL;Belgium;Other
+PRJ10170;26/08/2022;21/02/2024;Cloud Engineer (Azure);P1;Completed;8312679 - Cloud Engineer (Azure);;;Nijs;Ward;Azure, Terraform, Azure DevOps, ARM Templates;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10169;25/08/2022;05/05/2023;UX Designer;P1;Completed;JOB100211 - UX Designer;;;Cools;Stefaan;Figma, User Research, Journey Mapping, Usability Testing;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10168;21/08/2022;24/08/2024;Cloud Engineer (Azure) - Fluvius;P1;Completed;Cloud Engineer (Azure);;;De Smet;Anouk;Azure, Terraform, Azure DevOps, ARM Templates;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10167;16/08/2022;11/05/2023;Angular Developer - ING;P1;Completed;Angular Developer;;;Gérard;Yannick;Angular, TypeScript, RxJS, NgRx, Jasmine;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10166;30/07/2022;26/01/2023;Business Analyst - SPW;P1;Completed;Business Analyst;;;Charlier;Hugo;Business Analysis, BPMN, SQL, Requirements;SPW;Euro;Movify SRL;Belgium;Public
+PRJ10165;25/07/2022;12/01/2024;React Developer;P1;Completed;JOB154126 - React Developer;;;Nguyen;Fatima;React, TypeScript, Next.js, Tailwind, Jest;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10164;10/07/2022;11/01/2023;Java Developer - Ageas;P1;Completed;Java Developer;;;Hubert;Damien;Java, Spring Boot, Maven, PostgreSQL, JUnit;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10163;08/07/2022;28/12/2022;Product Owner - Brussels Mobility;P1;Completed;Product Owner;;;Lenoir;Cédric;Scrum, Jira, User Stories, Roadmapping;Brussels Mobility;Euro;Movify SRL;Belgium;Public
+PRJ10162;03/07/2022;30/12/2023;QA Engineer - AXA Belgium;P1;Completed;QA Engineer;;;Van Hove;Inge;Test Plans, Selenium, Cypress, Jira;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10161;23/06/2022;16/03/2023;QA Engineer - GSK;P1;Completed;JOB143992 - QA Engineer;;;Peeters;Els;Test Plans, Selenium, Cypress, Jira;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10160;22/06/2022;03/01/2024;iOS Developer;P1;Completed;JC7892 - iOS Developer;;;Vandenbergh;Ine;Swift, SwiftUI, iOS, Xcode, Combine;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ10159;20/06/2022;28/05/2023;UX/UI Designer;P1;Completed;JOB129034 - UX/UI Designer;;;Mertens;Pieter-Jan;Figma, Design Systems, User Research, Prototyping;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10158;15/06/2022;18/03/2023;Front-End Developer;P1;Completed;Front-End Developer;;;Charlier;Noémie;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10157;14/06/2022;11/11/2024;Front-End Developer - Colruyt;P1;Completed;JC5995 - Front-End Developer;;;Martin;Charlotte;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10156;12/06/2022;02/12/2023;Scrum Master;P1;Completed;JOB107136 - Scrum Master;;;Willems;Nele;Scrum, Agile, Jira, Facilitation;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10155;10/06/2022;11/06/2023;Design System Lead;P1;Completed;Design System Lead;;;Van Damme;Lisa;Figma, Design Tokens, Storybook, Accessibility;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10154;09/06/2022;13/03/2023;Scrum Master - Proximus;P1;Completed;8044931 - Scrum Master;;;Lefebvre;Benoît;Scrum, Agile, Jira, Facilitation;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10153;02/06/2022;29/11/2023;Scrum Master - Luminus;P1;Completed;Scrum Master;;;De Backer;Julie;Scrum, Agile, Jira, Facilitation;Luminus;Euro;Movify SRL;Belgium;Energy
+PRJ10152;27/05/2022;10/03/2023;UI Designer - RTBF;P1;Completed;JC9669 - UI Designer;;;Verhoeven;Sander;Figma, Visual Design, Typography, Design Systems;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ10151;25/05/2022;23/11/2022;UX/UI Designer - Colruyt;P1;Completed;UX/UI Designer;;;Hubert;Claire;Figma, Design Systems, User Research, Prototyping;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10150;24/05/2022;04/12/2023;Angular Developer - BNP Paribas Fortis;P1;Completed;Angular Developer;;;Patel;Ana;Angular, TypeScript, RxJS, NgRx, Jasmine;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10149;23/05/2022;02/06/2023;Python Developer;P1;Completed;8298997 - Python Developer;;;Vermeersch;Tim;Python, Django, FastAPI, PostgreSQL, pytest;SPW;Euro;Movify SRL;Belgium;Public
+PRJ10148;18/05/2022;13/11/2022;Business Analyst - Alpha Credit;P1;Completed;Business Analyst;;;Morel;Florian;Business Analysis, BPMN, SQL, Requirements;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10147;17/05/2022;17/05/2023;UX/UI Designer;P1;Completed;UX/UI Designer;;;Wauters;Céline;Figma, Design Systems, User Research, Prototyping;Smals;Euro;Movify SRL;Belgium;Public
+PRJ10146;16/05/2022;21/11/2022;Agile Coach - Lotus Bakeries;P1;Completed;8417498 - Agile Coach;;;Dumont;Mathieu;SAFe, Agile, Coaching, Change Management;Lotus Bakeries;Euro;Movify SRL;Belgium;Other
+PRJ10145;13/05/2022;12/05/2023;Android Developer - Euroclear;P1;Completed;JOB159571 - Android Developer;;;David;Yannick;Kotlin, Android, Jetpack Compose, Gradle;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10144;10/05/2022;16/02/2023;Business Analyst - Telenet;P1;Completed;JOB126724 - Business Analyst;;;Gérard;Hugo;Business Analysis, BPMN, SQL, Requirements;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10143;05/05/2022;22/04/2023;Analytics Engineer - Engie;P1;Completed;JOB197766 - Analytics Engineer;;;Faure;Manon;dbt, SQL, Snowflake, Looker;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10142;29/04/2022;15/01/2023;Project Manager - ING;P1;Completed;Project Manager;;;De Clercq;Jeroen;Prince2, MS Project, Stakeholder Management, Risk Management;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10141;26/04/2022;10/10/2022;Full-Stack Developer - Luminus;P1;Completed;Full-Stack Developer;;;Mercier;Charlotte;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Luminus;Euro;Movify SRL;Belgium;Energy
+PRJ10140;18/04/2022;03/04/2023;DevOps Engineer;P1;Completed;DevOps Engineer;;;Lenoir;Cédric;AWS, Kubernetes, Terraform, CI/CD, Docker;Brussels Mobility;Euro;Movify SRL;Belgium;Public
+PRJ10139;14/04/2022;27/01/2023;Angular Developer;P1;Completed;Angular Developer;;;De Wit;Sara;Angular, TypeScript, RxJS, NgRx, Jasmine;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10138;11/04/2022;25/04/2023;Java Developer - Smals;P1;Completed;JOB197707 - Java Developer;;;Helsen;Hanne;Java, Spring Boot, Maven, PostgreSQL, JUnit;Smals;Euro;Movify SRL;Belgium;Public
+PRJ10137;05/04/2022;24/09/2022;Tech Lead - Golden Palace Casino;P1;Completed;JOB186992 - Tech Lead;;;Charlier;Noémie;Architecture, Code Review, Mentoring, System Design;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10136;04/04/2022;14/12/2022;Cloud Engineer (AWS) - Acerta;P1;Completed;7567476 - Cloud Engineer (AWS);;;Nguyen;Fatima;AWS, Terraform, Lambda, CloudFormation, S3;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10135;03/04/2022;15/09/2022;Product Owner - Janssen Pharmaceutica;P1;Completed;Product Owner;;;Rossi;Dmitri;Scrum, Jira, User Stories, Roadmapping;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10134;02/04/2022;09/07/2022;Product Owner;P1;Completed;Product Owner;;;Smets;Bert;Scrum, Jira, User Stories, Roadmapping;FOD Financiën;Euro;Movify SRL;Belgium;Public
+PRJ10133;27/03/2022;29/09/2023;Angular Developer - Solvay;P1;Completed;JOB184169 - Angular Developer;;;Poncelet;Sarah;Angular, TypeScript, RxJS, NgRx, Jasmine;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10132;25/03/2022;11/12/2022;iOS Developer;P1;Completed;iOS Developer;;;Maes;Tim;Swift, SwiftUI, iOS, Xcode, Combine;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10131;20/03/2022;12/09/2023;Java Developer - TotalEnergies;P1;Completed;Java Developer;;;Peeters;Tom;Java, Spring Boot, Maven, PostgreSQL, JUnit;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10130;20/03/2022;18/03/2023;Site Reliability Engineer - Belfius;P1;Completed;JOB183676 - Site Reliability Engineer;;;Simon;Loïc;Kubernetes, Prometheus, Grafana, Incident response;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10129;15/03/2022;24/09/2022;Angular Developer;P1;Completed;Angular Developer;;;De Smet;Sara;Angular, TypeScript, RxJS, NgRx, Jasmine;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10128;13/03/2022;10/08/2024;UX Designer;P1;Completed;UX Designer;;;Roux;Elise;Figma, User Research, Journey Mapping, Usability Testing;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10127;09/03/2022;19/02/2023;Product Owner - FOD Financiën;P1;Completed;JOB112056 - Product Owner;;;Smets;Bert;Scrum, Jira, User Stories, Roadmapping;FOD Financiën;Euro;Movify SRL;Belgium;Public
+PRJ10126;05/03/2022;25/11/2022;Functional Analyst - GSK;P1;Completed;Functional Analyst;;;Girard;Margaux;Functional Analysis, UML, Requirements, Jira;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10125;05/03/2022;16/08/2022;Android Developer - Crelan;P1;Completed;JOB119558 - Android Developer;;;Dupont;Damien;Kotlin, Android, Jetpack Compose, Gradle;Crelan;Euro;Movify SRL;Belgium;Finance
+PRJ10124;05/03/2022;09/12/2022;DevOps Engineer;P1;Completed;JOB104709 - DevOps Engineer;;;Lenoir;Cédric;AWS, Kubernetes, Terraform, CI/CD, Docker;STIB-MIVB;Euro;Movify SRL;Belgium;Public
+PRJ10123;20/02/2022;12/02/2024;Product Owner;P1;Completed;Product Owner;;;Michel;Maxime;Scrum, Jira, User Stories, Roadmapping;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10122;20/02/2022;05/05/2022;UX/UI Designer - SD Worx;P1;Completed;UX/UI Designer;;;Vandenbergh;Ine;Figma, Design Systems, User Research, Prototyping;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ10121;19/02/2022;14/02/2023;Project Manager - AXA Belgium;P1;Completed;JOB103663 - Project Manager;;;Nguyen;Hassan;Prince2, MS Project, Stakeholder Management, Risk Management;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10120;18/02/2022;26/08/2022;Business Analyst - AXA Belgium;P1;Completed;JOB143658 - Business Analyst;;;Lambert;Romain;Business Analysis, BPMN, SQL, Requirements;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10119;18/02/2022;25/01/2023;Angular Developer;P1;Completed;Angular Developer;;;Ivanov;Mohamed;Angular, TypeScript, RxJS, NgRx, Jasmine;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ10118;16/02/2022;10/02/2023;Digital Product Owner;P1;Completed;JC4003 - Digital Product Owner;;;Rousseau;Margaux;Scrum, Jira, Analytics, A/B Testing;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10117;16/02/2022;12/11/2022;Site Reliability Engineer;P1;Completed;Site Reliability Engineer;;;Simon;Loïc;Kubernetes, Prometheus, Grafana, Incident response;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10116;15/02/2022;20/11/2022;Full-Stack Developer;P1;Completed;JC3418 - Full-Stack Developer;;;Lemmens;Karolien;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10115;14/02/2022;18/08/2022;Cloud Engineer (AWS);P1;Completed;Cloud Engineer (AWS);;;De Clercq;Jeroen;AWS, Terraform, Lambda, CloudFormation, S3;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10114;11/02/2022;29/05/2022;UX/UI Designer;P1;Completed;JOB135646 - UX/UI Designer;;;Peeters;Tom;Figma, Design Systems, User Research, Prototyping;Smals;Euro;Movify SRL;Belgium;Public
+PRJ10113;09/02/2022;28/05/2022;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;De Smet;Lars;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10112;26/01/2022;04/01/2025;Python Developer - BNP Paribas Fortis;P1;Completed;Python Developer;;;Thiry;Grégoire;Python, Django, FastAPI, PostgreSQL, pytest;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10111;24/01/2022;13/07/2022;Cloud Engineer (AWS);P1;Completed;JOB178452 - Cloud Engineer (AWS);;;Nguyen;Daniel;AWS, Terraform, Lambda, CloudFormation, S3;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10110;24/01/2022;09/04/2022;Java Developer;P1;Completed;JOB121524 - Java Developer;;;Aerts;Leen;Java, Spring Boot, Maven, PostgreSQL, JUnit;De Lijn;Euro;Movify SRL;Belgium;Public
+PRJ10109;23/01/2022;05/11/2022;Android Developer;P1;Completed;JOB197457 - Android Developer;;;Nguyen;Hassan;Kotlin, Android, Jetpack Compose, Gradle;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10108;23/01/2022;08/07/2022;Business Analyst;P1;Completed;8937609 - Business Analyst;;;Nguyen;Fatima;Business Analysis, BPMN, SQL, Requirements;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10107;21/01/2022;10/04/2022;Data Scientist - Lotus Bakeries;P1;Completed;Data Scientist;;;Pauwels;Lotte;Python, scikit-learn, Pandas, Statistics, SQL;Lotus Bakeries;Euro;Movify SRL;Belgium;Other
+PRJ10106;18/01/2022;20/01/2023;Python Developer;P1;Completed;Python Developer;;;Van den Berg;Stefaan;Python, Django, FastAPI, PostgreSQL, pytest;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10105;15/01/2022;11/01/2023;Senior Product Owner - Delhaize;P1;Completed;JC1974 - Senior Product Owner;;;Silva;Mohamed;Agile, Scrum, Jira, Product Discovery, OKRs;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10104;13/01/2022;12/07/2022;Front-End Developer;P1;Completed;Front-End Developer;;;De Smet;Lars;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10103;11/01/2022;27/10/2022;Front-End Developer - AXA Belgium;P1;Completed;Front-End Developer;;;Dehaene;Julie;JavaScript, TypeScript, HTML/CSS, React, Tailwind;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10102;08/01/2022;24/12/2023;Front-End Developer;P1;Completed;JOB117135 - Front-End Developer;;;Helsen;Hanne;JavaScript, TypeScript, HTML/CSS, React, Tailwind;Smals;Euro;Movify SRL;Belgium;Public
+PRJ10101;02/01/2022;26/12/2022;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;Boone;Anouk;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;SPW;Euro;Movify SRL;Belgium;Public
+PRJ10100;31/12/2021;12/09/2022;Service Designer;P1;Completed;JOB120248 - Service Designer;;;Poncelet;Sarah;Service Blueprinting, Journey Mapping, Co-creation;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10099;28/12/2021;12/04/2022;Solution Architect - Fluvius;P1;Completed;Solution Architect;;;Delvaux;Loïc;Architecture, Cloud, Integration, TOGAF;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10098;14/12/2021;20/06/2023;Data Analyst;P1;Completed;JOB197990 - Data Analyst;;;Silva;Leila;SQL, Excel, Tableau, Python;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10097;13/12/2021;14/09/2022;Delivery Manager - Orange Belgium;P1;Completed;JOB123307 - Delivery Manager;;;De Backer;Maarten;Agile, SAFe, Stakeholder Management, Delivery Planning;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10096;01/12/2021;16/02/2022;Back-End Developer - Colruyt;P1;Completed;Back-End Developer;;;Helsen;Hanne;Java, Spring Boot, PostgreSQL, REST API, Docker;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10095;22/11/2021;13/11/2023;iOS Developer - Ageas;P1;Completed;JOB137618 - iOS Developer;;;Van den Berg;Stefaan;Swift, SwiftUI, iOS, Xcode, Combine;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10094;19/11/2021;31/07/2022;Technical Analyst;P1;Completed;JOB154328 - Technical Analyst;;;Thiry;Grégoire;SQL, UML, Architecture, Documentation;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10093;17/11/2021;17/05/2022;Java Developer - DPG Media;P1;Completed;Java Developer;;;Peeters;Tom;Java, Spring Boot, Maven, PostgreSQL, JUnit;DPG Media;Euro;Movify SRL;Belgium;Media
+PRJ10092;15/11/2021;22/04/2024;Product Owner;P1;Completed;JOB183739 - Product Owner;;;Smets;Bert;Scrum, Jira, User Stories, Roadmapping;FOD Financiën;Euro;Movify SRL;Belgium;Public
+PRJ10091;12/11/2021;23/04/2023;iOS Developer - Orange Belgium;P1;Completed;iOS Developer;;;De Backer;Maarten;Swift, SwiftUI, iOS, Xcode, Combine;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10090;09/11/2021;10/08/2022;BI Analyst;P1;Completed;JOB166822 - BI Analyst;;;Fournier;Delphine;Power BI, Tableau, SQL, DAX;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10089;05/11/2021;23/05/2022;Delivery Manager;P1;Completed;Delivery Manager;;;Moreau;Grégoire;Agile, SAFe, Stakeholder Management, Delivery Planning;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10088;30/10/2021;19/10/2022;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;De Smet;Lars;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10087;23/10/2021;31/07/2022;Business Analyst - DPG Media;P1;Completed;JC6465 - Business Analyst;;;Verhoeven;Griet;Business Analysis, BPMN, SQL, Requirements;DPG Media;Euro;Movify SRL;Belgium;Media
+PRJ10086;22/10/2021;01/04/2022;Site Reliability Engineer;P1;Completed;JC1115 - Site Reliability Engineer;;;Nguyen;Daniel;Kubernetes, Prometheus, Grafana, Incident response;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10085;20/10/2021;25/07/2022;Java Developer - Golden Palace Casino;P1;Completed;JOB183343 - Java Developer;;;Charlier;Noémie;Java, Spring Boot, Maven, PostgreSQL, JUnit;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10084;19/10/2021;31/12/2021;Full-Stack Developer - Crelan;P1;Completed;7396812 - Full-Stack Developer;;;Verhoeven;Griet;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Crelan;Euro;Movify SRL;Belgium;Finance
+PRJ10083;14/10/2021;03/10/2022;Python Developer - Janssen Pharmaceutica;P1;Completed;Python Developer;;;Helsen;Hanne;Python, Django, FastAPI, PostgreSQL, pytest;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10082;06/10/2021;19/12/2021;Data Engineer;P1;Completed;7682528 - Data Engineer;;;Leclercq;Charlotte;Python, SQL, Airflow, dbt, Snowflake;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10081;06/10/2021;14/06/2022;Site Reliability Engineer;P1;Completed;8885762 - Site Reliability Engineer;;;Van Hove;Lotte;Kubernetes, Prometheus, Grafana, Incident response;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10080;27/09/2021;06/04/2022;Technical Analyst - De Lijn;P1;Completed;JOB198948 - Technical Analyst;;;Charlier;Camille;SQL, UML, Architecture, Documentation;De Lijn;Euro;Movify SRL;Belgium;Public
+PRJ10079;26/09/2021;28/08/2023;Technical Analyst;P1;Completed;JOB153395 - Technical Analyst;;;Faure;Manon;SQL, UML, Architecture, Documentation;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10078;14/09/2021;22/05/2022;Product Owner - Acerta;P1;Completed;JOB152309 - Product Owner;;;De Wit;Sara;Scrum, Jira, User Stories, Roadmapping;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10077;12/09/2021;30/12/2021;Project Manager - Fluvius;P1;Completed;7394080 - Project Manager;;;Vandenbergh;Bert;Prince2, MS Project, Stakeholder Management, Risk Management;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ10076;08/09/2021;20/09/2022;Product Owner;P1;Completed;JC5069 - Product Owner;;;Rossi;Dmitri;Scrum, Jira, User Stories, Roadmapping;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10075;08/09/2021;10/03/2023;Java Developer;P1;Completed;Java Developer;;;Chen;Yusuf;Java, Spring Boot, Maven, PostgreSQL, JUnit;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10074;04/09/2021;19/09/2022;UI Designer - Solvay;P1;Completed;UI Designer;;;Poncelet;Sarah;Figma, Visual Design, Typography, Design Systems;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10073;02/09/2021;05/06/2022;Back-End Developer;P1;Completed;JOB183010 - Back-End Developer;;;Poncelet;Sarah;Java, Spring Boot, PostgreSQL, REST API, Docker;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10072;29/08/2021;04/06/2022;Senior Product Owner - Euroclear;P1;Completed;Senior Product Owner;;;Verheyden;Marieke;Agile, Scrum, Jira, Product Discovery, OKRs;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10071;24/08/2021;27/01/2023;UX Designer - UCB;P1;Completed;UX Designer;;;Lemmens;Karolien;Figma, User Research, Journey Mapping, Usability Testing;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ10070;09/08/2021;18/01/2022;Test Automation Engineer - SPW;P1;Completed;JC3845 - Test Automation Engineer;;;Morel;Isabelle;Cypress, Playwright, CI/CD, Python;SPW;Euro;Movify SRL;Belgium;Public
+PRJ10069;01/08/2021;20/01/2023;Back-End Developer;P1;Completed;Back-End Developer;;;Aerts;Leen;Java, Spring Boot, PostgreSQL, REST API, Docker;Plantyn;Euro;Movify SRL;Belgium;Other
+PRJ10068;07/07/2021;02/04/2022;Agile Coach;P1;Completed;JC4571 - Agile Coach;;;Lambert;Grégoire;SAFe, Agile, Coaching, Change Management;De Lijn;Euro;Movify SRL;Belgium;Public
+PRJ10067;06/07/2021;02/07/2023;Cloud Engineer (AWS) - Colruyt;P1;Completed;Cloud Engineer (AWS);;;Charlier;Yannick;AWS, Terraform, Lambda, CloudFormation, S3;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10066;02/07/2021;09/12/2021;Cloud Engineer (Azure);P1;Completed;JC7242 - Cloud Engineer (Azure);;;Verheyden;Marieke;Azure, Terraform, Azure DevOps, ARM Templates;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10065;24/06/2021;03/01/2022;Python Developer - Sibelga;P1;Completed;JOB171015 - Python Developer;;;De Clercq;Jeroen;Python, Django, FastAPI, PostgreSQL, pytest;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10064;22/06/2021;04/06/2022;Technical Analyst - Engie;P1;Completed;Technical Analyst;;;Faure;Manon;SQL, UML, Architecture, Documentation;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10063;22/06/2021;22/06/2022;Product Owner - BNP Paribas Fortis;P1;Completed;Product Owner;;;De Wit;Sara;Scrum, Jira, User Stories, Roadmapping;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10062;14/06/2021;28/05/2022;Business Analyst - Proximus;P1;Completed;JC9591 - Business Analyst;;;Mertens;Peter;Business Analysis, BPMN, SQL, Requirements;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10061;03/06/2021;04/06/2023;Business Analyst - Ageas;P1;Completed;Business Analyst;;;Gérard;Hugo;Business Analysis, BPMN, SQL, Requirements;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10060;22/05/2021;12/05/2022;Python Developer - Ageas;P1;Completed;Python Developer;;;Aerts;Leen;Python, Django, FastAPI, PostgreSQL, pytest;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10059;18/05/2021;13/05/2022;.NET Developer;P1;Completed;7849982 - .NET Developer;;;Okonkwo;Yusuf;.NET, C#, ASP.NET, SQL Server, Azure;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10058;14/05/2021;03/02/2022;Site Reliability Engineer - GSK;P1;Completed;Site Reliability Engineer;;;Van Damme;Lore;Kubernetes, Prometheus, Grafana, Incident response;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10057;11/05/2021;30/01/2022;Product Owner;P1;Completed;Product Owner;;;Cools;Stefaan;Scrum, Jira, User Stories, Roadmapping;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10056;01/05/2021;29/10/2021;UX/UI Designer - Solvay;P1;Completed;JC7174 - UX/UI Designer;;;Hubert;Quentin;Figma, Design Systems, User Research, Prototyping;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10055;25/04/2021;10/04/2022;QA Engineer;P1;Completed;QA Engineer;;;David;Yannick;Test Plans, Selenium, Cypress, Jira;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10054;24/04/2021;24/10/2021;Java Developer;P1;Completed;8935345 - Java Developer;;;Roux;Elise;Java, Spring Boot, Maven, PostgreSQL, JUnit;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10053;24/04/2021;28/10/2021;UX/UI Designer - GSK;P1;Completed;JOB181764 - UX/UI Designer;;;Nguyen;Hassan;Figma, Design Systems, User Research, Prototyping;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10052;19/04/2021;14/07/2021;React Developer - Acerta;P1;Completed;JOB114638 - React Developer;;;Nijs;Lieven;React, TypeScript, Next.js, Tailwind, Jest;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10051;17/04/2021;11/01/2022;Python Developer - ING;P1;Completed;Python Developer;;;Aerts;Leen;Python, Django, FastAPI, PostgreSQL, pytest;ING;Euro;Movify SRL;Belgium;Finance
+PRJ10050;31/03/2021;30/12/2021;Data Scientist - TotalEnergies;P1;Completed;JC6690 - Data Scientist;;;Roux;Elise;Python, scikit-learn, Pandas, Statistics, SQL;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10049;28/03/2021;23/12/2021;Cloud Engineer (AWS);P1;Completed;Cloud Engineer (AWS);;;Patel;Ana;AWS, Terraform, Lambda, CloudFormation, S3;DPG Media;Euro;Movify SRL;Belgium;Media
+PRJ10048;18/03/2021;27/03/2022;UX Designer - AXA Belgium;P1;Completed;UX Designer;;;Verheyden;Marieke;Figma, User Research, Journey Mapping, Usability Testing;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ10047;16/03/2021;04/12/2021;Agile Coach;P1;Completed;Agile Coach;;;Lambert;Grégoire;SAFe, Agile, Coaching, Change Management;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ10046;13/03/2021;17/09/2022;Project Manager - bpost;P1;Completed;7208510 - Project Manager;;;Dehaene;Julie;Prince2, MS Project, Stakeholder Management, Risk Management;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10045;24/02/2021;12/09/2021;Product Manager - Ageas;P1;Completed;JOB151394 - Product Manager;;;Gérard;Hugo;Roadmapping, User Research, Analytics, Strategy;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ10044;19/02/2021;17/08/2022;UI Designer - Belfius;P1;Completed;JOB140737 - UI Designer;;;Morel;Sébastien;Figma, Visual Design, Typography, Design Systems;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10043;13/02/2021;31/08/2021;Business Analyst - Orange Belgium;P1;Completed;JOB135691 - Business Analyst;;;De Backer;Maarten;Business Analysis, BPMN, SQL, Requirements;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10042;08/02/2021;11/07/2023;UX Designer;P1;Completed;JC5691 - UX Designer;;;Aerts;Leen;Figma, User Research, Journey Mapping, Usability Testing;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10041;29/01/2021;04/02/2023;iOS Developer - KBC;P1;Completed;7874375 - iOS Developer;;;Maes;Tim;Swift, SwiftUI, iOS, Xcode, Combine;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10040;24/01/2021;29/01/2023;Technical Analyst;P1;Completed;JC4099 - Technical Analyst;;;Ahmed;Rafael;SQL, UML, Architecture, Documentation;Euroclear;Euro;Movify SRL;Belgium;Finance
+PRJ10039;24/01/2021;01/01/2022;.NET Developer - bpost;P1;Completed;.NET Developer;;;Okonkwo;Yusuf;.NET, C#, ASP.NET, SQL Server, Azure;bpost;Euro;Movify SRL;Belgium;Services
+PRJ10038;24/01/2021;22/07/2021;React Developer;P1;Completed;JOB135618 - React Developer;;;Roux;Elise;React, TypeScript, Next.js, Tailwind, Jest;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10037;23/01/2021;14/07/2023;Product Owner - Proximus;P1;Completed;7339520 - Product Owner;;;Henry;Julien;Scrum, Jira, User Stories, Roadmapping;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ10036;10/01/2021;15/01/2022;UI Designer - Sibelga;P1;Completed;UI Designer;;;De Clercq;Jeroen;Figma, Visual Design, Typography, Design Systems;Sibelga;Euro;Movify SRL;Belgium;Energy
+PRJ10035;31/12/2020;12/01/2022;Project Manager - GSK;P1;Completed;JC6912 - Project Manager;;;Segers;Seppe;Prince2, MS Project, Stakeholder Management, Risk Management;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10034;17/12/2020;21/06/2022;Product Manager - BNP Paribas Fortis;P1;Completed;Product Manager;;;Nguyen;Hassan;Roadmapping, User Research, Analytics, Strategy;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ10033;06/12/2020;15/11/2021;Full-Stack Developer;P1;Completed;Full-Stack Developer;;;Peeters;Tom;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10032;30/11/2020;07/12/2021;Product Owner - DPG Media;P1;Completed;Product Owner;;;Henry;Julien;Scrum, Jira, User Stories, Roadmapping;DPG Media;Euro;Movify SRL;Belgium;Media
+PRJ10031;10/11/2020;12/08/2021;Cloud Engineer (Azure);P1;Completed;JC5820 - Cloud Engineer (Azure);;;Verheyden;Marieke;Azure, Terraform, Azure DevOps, ARM Templates;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10030;04/11/2020;17/07/2021;Android Developer - Acerta;P1;Completed;JOB144417 - Android Developer;;;Nguyen;Hassan;Kotlin, Android, Jetpack Compose, Gradle;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ10029;22/10/2020;05/10/2021;Angular Developer - Janssen Pharmaceutica;P1;Completed;Angular Developer;;;Gérard;Hugo;Angular, TypeScript, RxJS, NgRx, Jasmine;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ10028;20/10/2020;17/07/2021;Agile Coach;P1;Completed;JC4896 - Agile Coach;;;Lambert;Grégoire;SAFe, Agile, Coaching, Change Management;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ10027;17/10/2020;09/07/2021;Business Analyst - Orange Belgium;P1;Completed;Business Analyst;;;Jacobs;Lore;Business Analysis, BPMN, SQL, Requirements;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10026;08/10/2020;21/01/2021;Technical Analyst;P1;Completed;Technical Analyst;;;Ivanov;Mohamed;SQL, UML, Architecture, Documentation;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ10025;29/09/2020;31/12/2020;Business Analyst - De Lijn;P1;Completed;Business Analyst;;;Lambert;Grégoire;Business Analysis, BPMN, SQL, Requirements;De Lijn;Euro;Movify SRL;Belgium;Public
+PRJ10024;23/09/2020;22/03/2021;Tech Lead - Colruyt;P1;Completed;JOB137504 - Tech Lead;;;Charlier;Yannick;Architecture, Code Review, Mentoring, System Design;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10023;20/09/2020;09/09/2021;Front-End Developer;P1;Completed;JOB176778 - Front-End Developer;;;Massart;Amélie;JavaScript, TypeScript, HTML/CSS, React, Tailwind;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10022;09/09/2020;23/12/2020;Tech Lead;P1;Completed;JOB142614 - Tech Lead;;;Charlier;Yannick;Architecture, Code Review, Mentoring, System Design;Luminus;Euro;Movify SRL;Belgium;Energy
+PRJ10021;26/08/2020;30/08/2021;UX/UI Designer;P1;Completed;UX/UI Designer;;;Segers;Seppe;Figma, Design Systems, User Research, Prototyping;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10020;07/08/2020;14/08/2021;DevOps Engineer;P1;Completed;DevOps Engineer;;;Nijs;Lieven;AWS, Kubernetes, Terraform, CI/CD, Docker;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10019;15/07/2020;09/01/2021;Data Analyst - GSK;P1;Completed;Data Analyst;;;Segers;Seppe;SQL, Excel, Tableau, Python;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10018;01/07/2020;08/03/2021;Tech Lead - GSK;P1;Completed;Tech Lead;;;Segers;Seppe;Architecture, Code Review, Mentoring, System Design;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ10017;13/06/2020;24/05/2021;iOS Developer;P1;Completed;iOS Developer;;;De Backer;Maarten;Swift, SwiftUI, iOS, Xcode, Combine;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10016;02/06/2020;11/09/2020;iOS Developer;P1;Completed;JC8671 - iOS Developer;;;De Backer;Maarten;Swift, SwiftUI, iOS, Xcode, Combine;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10015;11/05/2020;04/05/2022;Full-Stack Developer - Solvay;P1;Completed;JOB152653 - Full-Stack Developer;;;Dehaene;Julie;JavaScript, TypeScript, React, Node.js, PostgreSQL, REST API;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10014;28/04/2020;01/11/2020;UX Designer - Delhaize;P1;Completed;UX Designer;;;Cools;Stefaan;Figma, User Research, Journey Mapping, Usability Testing;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ10013;05/04/2020;05/09/2022;Product Owner - Engie;P1;Completed;Product Owner;;;Roux;Elise;Scrum, Jira, User Stories, Roadmapping;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ10012;17/03/2020;22/03/2021;Data Engineer;P1;Completed;JOB100397 - Data Engineer;;;Maes;Tim;Python, SQL, Airflow, dbt, Snowflake;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10011;11/03/2020;14/03/2021;React Developer;P1;Completed;React Developer;;;Roux;Elise;React, TypeScript, Next.js, Tailwind, Jest;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10010;09/03/2020;01/12/2020;UI Designer - DPG Media;P1;Completed;8249315 - UI Designer;;;Verhoeven;Griet;Figma, Visual Design, Typography, Design Systems;DPG Media;Euro;Movify SRL;Belgium;Media
+PRJ10009;21/02/2020;12/08/2022;Technical Analyst;P1;Completed;JOB157145 - Technical Analyst;;;Ahmed;Rafael;SQL, UML, Architecture, Documentation;Solvay;Euro;Movify SRL;Belgium;Pharma
+PRJ10008;20/02/2020;21/01/2022;Angular Developer;P1;Completed;Angular Developer;;;Moreau;Grégoire;Angular, TypeScript, RxJS, NgRx, Jasmine;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ10007;20/02/2020;04/05/2020;React Developer;P1;Completed;JC6332 - React Developer;;;Roux;Elise;React, TypeScript, Next.js, Tailwind, Jest;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ10006;04/02/2020;16/01/2021;UX Designer;P1;Completed;JOB142832 - UX Designer;;;Cools;Stefaan;Figma, User Research, Journey Mapping, Usability Testing;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ10005;01/02/2020;19/04/2020;UI Designer - KBC;P1;Completed;UI Designer;;;Verhoeven;Griet;Figma, Visual Design, Typography, Design Systems;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ10004;25/01/2020;06/10/2020;Project Manager;P1;Completed;JOB130040 - Project Manager;;;Charlier;Yannick;Prince2, MS Project, Stakeholder Management, Risk Management;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ10003;24/01/2020;07/11/2020;React Developer - TotalEnergies;P1;Completed;React Developer;;;Roux;Elise;React, TypeScript, Next.js, Tailwind, Jest;TotalEnergies;Euro;Movify SRL;Belgium;Energy
+PRJ10002;17/01/2020;02/11/2020;UI Designer;P1;Completed;UI Designer;;;Verhoeven;Griet;Figma, Visual Design, Typography, Design Systems;Telenet;Euro;Movify SRL;Belgium;Telecom
+PRJ10001;11/01/2020;16/07/2020;React Developer - TotalEnergies;P1;Completed;JOB157044 - React Developer;;;Roux;Elise;React, TypeScript, Next.js, Tailwind, Jest;TotalEnergies;Euro;Movify SRL;Belgium;Energy
