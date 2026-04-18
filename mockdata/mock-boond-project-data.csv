@@ -1,0 +1,101 @@
+Internal reference;Start;End;Reference;Type;State;Opportunity - Title;Consultant - Last Name;Consultant - First Name;Company - Name;Currency;Agency;Country;Company - Sector activity
+PRJ152;16/04/2025;25/08/2026;Angular Developer - STIB-MIVB;P1;Active;Angular Developer;De Smet;Lars;STIB-MIVB;Euro;Movify SRL;Belgium;Public
+PRJ151;23/05/2022;24/04/2028;Technical Analyst;P1;Active;8907780 - Technical Analyst;Maes;Jonas;Ores;Euro;Movify SRL;Belgium;Energy
+PRJ150;24/10/2024;09/06/2026;Angular Developer;P1;Active;Angular Developer;Segers;Inge;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ149;07/03/2026;01/04/2028;Data Analyst;P1;Active;JOB103379 - Data Analyst;Faure;Romain;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ148;24/03/2026;11/07/2026;Tech Lead - Golden Palace Casino;P1;Active;Tech Lead;Costa;Leila;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ147;13/03/2026;03/09/2026;UI Designer - SD Worx;P1;Active;JC3110 - UI Designer;Desmet;Lotte;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ146;05/11/2024;31/07/2027;Site Reliability Engineer - Elia;P1;Active;Site Reliability Engineer;Van Damme;Matthias;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ145;22/10/2025;08/06/2026;Product Lead - UCB;P1;Active;7203826 - Product Lead;Leclercq;Sarah;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ144;01/11/2024;31/10/2026;Service Designer - Orange Belgium;P1;Active;Service Designer;Aerts;Sofie;Orange Belgium;Euro;Movify SRL;Belgium;Telecom
+PRJ143;27/04/2022;24/01/2027;Front-End Developer;P1;Active;Front-End Developer;Ahmed;Sofia;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ142;02/05/2024;30/11/2026;Java Developer;P1;Active;Java Developer;Van Hove;Emma;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ141;29/04/2023;02/06/2026;Senior Product Owner;P1;Active;Senior Product Owner;Roux;Sarah;STIB-MIVB;Euro;Movify SRL;Belgium;Public
+PRJ140;08/11/2024;25/07/2027;Platform Engineer;P1;Active;JC3771 - Platform Engineer;Hubert;Claire;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ139;28/07/2025;19/07/2026;Product Lead - RTBF;P1;Active;JC5882 - Product Lead;De Wit;Lisa;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ138;29/07/2025;26/10/2026;Product Designer;P1;Active;Product Designer;De Vos;Febe;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ137;23/03/2026;31/08/2026;Project Manager;P1;Active;JOB122946 - Project Manager;De Wit;Pieter-Jan;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ136;12/05/2023;16/01/2027;Senior Product Owner;P1;Active;Senior Product Owner;Dupont;Noémie;De Lijn;Euro;Movify SRL;Belgium;Public
+PRJ135;09/03/2026;10/10/2027;Design System Lead - Golden Palace Casino;P1;Active;JOB143065 - Design System Lead;Nguyen;Daniel;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ134;18/03/2026;10/10/2027;Solution Architect;P1;Active;8102999 - Solution Architect;Vandamme;Ine;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ133;06/10/2025;12/08/2026;Site Reliability Engineer - Delhaize;P1;Active;JC6731 - Site Reliability Engineer;Charlier;Yannick;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ132;01/11/2024;12/04/2027;Mobile Developer (Flutter);P1;Active;Mobile Developer (Flutter);El Mansouri;Diego;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ131;04/01/2026;19/01/2027;UX Designer - FPS BOSA;P1;Active;7990316 - UX Designer;Michel;Romain;FPS BOSA;Euro;Movify SRL;Belgium;Public
+PRJ130;06/08/2025;16/04/2028;Agile Coach;P1;Active;JC0225 - Agile Coach;Lefebvre;Benoît;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ129;21/04/2025;31/10/2026;Data Analyst;P1;Active;Data Analyst;Vermeersch;Tim;Lotus Bakeries;Euro;Movify SRL;Belgium;Other
+PRJ128;29/04/2025;15/01/2027;Functional Analyst;P1;Active;7659590 - Functional Analyst;Noël;Mélanie;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ127;09/04/2025;25/07/2026;Senior Product Owner;P1;Active;Senior Product Owner;Pauwels;Tim;Ores;Euro;Movify SRL;Belgium;Energy
+PRJ126;22/07/2025;31/08/2026;Senior Business Analyst - GSK;P1;Active;JC1497 - Senior Business Analyst;Kowalski;Leila;GSK;Euro;Movify SRL;Belgium;Pharma
+PRJ125;31/10/2025;12/06/2026;Design System Lead;P1;Active;Design System Lead;El Mansouri;Raj;Belfius;Euro;Movify SRL;Belgium;Finance
+PRJ124;28/10/2025;16/07/2026;Design System Lead - FOD Financiën;P1;Active;Design System Lead;Janssens;Jeroen;FOD Financiën;Euro;Movify SRL;Belgium;Public
+PRJ123;21/05/2022;06/10/2027;Tech Lead - BNP Paribas Fortis;P1;Active;JOB131439 - Tech Lead;De Backer;Julie;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ122;16/01/2026;22/04/2027;AI Engineer;P1;Active;AI Engineer;De Smet;Tom;KBC;Euro;Movify SRL;Belgium;Finance
+PRJ121;05/10/2025;07/07/2026;Product Lead - Ores;P1;Active;JOB164454 - Product Lead;Janssens;Katrien;Ores;Euro;Movify SRL;Belgium;Energy
+PRJ120;17/03/2026;08/06/2026;iOS Developer;P1;Active;iOS Developer;Roux;Aurélie;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ119;30/10/2024;24/06/2026;Angular Developer;P1;Active;JOB196810 - Angular Developer;Van Damme;Lisa;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ118;25/03/2026;28/07/2026;Product Lead - Luminus;P1;Active;Product Lead;Charlier;Hugo;Luminus;Euro;Movify SRL;Belgium;Energy
+PRJ117;27/04/2023;19/07/2027;Angular Developer - Proximus;P1;Active;Angular Developer;Wauters;Céline;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ116;06/03/2026;29/10/2026;React Developer;P1;Active;JC0471 - React Developer;Legrand;Virginie;Brussels Airlines;Euro;Movify SRL;Belgium;Services
+PRJ115;21/04/2024;12/07/2026;UX/UI Designer;P1;Active;JC8818 - UX/UI Designer;Claes;Sara;De Lijn;Euro;Movify SRL;Belgium;Public
+PRJ114;22/10/2024;14/04/2027;BI Analyst;P1;Active;JOB184874 - BI Analyst;De Wit;Kristof;bpost;Euro;Movify SRL;Belgium;Services
+PRJ113;02/02/2026;18/10/2027;Data Scientist;P1;Active;JC3250 - Data Scientist;Wouters;Nele;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ112;30/03/2026;22/07/2026;Functional Analyst;P1;Active;JOB191680 - Functional Analyst;Maes;Tim;P&V Assurances;Euro;Movify SRL;Belgium;Finance
+PRJ111;11/05/2022;09/07/2026;Android Developer;P1;Active;JOB145870 - Android Developer;Segers;Lieven;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ110;17/04/2025;28/05/2026;Project Manager;P1;Active;JOB134099 - Project Manager;Van Damme;Nele;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ109;15/10/2024;12/10/2026;Senior Business Analyst - Smals;P1;Active;7815492 - Senior Business Analyst;De Wit;Wout;Smals;Euro;Movify SRL;Belgium;Public
+PRJ108;08/03/2026;03/09/2026;Product Designer;P1;Active;JOB175456 - Product Designer;Gérard;Antoine;Ores;Euro;Movify SRL;Belgium;Energy
+PRJ107;02/11/2024;17/07/2026;Product Manager - Engie;P1;Active;JOB150205 - Product Manager;Wauters;Margaux;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ106;05/05/2023;25/07/2027;BI Analyst - Engie;P1;Active;BI Analyst;Chen;Aïcha;Engie;Euro;Movify SRL;Belgium;Energy
+PRJ105;27/03/2026;05/07/2027;Analytics Engineer;P1;Active;Analytics Engineer;Nguyen;Priya;Fluvius;Euro;Movify SRL;Belgium;Energy
+PRJ104;23/10/2025;27/07/2026;Delivery Manager;P1;Active;Delivery Manager;Gérard;Yannick;Colruyt;Euro;Movify SRL;Belgium;Retail
+PRJ103;19/04/2024;31/07/2026;Tech Lead - Proximus;P1;Active;JOB162277 - Tech Lead;Willems;Nele;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ102;29/10/2025;24/08/2026;Site Reliability Engineer - Brussels Airlines;P1;Active;8416893 - Site Reliability Engineer;Chen;Dmitri;Brussels Airlines;Euro;Movify SRL;Belgium;Services
+PRJ101;16/07/2025;18/08/2026;Analytics Engineer;P1;Active;JOB187153 - Analytics Engineer;Costa;Sofia;UCB;Euro;Movify SRL;Belgium;Pharma
+PRJ100;02/05/2023;02/02/2027;Mobile Developer (Flutter);P1;Active;JC1147 - Mobile Developer (Flutter);De Clercq;Matthias;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ99;17/10/2025;08/10/2027;Project Manager - Acerta;P1;Active;Project Manager;Verhoeven;Griet;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ98;02/11/2024;31/07/2026;Scrum Master;P1;Active;Scrum Master;Diallo;Mohamed;Crelan;Euro;Movify SRL;Belgium;Finance
+PRJ97;14/10/2025;31/07/2027;Technical Analyst;P1;Active;JC0635 - Technical Analyst;Girard;Claire;Decathlon;Euro;Movify SRL;Belgium;Retail
+PRJ96;16/10/2025;01/02/2027;Site Reliability Engineer;P1;Active;Site Reliability Engineer;Claes;Maarten;Acerta;Euro;Movify SRL;Belgium;Services
+PRJ95;03/11/2025;03/09/2026;BI Analyst;P1;Active;JOB146898 - BI Analyst;Maes;Niels;Smals;Euro;Movify SRL;Belgium;Public
+PRJ94;20/10/2024;02/04/2028;Data Engineer;P1;Active;7020278 - Data Engineer;De Backer;Bram;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ93;24/01/2026;27/10/2026;Back-End Developer;P1;Active;Back-End Developer;Goossens;Katrien;Delhaize;Euro;Movify SRL;Belgium;Retail
+PRJ92;02/11/2025;31/07/2027;Angular Developer - ING;P1;Active;JC8667 - Angular Developer;Coppens;Bram;ING;Euro;Movify SRL;Belgium;Finance
+PRJ91;02/11/2024;11/07/2026;Angular Developer - P&V Assurances;P1;Active;JC1189 - Angular Developer;Massart;Elise;P&V Assurances;Euro;Movify SRL;Belgium;Finance
+PRJ90;01/05/2025;05/09/2026;Data Engineer - FOD Financiën;P1;Active;Data Engineer;Laurent;Cédric;FOD Financiën;Euro;Movify SRL;Belgium;Public
+PRJ89;11/03/2026;31/10/2026;Vue.js Developer - Ageas;P1;Active;Vue.js Developer;Wauters;Noémie;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ88;03/11/2025;07/07/2026;Service Designer - Ageas;P1;Active;Service Designer;Moreau;Romain;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ87;04/01/2026;02/07/2026;.NET Developer;P1;Active;JOB170855 - .NET Developer;Desmet;Niels;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ86;19/10/2024;31/01/2027;Mobile Developer (Flutter) - Ores;P1;Active;Mobile Developer (Flutter);De Backer;Maarten;Ores;Euro;Movify SRL;Belgium;Energy
+PRJ85;04/01/2026;20/07/2027;Cloud Engineer (AWS);P1;Active;Cloud Engineer (AWS);Silva;Andrei;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ84;17/10/2025;31/10/2026;UI Designer;P1;Active;JOB104117 - UI Designer;Dehaene;Eva;Ageas;Euro;Movify SRL;Belgium;Finance
+PRJ83;30/04/2024;29/10/2027;Delivery Manager;P1;Active;JOB140857 - Delivery Manager;Charlier;Pierre;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ82;17/04/2024;10/04/2027;UX Designer;P1;Active;JOB163699 - UX Designer;Noël;Alexandre;Janssen Pharmaceutica;Euro;Movify SRL;Belgium;Pharma
+PRJ81;15/10/2025;11/10/2026;UX Designer - SD Worx;P1;Active;UX Designer;Girard;Margaux;SD Worx;Euro;Movify SRL;Belgium;Services
+PRJ80;05/01/2026;13/10/2026;QA Engineer - RTBF;P1;Active;JC2592 - QA Engineer;Aerts;Tine;RTBF;Euro;Movify SRL;Belgium;Media
+PRJ79;07/04/2026;31/12/2026;Delivery Manager;P1;Active;Delivery Manager;Morel;Benoît;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ76;16/03/2026;30/09/2026;UX/UI Designer;P1;Active;UX/UI Designer;Coppens;Maarten;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ64;09/03/2026;29/05/2026;Business Analyst - AI Tribe;P1;Active;Business Analyst - AI Tribe;Peeters;Els;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ60;06/01/2026;30/06/2026;AI PoV - Fraud Detection;P1;Active;AI Engineer (Fraud);Peeters;Karel;ING;Euro;Movify SRL;Belgium;Finance
+PRJ57;24/02/2025;30/06/2026;Project Manager - bpost;P1;Active;Project Manager;Collard;Sarah;bpost;Euro;Movify SRL;Belgium;Services
+PRJ56;23/04/2019;29/01/2027;iOS Developer - BNP Paribas Fortis;P1;Active;JOB117161 - IOS Developer;Dethier;François;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ55;07/04/2025;07/10/2026;Product Lead - Plantyn;P1;Active;Product Lead;Verhoeven;Sander;Plantyn;Euro;Movify SRL;Belgium;Other
+PRJ54;10/02/2025;30/06/2026;UX Designer/Service Designer - Smals;P1;Active;UX Designer/Service Designer;Luyten;Katrien;Smals;Euro;Movify SRL;Belgium;Public
+PRJ53;29/07/2024;30/06/2026;Proximus;P1;Active;JC0029 - Senior Developer;Lemaire;Camille;Proximus;Euro;Movify SRL;Belgium;Telecom
+PRJ52;13/06/2023;31/05/2026;IT Developer (Android) - BNP Paribas Fortis;P1;Active;JOB157488 - IT Developer (Android);Rousseau;Sophie;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ50;04/03/2024;31/12/2026;UX Designer - Golden Palace;P1;Active;UX Designer;Roux;Elise;Golden Palace Casino;Euro;Movify SRL;Belgium;Other
+PRJ49;18/02/2019;31/12/2026;IT Developer - VRT;P1;Active;VRT-TT-39 - IT Developer;Bertrand;Grégoire;VRT;Euro;Movify SRL;Belgium;Media
+PRJ46;08/01/2024;31/12/2026;Digital Product Owner Service - Elia;P1;Active;8003110 - Digital Product Owner Service;Simon;Romain;Elia;Euro;Movify SRL;Belgium;Energy
+PRJ44;08/11/2021;31/12/2026;UI/UX Designer - Concept Designer - BNP Paribas Fortis;P1;Active;UI/UX Designer - Concept Designer;Verstraete;Margot;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ43;01/05/2021;31/12/2026;IT Developer - Alpha Credit;P1;Active;IT Developer;Pauwels;Lotte;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ42;03/12/2024;30/06/2026;UX Designer/Service Designer - Smals;P1;Active;UX Designer/Service Designer;Moreau;Alexandre;Smals;Euro;Movify SRL;Belgium;Public
+PRJ41;02/12/2023;31/12/2026;Front-End Developer Design System - SPW;P1;Active;Front-End Developer Design System;Lemaire;François;SPW;Euro;Movify SRL;Belgium;Public
+PRJ40;05/11/2024;31/12/2026;Front-End Developer (Drupal) - Alpha Credit;P1;Active;Front-End Developer (Drupal);Segers;Maarten;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ39;08/05/2023;18/12/2026;UI Designer - AXA Belgium;P1;Active;UI Designer;Dupont;Romain;AXA Belgium;Euro;Movify SRL;Belgium;Finance
+PRJ38;29/06/2023;31/12/2026;UI/UX Designer - Alpha Credit;P1;Active;UI/UX Designer;Leclercq;Charlotte;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ37;13/10/2025;31/12/2026;UI/UX Designer - Alpha Credit;P1;Active;UI/UX Designer;Verheyden;Lotte;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ36;14/04/2025;31/12/2026;Front-End Developer (Drupal) - Alpha Credit;P1;Active;Front-End Developer (Drupal);Aerts;Leen;Alpha Credit;Euro;Movify SRL;Belgium;Finance
+PRJ31;08/01/2018;30/04/2026;UX/UI Designer - BNP Paribas Fortis;P1;Active;JOB108579;De Backer;Silke;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ30;07/07/2025;30/06/2026;Product Owner - bpost;P1;Active;JOB114539;Silva;Sofia;bpost;Euro;Movify SRL;Belgium;Services
+PRJ29;27/10/2022;30/04/2026;Senior UX/UI Designer - BNP Paribas Fortis;P1;Active;JOB159881;Kowalski;Andrei;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ28;04/11/2019;30/04/2026;IT Developer - BNP Paribas Fortis;P1;Active;JOB127084;De Smet;Kristof;BNP Paribas Fortis;Euro;Movify SRL;Belgium;Finance
+PRJ26;11/03/2024;31/12/2026;Business Analyst - Ores;P1;Active;Functional Analyst;Delvaux;Sophie;Ores;Euro;Movify SRL;Belgium;Energy

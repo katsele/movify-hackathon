@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { MockForecastCell } from "@/lib/mock-data";
+import type { ForecastCell } from "@/lib/mock-data";
+import type { SignalLookup } from "@/lib/hooks/useSignalsByIds";
+import type { SignalSource } from "@/lib/types";
 import {
   Tooltip,
   TooltipContent,
@@ -10,10 +13,21 @@ import {
 } from "@/components/ui/tooltip";
 
 interface ForecastHeatmapProps {
-  cells: MockForecastCell[];
+  cells: ForecastCell[];
   weeks?: number;
   interactive?: boolean;
+  signalsById?: Record<string, SignalLookup>;
 }
+
+const SOURCE_LABEL: Record<SignalSource, string> = {
+  boond_crm: "Pipeline",
+  ted_procurement: "TED",
+  news_intelligence: "News",
+  news: "News",
+  google_trends: "Trend",
+  ats_greenhouse: "Greenhouse",
+  ats_lever: "Lever",
+};
 
 function gapColor(gap: number) {
   if (gap >= 3) return "bg-signal-gap text-white";
@@ -31,6 +45,7 @@ export function ForecastHeatmap({
   cells,
   weeks = 12,
   interactive = true,
+  signalsById,
 }: ForecastHeatmapProps) {
   const skillsOrdered: { name: string; discipline: string }[] = [];
   const seen = new Set<string>();
@@ -104,7 +119,7 @@ export function ForecastHeatmap({
                             cellNode
                           )}
                         </TooltipTrigger>
-                        <TooltipContent side="top">
+                        <TooltipContent side="top" className="max-w-xs">
                           <div className="space-y-0.5">
                             <div className="font-semibold">
                               {skill.name} · W{cell.week}
@@ -127,6 +142,10 @@ export function ForecastHeatmap({
                                 {Math.round(cell.confidence * 100)}%
                               </span>
                             </div>
+                            <ContributingSignalList
+                              ids={cell.contributingSignalIds}
+                              signalsById={signalsById}
+                            />
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -139,6 +158,51 @@ export function ForecastHeatmap({
         </tbody>
       </table>
       <Legend />
+    </div>
+  );
+}
+
+function ContributingSignalList({
+  ids,
+  signalsById,
+}: {
+  ids?: string[];
+  signalsById?: Record<string, SignalLookup>;
+}) {
+  if (!ids?.length || !signalsById) return null;
+  const resolved = ids
+    .map((id) => signalsById[id])
+    .filter((s): s is SignalLookup => Boolean(s));
+  if (!resolved.length) return null;
+  const visible = resolved.slice(0, 3);
+  const extra = resolved.length - visible.length;
+  return (
+    <div className="mt-1 pt-1 border-t border-border/60 text-[11px] space-y-0.5">
+      <div className="text-muted-foreground">
+        Driven by {resolved.length} signal{resolved.length === 1 ? "" : "s"}:
+      </div>
+      {visible.map((s) => (
+        <div key={s.id} className="flex items-start gap-1.5">
+          <span className="inline-block rounded bg-muted px-1 py-px text-[10px] font-medium text-muted-foreground shrink-0">
+            {SOURCE_LABEL[s.source] ?? s.source}
+          </span>
+          <span className="flex-1 truncate">{s.title ?? "—"}</span>
+          {s.url ? (
+            <a
+              href={s.url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-muted-foreground hover:text-foreground shrink-0"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          ) : null}
+        </div>
+      ))}
+      {extra > 0 && (
+        <div className="text-muted-foreground">+{extra} more</div>
+      )}
     </div>
   );
 }
