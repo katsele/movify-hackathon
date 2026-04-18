@@ -9,12 +9,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from connectors.boond import BoondConnector
+from connectors.boond_csv import BoondCsvConnector
 from connectors.google_trends import GoogleTrendsConnector
 from connectors.news_intelligence import NewsIntelligenceConnector
 from connectors.ted_procurement import TEDProcurementConnector
 
 CONNECTORS = {
     "boond": BoondConnector,
+    "boond_csv": BoondCsvConnector,
     "ted_procurement": TEDProcurementConnector,
     "google_trends": GoogleTrendsConnector,
     "news_intelligence": NewsIntelligenceConnector,

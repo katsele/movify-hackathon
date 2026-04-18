@@ -104,6 +104,7 @@ Env vars are auto-loaded from `.env.local` via `python-dotenv`. Every worker nee
 | Command | Source | Writes to | Extra env needed |
 |---|---|---|---|
 | `python run_connector.py boond` | Boondmanager CRM | `consultants`, `deals`, `deal_profiles`, `projects` | Boond JWT triple (`BOOND_USER_TOKEN`, `BOOND_CLIENT_TOKEN`, `BOOND_CLIENT_KEY`) **or** Basic auth (`BOOND_USERNAME`, `BOOND_PASSWORD`) |
+| `python run_connector.py boond_csv` | Boond CSV exports in `mockdata/` (fallback when the live API is unavailable) | `consultants`, `consultant_skills`, `projects`, `project_skills` | Optional `BOOND_CSV_DIR` to override the default `mockdata/` path |
 | `python run_connector.py ted_procurement` | TED EU procurement notices | `signals`, `signal_skills` | — |
 | `python run_connector.py google_trends` | Google Trends, geo=BE | `signals`, `signal_skills` | — |
 | `python run_connector.py news_intelligence` | News RSS / Atom feeds | `signals`, `signal_skills`, news event tables | — |
