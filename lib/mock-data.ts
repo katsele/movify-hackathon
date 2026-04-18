@@ -5,7 +5,7 @@ import type {
   RecentSignal,
 } from "@/lib/types";
 
-export interface MockForecastCell {
+export interface ForecastCell {
   skill: string;
   discipline: string;
   week: number;
@@ -13,7 +13,11 @@ export interface MockForecastCell {
   supply: number;
   gap: number;
   confidence: number;
+  contributingSignalIds?: string[];
 }
+
+// Back-compat alias — existing imports keep working while the rename lands.
+export type MockForecastCell = ForecastCell;
 
 export const MOCK_SKILLS = [
   { name: "React", discipline: "Web Development" },
@@ -36,9 +40,9 @@ const seedRandom = (seed: number) => {
   };
 };
 
-export function buildMockForecast(): MockForecastCell[] {
+export function buildMockForecast(): ForecastCell[] {
   const rand = seedRandom(42);
-  const cells: MockForecastCell[] = [];
+  const cells: ForecastCell[] = [];
 
   MOCK_SKILLS.forEach((skill, i) => {
     const baseDemand = 2 + Math.floor(rand() * 5);

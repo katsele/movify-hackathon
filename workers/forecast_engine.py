@@ -1,17 +1,21 @@
 """Forecasting engine — weighted signal aggregation (V1).
 
-Combines CRM pipeline, procurement notices, historical patterns, Google Trends
-and job postings into a rolling 12-week demand forecast per skill.
+Combines CRM pipeline, news intelligence, procurement notices and historical
+patterns into a rolling 12-week demand forecast per skill. Trend and job-posting
+weights are zeroed for the hackathon cut (those connectors ship in V1).
 """
 from __future__ import annotations
 
 import logging
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from typing import Any
 
 from supabase import Client, create_client
 
 log = logging.getLogger(__name__)
+
+CONVERGENCE_WINDOW_DAYS = 28
+NEWS_RECENCY_WINDOW_DAYS = 90
 
 
 class ForecastEngine:
@@ -19,9 +23,11 @@ class ForecastEngine:
         "crm_pipeline": 0.35,
         "procurement_notice": 0.25,
         "historical_pattern": 0.15,
-        "trend_spike": 0.10,
-        "job_posting": 0.10,
         "news_event": 0.05,
+        # Trend + job-posting connectors don't ship until V1 — keep the keys for
+        # schema parity but score them as zero so they never distort the demo.
+        "trend_spike": 0.0,
+        "job_posting": 0.0,
     }
 
     def __init__(
@@ -59,21 +65,26 @@ class ForecastEngine:
             target_week = today + timedelta(weeks=offset)
 
             crm = self._score_crm_pipeline(skill_id, target_week)
-            procurement = self._score_procurement(skill_id)
+            procurement = self._score_procurement(skill_id, target_week)
+            news = self._score_news_events(skill_id, target_week)
             historical = self._score_historical_pattern(skill_id, target_week)
-            trend = self._score_trends(skill_id)
-            posting = self._score_job_postings(skill_id)
 
             raw_demand = (
                 crm * self.weights["crm_pipeline"]
                 + procurement * self.weights["procurement_notice"]
                 + historical * self.weights["historical_pattern"]
-                + trend * self.weights["trend_spike"]
-                + posting * self.weights["job_posting"]
+                + news * self.weights["news_event"]
             )
 
-            active = sum(1 for s in (crm, procurement, historical, trend, posting) if s > 0)
-            confidence = min(active / 4.0, 1.0)
+            active = sum(1 for s in (crm, procurement, historical, news) if s > 0)
+            base_confidence = min(active / 4.0, 1.0)
+            sources = self._convergent_sources(skill_id, target_week)
+            # When ≥2 independent sources hit the same skill within 4 weeks of
+            # the target week, raise the confidence. Single-source (e.g. pipeline
+            # only) stays at base — the UI then renders it with the low-confidence
+            # opacity + hatched pattern.
+            converging = len(sources) >= 2
+            confidence = min(base_confidence + (0.2 if converging else 0.0), 1.0)
             supply = self._get_supply(skill_id, target_week)
 
             results.append(
@@ -84,14 +95,17 @@ class ForecastEngine:
                     "current_supply": supply,
                     "gap": round(raw_demand - supply, 2),
                     "confidence": round(confidence, 2),
-                    "contributing_signals": self._contributing_signal_ids(skill_id),
-                    "notes": self._explain(skill_id, crm, procurement, historical, trend, posting),
+                    "contributing_signals": self._contributing_signal_ids(
+                        skill_id, target_week
+                    ),
+                    "notes": self._explain(
+                        skill_id, crm, procurement, news, historical, converging
+                    ),
                 }
             )
         return results
 
     # ---------------------------------------------------- signal scorers ----
-    # TODO: implement each scorer properly once seed data is in place.
 
     def _score_crm_pipeline(self, skill_id: str, target_week: date) -> float:
         deals = (
@@ -116,7 +130,30 @@ class ForecastEngine:
             score += row["quantity"] * probability * proximity
         return score
 
-    def _score_procurement(self, skill_id: str) -> float:
+    def _score_procurement(self, skill_id: str, target_week: date) -> float:
+        return self._score_signal_source(
+            skill_id,
+            source="ted_procurement",
+            target_week=target_week,
+            window_days=NEWS_RECENCY_WINDOW_DAYS,
+        )
+
+    def _score_news_events(self, skill_id: str, target_week: date) -> float:
+        return self._score_signal_source(
+            skill_id,
+            source="news_intelligence",
+            target_week=target_week,
+            window_days=NEWS_RECENCY_WINDOW_DAYS,
+        )
+
+    def _score_signal_source(
+        self,
+        skill_id: str,
+        *,
+        source: str,
+        target_week: date,
+        window_days: int,
+    ) -> float:
         rows = (
             self.db.table("signal_skills")
             .select("confidence, signals(detected_at, source)")
@@ -125,11 +162,20 @@ class ForecastEngine:
             .data
             or []
         )
-        return sum(
-            row["confidence"]
-            for row in rows
-            if (row.get("signals") or {}).get("source") == "ted_procurement"
-        )
+        score = 0.0
+        for row in rows:
+            sig = row.get("signals") or {}
+            if sig.get("source") != source:
+                continue
+            detected = _parse_detected_at(sig.get("detected_at"))
+            if detected is None:
+                continue
+            days_age = abs((target_week - detected).days)
+            if days_age > window_days:
+                continue
+            decay = max(0.0, 1.0 - days_age / window_days)
+            score += row["confidence"] * decay
+        return score
 
     def _score_historical_pattern(self, skill_id: str, target_week: date) -> float:
         rows = (
@@ -152,36 +198,6 @@ class ForecastEngine:
         total = sum(month_counts.values()) or 1
         return month_counts.get(target_week.month, 0) / total
 
-    def _score_trends(self, skill_id: str) -> float:
-        rows = (
-            self.db.table("signal_skills")
-            .select("confidence, signals(signal_type)")
-            .eq("skill_id", skill_id)
-            .execute()
-            .data
-            or []
-        )
-        return sum(
-            row["confidence"]
-            for row in rows
-            if (row.get("signals") or {}).get("signal_type") == "trend_spike"
-        )
-
-    def _score_job_postings(self, skill_id: str) -> float:
-        rows = (
-            self.db.table("signal_skills")
-            .select("confidence, signals(signal_type)")
-            .eq("skill_id", skill_id)
-            .execute()
-            .data
-            or []
-        )
-        return sum(
-            row["confidence"]
-            for row in rows
-            if (row.get("signals") or {}).get("signal_type") == "job_posting"
-        )
-
     def _get_supply(self, skill_id: str, target_week: date) -> int:
         rows = (
             self.db.table("consultant_skills")
@@ -202,18 +218,56 @@ class ForecastEngine:
             available += 1
         return available
 
-    def _contributing_signal_ids(self, skill_id: str) -> list[str]:
+    def _contributing_signal_ids(
+        self, skill_id: str, target_week: date
+    ) -> list[str]:
         rows = (
             self.db.table("signal_skills")
-            .select("signal_id")
+            .select("signal_id, signals(detected_at)")
             .eq("skill_id", skill_id)
             .execute()
             .data
             or []
         )
-        return [r["signal_id"] for r in rows]
+        ids: list[str] = []
+        for row in rows:
+            detected = _parse_detected_at((row.get("signals") or {}).get("detected_at"))
+            if detected is None:
+                continue
+            if abs((target_week - detected).days) <= CONVERGENCE_WINDOW_DAYS:
+                ids.append(row["signal_id"])
+        return ids
 
-    def _explain(self, skill_id: str, *scores: float) -> str:
+    def _convergent_sources(self, skill_id: str, target_week: date) -> set[str]:
+        rows = (
+            self.db.table("signal_skills")
+            .select("signals(detected_at, source)")
+            .eq("skill_id", skill_id)
+            .execute()
+            .data
+            or []
+        )
+        sources: set[str] = set()
+        for row in rows:
+            sig = row.get("signals") or {}
+            detected = _parse_detected_at(sig.get("detected_at"))
+            if detected is None:
+                continue
+            if abs((target_week - detected).days) <= CONVERGENCE_WINDOW_DAYS:
+                source = sig.get("source")
+                if source:
+                    sources.add(source)
+        return sources
+
+    def _explain(
+        self,
+        skill_id: str,
+        crm: float,
+        procurement: float,
+        news: float,
+        historical: float,
+        converging: bool,
+    ) -> str:
         skill = (
             self.db.table("skills")
             .select("name")
@@ -224,29 +278,39 @@ class ForecastEngine:
             or {}
         )
         name = skill.get("name", "this skill")
-        crm, procurement, historical, trend, posting = scores
         parts: list[str] = []
         if crm > 0:
             parts.append(f"Pipeline deals request {name}")
         if procurement > 0:
             parts.append(f"Recent procurement notices mention {name}")
+        if news > 0:
+            parts.append(f"Belgian news coverage signals demand for {name}")
         if historical > 0:
             parts.append("Seasonality: demand typically rises this quarter")
-        if trend > 0:
-            parts.append(f"Google Trends rising for {name} in Belgium")
-        if posting > 0:
-            parts.append(f"Active job postings mention {name}")
+        if converging:
+            parts.append("Multiple independent sources agree — confidence boosted")
         return ". ".join(parts) + "." if parts else "No strong signals detected."
 
-    # ------------------------------------------------------------- helpers --
 
-    @staticmethod
-    def _week_from_now(offset: int) -> date:
-        return date.today() + timedelta(weeks=offset)
-
-    @staticmethod
-    def _now_iso() -> str:
-        return date.today().isoformat()
-
-    def _dump(self, obj: Any) -> Any:
-        return obj
+def _parse_detected_at(value: Any) -> date | None:
+    """Parse a Supabase `detected_at` timestamp into a date (best-effort)."""
+    if value is None:
+        return None
+    if isinstance(value, date) and not isinstance(value, datetime):
+        return value
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return None
+        if text.endswith("Z"):
+            text = text[:-1] + "+00:00"
+        try:
+            return datetime.fromisoformat(text).astimezone(timezone.utc).date()
+        except ValueError:
+            try:
+                return date.fromisoformat(text[:10])
+            except ValueError:
+                return None
+    return None
