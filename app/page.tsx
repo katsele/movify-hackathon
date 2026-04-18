@@ -6,28 +6,33 @@ import { ForecastHeatmap } from "@/components/ForecastHeatmap";
 import { GapAlert } from "@/components/GapAlert";
 import { SignalCard } from "@/components/SignalCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useForecast } from "@/lib/hooks/useForecast";
 import { useConsultants } from "@/lib/hooks/useBench";
 import { useSignals } from "@/lib/hooks/useSignals";
+import { useSignalsByIds } from "@/lib/hooks/useSignalsByIds";
+import { forecastToCells } from "@/lib/forecast-adapter";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
 import type { RecentSignal } from "@/lib/types";
 
 export default function DashboardPage() {
-  const cells = buildMockForecast();
+  const consultants = useConsultants();
+  const liveForecast = useForecast();
+  const liveSignals = useSignals();
+
+  const liveCells = liveForecast.data
+    ? forecastToCells(liveForecast.data)
+    : [];
+  const usingMock = !liveForecast.isLoading && liveCells.length === 0;
+  const cells = usingMock ? buildMockForecast() : liveCells;
+
+  const signalIds = cells.flatMap((c) => c.contributingSignalIds ?? []);
+  const signalsLookup = useSignalsByIds(signalIds);
+
   const topGaps = [...cells]
     .filter((c) => c.week <= 6 && c.gap > 0)
     .sort((a, b) => b.gap - a.gap)
     .slice(0, 3);
 
-  const consultants = useConsultants();
   const onBench =
     consultants.data?.filter((c) =>
       ["on_bench", "rolling_off"].includes(c.current_status),
@@ -35,8 +40,6 @@ export default function DashboardPage() {
   const pipelineValue = 1.8;
   const topGapSkill = topGaps[0];
 
-  const liveForecast = useForecast();
-  const liveSignals = useSignals();
   const recentSignals: RecentSignal[] = liveSignals.data?.length
     ? liveSignals.data
     : (MOCK_SIGNALS as RecentSignal[]);
@@ -90,61 +93,28 @@ export default function DashboardPage() {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Live forecast (Supabase)</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between gap-2">
+          <CardTitle>12-week forecast</CardTitle>
+          {usingMock && (
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-900">
+              Mock data — run connectors + forecast engine to populate live
+            </span>
+          )}
         </CardHeader>
         <CardContent className="pt-0">
-          {liveForecast.isLoading && (
-            <p className="text-sm text-muted-foreground">Loading live data…</p>
-          )}
-          {liveForecast.error && (
+          {liveForecast.isLoading ? (
+            <p className="text-sm text-muted-foreground">Loading forecast…</p>
+          ) : liveForecast.error ? (
             <p className="text-sm text-red-600">
               Failed to load forecast: {liveForecast.error.message}
             </p>
+          ) : (
+            <ForecastHeatmap
+              cells={cells}
+              weeks={12}
+              signalsById={signalsLookup.data}
+            />
           )}
-          {liveForecast.data && liveForecast.data.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              No forecast rows yet. Apply migrations 001 + 002 to your Supabase
-              project.
-            </p>
-          )}
-          {liveForecast.data && liveForecast.data.length > 0 && (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Skill</TableHead>
-                  <TableHead>Week</TableHead>
-                  <TableHead className="text-right">Demand</TableHead>
-                  <TableHead className="text-right">Supply</TableHead>
-                  <TableHead className="text-right">Gap</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {liveForecast.data.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell>{row.skills?.name ?? "—"}</TableCell>
-                    <TableCell>{row.forecast_week}</TableCell>
-                    <TableCell className="text-right">
-                      {row.predicted_demand}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {row.current_supply}
-                    </TableCell>
-                    <TableCell className="text-right">{row.gap}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>12-week forecast</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <ForecastHeatmap cells={cells} weeks={12} />
         </CardContent>
       </Card>
 
