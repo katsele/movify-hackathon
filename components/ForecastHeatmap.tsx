@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { summarizeForecastCells } from "@/lib/forecast-display";
 import type { ForecastCell } from "@/lib/mock-data";
 import type { SignalLookup } from "@/lib/hooks/useSignalsByIds";
 import type { SignalSource } from "@/lib/types";
@@ -17,6 +18,7 @@ interface ForecastHeatmapProps {
   weeks?: number;
   interactive?: boolean;
   signalsById?: Record<string, SignalLookup>;
+  limitSkills?: number;
 }
 
 const SOURCE_LABEL: Record<SignalSource, string> = {
@@ -46,17 +48,23 @@ export function ForecastHeatmap({
   weeks = 12,
   interactive = true,
   signalsById,
+  limitSkills,
 }: ForecastHeatmapProps) {
-  const skillsOrdered: { name: string; discipline: string }[] = [];
-  const seen = new Set<string>();
-  for (const cell of cells) {
-    if (!seen.has(cell.skill)) {
-      seen.add(cell.skill);
-      skillsOrdered.push({ name: cell.skill, discipline: cell.discipline });
-    }
-  }
+  const visibleRows = summarizeForecastCells(cells, weeks);
+  const rows =
+    typeof limitSkills === "number"
+      ? visibleRows.slice(0, limitSkills)
+      : visibleRows;
 
   const weekLabels = Array.from({ length: weeks }, (_, i) => `W${i + 1}`);
+
+  if (rows.length === 0) {
+    return (
+      <div className="rounded-lg border border-dashed border-border p-6 text-sm text-muted-foreground">
+        No forecastable skills matched this filter window yet.
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto">
@@ -77,19 +85,18 @@ export function ForecastHeatmap({
           </tr>
         </thead>
         <tbody>
-          {skillsOrdered.map((skill) => {
-            const row = cells.filter((c) => c.skill === skill.name);
+          {rows.map((skill) => {
             return (
-              <tr key={skill.name}>
+              <tr key={skill.skill}>
                 <td className="sticky left-0 bg-neutral-50 pr-3 py-1 text-left align-middle">
                   <div className="font-medium text-neutral-800 leading-tight">
-                    {skill.name}
+                    {skill.skill}
                   </div>
                   <div className="text-[10px] text-neutral-500 leading-tight">
                     {skill.discipline}
                   </div>
                 </td>
-                {row.slice(0, weeks).map((cell) => {
+                {skill.cells.map((cell) => {
                   const cellNode = (
                     <div
                       className={cn(
@@ -110,8 +117,8 @@ export function ForecastHeatmap({
                         <TooltipTrigger asChild>
                           {interactive ? (
                             <Link
-                              href={`/forecast/${encodeURIComponent(skill.name)}`}
-                              aria-label={`${skill.name} week ${cell.week}`}
+                              href={`/forecast/${encodeURIComponent(skill.skill)}`}
+                              aria-label={`${skill.skill} week ${cell.week}`}
                             >
                               {cellNode}
                             </Link>
@@ -122,7 +129,7 @@ export function ForecastHeatmap({
                         <TooltipContent side="top" className="max-w-xs">
                           <div className="space-y-0.5">
                             <div className="font-semibold">
-                              {skill.name} · W{cell.week}
+                              {skill.skill} · W{cell.week}
                             </div>
                             <div className="tabular">
                               Demand: <span className="font-mono">{cell.demand}</span>
@@ -146,6 +153,11 @@ export function ForecastHeatmap({
                               ids={cell.contributingSignalIds}
                               signalsById={signalsById}
                             />
+                            {cell.notes && (
+                              <div className="mt-1 border-t border-border/60 pt-1 text-[11px] text-muted-foreground">
+                                {cell.notes}
+                              </div>
+                            )}
                           </div>
                         </TooltipContent>
                       </Tooltip>
