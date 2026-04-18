@@ -162,6 +162,9 @@ export interface RecentSignal {
   region?: Region | null;
   detected_at: string;
   confidence: number;
+  converges_with_sources?: SignalSource[] | null;
+  converging_skills?: string[] | null;
+  converging_count?: number | null;
 }
 
 export interface SignalRawData {
@@ -174,6 +177,17 @@ export interface SignalRawData {
   summary?: string;
   score?: number;
   priors_tier?: "exact" | "industry" | "wildcard" | "client_default" | "none";
+  contracting_authority?: string;
+  cpv_code?: string;
+  cpv_label?: string;
+  cpv_codes?: string[];
+  value_estimate_eur?: number;
+  deadline?: string;
+  notice_type?: string;
+  publication_number?: string;
+  lang?: string;
+  title_multilingual?: Record<string, string | string[]>;
+  seed?: boolean;
   [key: string]: unknown;
 }
 
