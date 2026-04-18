@@ -6,6 +6,15 @@ import { ForecastHeatmap } from "@/components/ForecastHeatmap";
 import { GapAlert } from "@/components/GapAlert";
 import { SignalCard } from "@/components/SignalCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useForecast } from "@/lib/hooks/useForecast";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
 
 export default function DashboardPage() {
@@ -18,6 +27,8 @@ export default function DashboardPage() {
   const onBench = 7;
   const pipelineValue = 1.8;
   const topGapSkill = topGaps[0];
+
+  const liveForecast = useForecast();
 
   return (
     <div className="space-y-6">
@@ -57,6 +68,56 @@ export default function DashboardPage() {
           deltaLabel="vs last week"
         />
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Live forecast (Supabase)</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          {liveForecast.isLoading && (
+            <p className="text-sm text-muted-foreground">Loading live data…</p>
+          )}
+          {liveForecast.error && (
+            <p className="text-sm text-red-600">
+              Failed to load forecast: {liveForecast.error.message}
+            </p>
+          )}
+          {liveForecast.data && liveForecast.data.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              No forecast rows yet. Apply migrations 001 + 002 to your Supabase
+              project.
+            </p>
+          )}
+          {liveForecast.data && liveForecast.data.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Skill</TableHead>
+                  <TableHead>Week</TableHead>
+                  <TableHead className="text-right">Demand</TableHead>
+                  <TableHead className="text-right">Supply</TableHead>
+                  <TableHead className="text-right">Gap</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {liveForecast.data.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell>{row.skills?.name ?? "—"}</TableCell>
+                    <TableCell>{row.forecast_week}</TableCell>
+                    <TableCell className="text-right">
+                      {row.predicted_demand}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {row.current_supply}
+                    </TableCell>
+                    <TableCell className="text-right">{row.gap}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
