@@ -1,7 +1,27 @@
-# UX Specification — Skills Demand Forecaster
+# UX Specification — Azimuth
 
-*Movify — April 2026*
+*Skills demand forecasting for Movify — April 2026*
 *Design principles: Overview first → zoom and filter → details on demand (Shneiderman's mantra)*
+
+---
+
+## 0. Brand Identity
+
+**Product name:** *Azimuth* — the celestial/navigational term for the bearing angle from north. The name signals precision, foresight, and analyst credibility without chasing the SaaS-blue-plus-illustration tropes of the talent-intelligence category.
+
+**Tagline (working):** *See what your clients will need — before they do.*
+
+**Positioning one-liner:** *Skills demand forecasting for Belgian digital consultancies — predict the skill-mix your clients will buy in the next 3–6 months by fusing your CRM pipeline with external market signals.*
+
+**Brand tone on screen:**
+- **Confident but not cold.** Write like a senior analyst briefing a managing partner.
+- **Specific over general.** "Java architects in Flanders up 23% in 30 days" beats "trending skills nearby."
+- **Cite the signal.** Every prediction shows its sources — the brand voice matches the product value.
+- **No breathless AI.** Avoid "revolutionary," "AI-powered," "unlock," "supercharge." Use "predicted," "forecast," "signal," "source."
+
+**Core product vocabulary:** *forecast* (verb of choice over "predict"), *signal, gap, coverage, pipeline, skill-mix, demand, supply, bench, utilization, yield, watchlist, portfolio.*
+
+**Visual positioning:** *"Bloomberg-serious, Linear-polished, editorially warm."* The brand recedes chromatically so the data carries the hue — chrome in graphite + cocoa, data in the six semantic colors. See §6 (colour) and §7 (typography) for the operational details.
 
 ---
 
@@ -32,7 +52,7 @@ Only after scanning this overview does he drill into a specific skill, signal, o
 ### Site map
 
 ```
-Skills Demand Forecaster
+Azimuth
 │
 ├── / Dashboard (home)
 │   Overview: KPI cards + forecast heatmap + gap alerts + signal highlights
@@ -89,7 +109,7 @@ The Monday morning view. Everything on one screen, no scrolling required for the
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│ ☰  Skills Demand Forecaster              Last updated: 5 min ago 🔄│
+│ ☰  Azimuth                               Last updated: 5 min ago 🔄│
 ├────────┬────────────────────────────────────────────────────────────┤
 │        │                                                            │
 │  NAV   │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐     │
@@ -576,48 +596,270 @@ Every drill-down has a clear "back" path via the sidebar nav or breadcrumb. No d
 
 ## 6. Colour System
 
-### Semantic palette
+Azimuth operates three colour families with three separate rulebooks. **Never mix them.**
+
+- **Brand family (graphite + cocoa):** chrome only — logo, primary nav, primary button, focus rings, link hover. Never inside a data cell or chart mark.
+- **Semantic family (red/amber/emerald + blue/violet/cyan/emerald):** data only — cells, legends, heatmaps, chart marks, status pills. Never as chrome. Never as body text.
+- **Neutrals (warm stone 50–950):** everything else — surfaces, borders, body text, dividers, disabled states, low-emphasis UI.
+
+The single ergonomic principle behind this split: over an 8-hour analyst session, chrome competes with chart marks for attention. Azimuth's brand recedes chromatically so the six signal colors stay visually supreme inside dense tables and heatmaps.
+
+### 6.1 Brand palette (graphite + cocoa)
+
+| Role | Token | Hex | Contrast on white | Usage |
+|---|---|---|---|---|
+| Primary | `--brand-700` | `#1A1D24` | 17.6:1 AAA | Logo, primary button fill, active nav item, focus ring |
+| Accent | `--accent` | `#6B4E3D` | 7.2:1 AA body | Sparingly: link hover, accent underline, brand moments |
+| Accent dark | `--accent-dark` | `#4D3829` | 9.8:1 AAA | Hovered accent on light surfaces |
+| Accent light | `--accent-light` | `#C9A88F` | — | Illustrative details, decorative dividers only |
+
+**Full brand scale (graphite):** 50 `#F4F3F1`, 100 `#E7E5E1`, 200 `#D1CEC8`, 300 `#A8A39A`, 400 `#78736A`, 500 `#3D3A33`, 600 `#27251F`, **700 `#1A1D24`** (primary), 800 `#14161C`, 900 `#0E0F14`, 950 `#08090D`.
+
+### 6.2 Neutral scale (warm stone)
+
+Warm-tinted rather than cool slate — signals European-editorial, not American-clinical.
 
 | Token | Hex | Usage |
 |---|---|---|
-| `--gap-critical` | `#DC2626` (red-600) | Gap ≥ 3 — immediate action needed |
-| `--gap-warning` | `#D97706` (amber-600) | Gap 1–2 — watch closely |
-| `--gap-covered` | `#059669` (emerald-600) | Gap ≤ 0 — supply meets demand |
-| `--confidence-low` | `#9CA3AF` (grey-400) | Low confidence overlay |
+| `--neutral-50` | `#FAFAF9` | Page background (light theme) |
+| `--neutral-100` | `#F4F3F1` | Subtle surface, hover background |
+| `--neutral-200` | `#E7E5E1` | Borders, dividers, grid lines |
+| `--neutral-300` | `#D1CEC8` | Disabled backgrounds |
+| `--neutral-400` | `#A8A39A` | Disabled text, placeholder |
+| `--neutral-500` | `#78736A` | Secondary / meta text (11–12px labels) |
+| `--neutral-600` | `#575349` | Tertiary text |
+| `--neutral-700` | `#3D3A33` | Body text primary |
+| `--neutral-800` | `#27251F` | Strong body on light |
+| `--neutral-900` | `#1A1814` | Card surface (dark theme) |
+| `--neutral-950` | `#0E0D0A` | Canvas (dark theme) |
+
+### 6.3 Semantic palette (LOCKED — do not modify)
+
+These six colors do all the signaling work in charts, tables, heatmaps, and status pills.
+
+| Token | Hex | Usage |
+|---|---|---|
+| `--signal-gap` | `#DC2626` (red-600) | Gap ≥ 3 — immediate action needed |
+| `--signal-watch` | `#D97706` (amber-600) | Gap 1–2 — watch closely |
+| `--signal-covered` | `#059669` (emerald-600) | Gap ≤ 0 — supply meets demand (also CRM pipeline source) |
 | `--signal-procurement` | `#2563EB` (blue-600) | Procurement source |
 | `--signal-trend` | `#7C3AED` (violet-600) | Trend source |
 | `--signal-posting` | `#0891B2` (cyan-600) | Job posting source |
-| `--signal-pipeline` | `#059669` (emerald-600) | CRM pipeline source |
-| `--surface` | `#FFFFFF` | Card/panel background |
-| `--surface-secondary` | `#F9FAFB` (grey-50) | Page background |
-| `--text-primary` | `#111827` (grey-900) | Primary text |
-| `--text-secondary` | `#6B7280` (grey-500) | Secondary/meta text |
 
-### Accessibility notes
+**Clash check:** the brand accent is a warm brown (hue ~25°, L\*≈38) — sufficiently different from amber-watch (hue ~35°, L\*≈55) to never collide on a dense grid. Graphite is achromatic, so it has zero hue collision with any signal color.
 
-- All text colours meet WCAG AA contrast (4.5:1) against their backgrounds
-- Gap colours (red/amber/green) are always accompanied by textual indicators (+3, +1, 0) — never colour-alone
-- Colourblind-safe: red/green are distinguished by saturation and brightness, plus text labels. The colour system works in deuteranopia simulation.
-- Heatmap cells use both colour fill and a hatched pattern overlay for low confidence — two independent visual channels
+### 6.4 Surface & text tokens
+
+| Token | Light theme | Dark theme |
+|---|---|---|
+| `--surface` | `#FFFFFF` | `#1A1814` (neutral-900) |
+| `--surface-secondary` | `#FAFAF9` (neutral-50) | `#0E0D0A` (neutral-950) |
+| `--text-primary` | `#3D3A33` (neutral-700) | `#E7E5E1` (neutral-200) |
+| `--text-secondary` | `#78736A` (neutral-500) | `#A8A39A` (neutral-400) |
+| `--border` | `#E7E5E1` (neutral-200) | `#27251F` (neutral-800) |
+| `--focus-ring` | `#1A1D24` (brand-700) | `#FAFAF9` (neutral-50) |
+
+**Dark mode:** canvas `#0E0D0A`, card `#1A1814`, body text neutral-200, subtle text neutral-400. Primary button stays `--brand-700` with white text in light theme; in dark theme, use `--neutral-100` ghost with `--brand-700` hover fill.
+
+### 6.5 Tailwind config (ship-ready)
+
+```ts
+// tailwind.config.ts
+export default {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          50:'#F4F3F1',100:'#E7E5E1',200:'#D1CEC8',300:'#A8A39A',
+          400:'#78736A',500:'#3D3A33',600:'#27251F',
+          700:'#1A1D24', // primary
+          800:'#14161C',900:'#0E0F14',950:'#08090D',
+        },
+        accent: { DEFAULT:'#6B4E3D', dark:'#4D3829', light:'#C9A88F' },
+        neutral: {
+          50:'#FAFAF9',100:'#F4F3F1',200:'#E7E5E1',300:'#D1CEC8',
+          400:'#A8A39A',500:'#78736A',600:'#575349',700:'#3D3A33',
+          800:'#27251F',900:'#1A1814',950:'#0E0D0A',
+        },
+        signal: { // LOCKED — do not modify
+          gap:'#DC2626', watch:'#D97706', covered:'#059669',
+          procurement:'#2563EB', trend:'#7C3AED', posting:'#0891B2',
+        },
+      },
+    },
+  },
+};
+```
+
+### 6.6 Accessibility notes
+
+- All text colours meet WCAG AA (4.5:1) against their backgrounds; brand-700 on white is 17.6:1 AAA, neutral-700 on white is 11.8:1 AAA.
+- Gap colours are always paired with a textual indicator (+3, +1, 0) — never colour-alone.
+- Colourblind-safe: the six semantic colors are distinguished by hue, saturation, and brightness together, plus text labels. Verified in deuteranopia simulation.
+- **Confidence is triple-coded** (ADA-critical): (a) opacity 40%/70%/100% for low/medium/high, (b) a small pill badge reading e.g. "62% conf.", (c) border style dashed/dotted/solid. Never encode confidence in colour alone.
+- Heatmap cells use both colour fill and a hatched pattern overlay for low confidence — two independent visual channels.
+- Focus rings are always visible — 2px `--focus-ring` with 2px offset.
 
 ---
 
 ## 7. Typography
 
-| Element | Size | Weight | Line height | Usage |
-|---|---|---|---|---|
-| KPI number | 32px | 700 (bold) | 1.2 | Big numbers on KPI cards |
-| Page title | 24px | 600 (semibold) | 1.3 | Page headers |
-| Section header | 18px | 600 (semibold) | 1.3 | Card/section titles |
-| Body text | 14px | 400 (regular) | 1.5 | All standard text, table cells |
-| Meta text | 12px | 400 (regular) | 1.4 | Timestamps, labels, secondary info |
-| Skill tag | 12px | 500 (medium) | 1 | Pill-shaped skill labels |
+Azimuth ships with **Geist Sans + Geist Mono**, self-hosted. Both fonts are free (SIL OFL), cover NL/FR/EN diacritics, and give the product its Vercel-adjacent analyst-precision feel. No system fonts — consistent screenshots across Mac and Windows matter when Sebastiaan shares deliverables with clients.
 
-Font: system font stack (`-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`). No custom fonts — maximise load performance.
+### 7.1 Font stack
+
+```css
+:root {
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+html { font-family: var(--font-sans); }
+table, .tabular, .kpi-number, .axis-label { font-variant-numeric: tabular-nums slashed-zero; }
+code, pre, .mono, .kpi-number, .cell-number { font-family: var(--font-mono); }
+```
+
+Load via `next/font/local` or `next/font/google` (Geist is in the Google Fonts API). Subset to Latin-Extended; total weight target ≤ 220KB woff2, cached.
+
+### 7.2 Type ladder
+
+| Role | Family | Size | Weight | Tracking | Line height | Usage |
+|---|---|---|---|---|---|---|
+| Display | Geist Sans | 32px | 600 | -0.015em | 1.15 | Hero KPI headers (rare) |
+| H1 / Page title | Geist Sans | 24px | 600 | -0.01em | 1.2 | Page headers |
+| H2 / Section | Geist Sans | 18px | 600 | -0.005em | 1.3 | Card titles, section headers |
+| Body | Geist Sans | 14px | 400 | 0 | 1.5 | All standard text, table cells |
+| Body strong | Geist Sans | 14px | 500 | 0 | 1.5 | Emphasised body, row labels |
+| Metadata | Geist Sans | 12px | 500 | +0.005em | 1.4 | Timestamps, labels, captions |
+| Skill tag | Geist Sans | 12px | 500 | +0.01em | 1 | Pill-shaped skill labels |
+| KPI number | **Geist Mono** | 32px | 500 | 0 | 1.1 | Big numbers on KPI cards |
+| Cell number | **Geist Mono** | 13px | 400 | 0 | 1.3 | Table numerics, heatmap values |
+| Axis label | **Geist Mono** | 11px | 400 | +0.01em | 1.3 | Chart axes, legend ticks |
+| Code / ID | **Geist Mono** | 12px | 400 | 0 | 1.4 | CPV codes, deal IDs, tokens |
+
+### 7.3 Mono usage rules
+
+Geist Mono is the product's analyst-tone signal. Use it on:
+
+- **All numerics in a grid or KPI context** — table cells with counts, KPI big-numbers, axis ticks, percentages in chart legends.
+- **Identifiers** — CPV codes (`CPV 79411000`), deal IDs, signal IDs, dates in `YYYY-MM-DD` form.
+- **Inline code / source snippets** — rare in this product, but use Mono when they appear.
+
+Never use Mono for body prose, section headers, or button labels.
+
+Apply `font-variant-numeric: tabular-nums slashed-zero` on any element containing numbers in an aligned column. This keeps digits vertically aligned in tables and heatmap rows — the #1 analyst-tool polish detail.
+
+### 7.4 Licensing
+
+Geist and Geist Mono are released by Vercel under the SIL Open Font License — free for commercial use, no procurement overhead. Self-host the woff2 files in `/public/fonts/` or load via `next/font` to preempt layout shift.
 
 ---
 
-## 8. Responsive Behaviour
+## 8. Logo & Wordmark Principles
+
+Azimuth's logo expresses **navigation, foresight, and precision** — in that order. Briefing only (design lives in a separate file):
+
+- **Wordmark-led** in Geist Sans 600, optionally paired with a geometric monogram mark. No mascots, no illustrative metaphors, no gradients.
+- **Monogram direction:** an abstract bearing point or compass rose stroke, rendered in `--brand-700` graphite (not indigo or blue — that would collide with the procurement signal colour). Must read at 16×16 favicon and on a 400×400 avatar.
+- **Lock-up:** wordmark + monogram left-aligned, 8px gap, baseline aligned to the x-height of the lowercase letters.
+- **Contrast:** the monogram must read on both `#FFFFFF` and `#0E0D0A`.
+- **Avoid:** ship wheels, crystal balls, eye-in-triangle, upward "growth" arrows, 3D bevels, anything that resembles a compass clip-art.
+
+---
+
+## 9. Iconography
+
+Azimuth uses **lucide-react** exclusively. No custom icon sets.
+
+- **Sizes:** 16px in dense rows and table cells, 20px in sidebar nav, 24px in empty states and hero moments. No other sizes.
+- **Stroke:** 1.5px default, **1.75px at 16px** to compensate for small-size rendering. Never use lucide's "fill" variants — they break the product's visual rhythm.
+- **Colour:** `--neutral-500` for passive states, `--neutral-700` on hover. Signal colours appear on icons only when the icon itself carries semantic state (e.g., `AlertTriangle` in `--signal-gap` on a critical row).
+- **Locked signal-source mapping** — store in `lib/constants/signalIcons.ts` and never diverge:
+
+| Signal source | Icon | Colour token |
+|---|---|---|
+| Procurement | `FileText` | `--signal-procurement` |
+| Trend | `TrendingUp` | `--signal-trend` |
+| Job posting | `Briefcase` | `--signal-posting` |
+| CRM pipeline | `GitBranch` | `--signal-covered` (emerald) |
+
+(Note: the emoji icons used in §3 mockups — 📋 📈 💼 — are placeholders. In production use the lucide mapping above.)
+
+---
+
+## 10. Data Visualization
+
+The heart of the product. **Rule 0:** the six semantic colors are the data palette. Do not introduce chart palettes from recharts defaults, Tableau-10, or Observable-10. Every chart colour must carry the same meaning across every chart in Azimuth.
+
+### 10.1 Colour assignment
+
+| Encoding | Colours | Where it appears |
+|---|---|---|
+| Categorical by status | gap · watch · covered | Coverage bars, supply-vs-demand deltas, risk indicators, heatmap cells |
+| Categorical by signal source | procurement · trend · posting · covered (pipeline) | Stacked bars in signal contribution breakdowns, signal-source filters |
+| Sequential (demand intensity heatmap) | 9-step ramp: `neutral-100` → `amber-300` → `amber-600` → `red-700` | Forecast heatmap fill |
+| Confidence | opacity 40% / 70% / 100% + dashed/dotted/solid border + pill badge | Every forecast output |
+
+Generate sequential ramps with a deterministic function — not hand-picked intermediate values.
+
+### 10.2 Chart hygiene
+
+- **Grid lines:** `--neutral-200` at 1px. Never darker.
+- **Axis labels:** `--neutral-500`, 11px, Geist Mono with tabular nums.
+- **Axis ticks:** match the axis label colour at 50% length of the gridline.
+- **Data labels on marks:** Geist Mono, 12px, `--neutral-700`, only when the value can't be read from the axis.
+- **Legend:** always above the chart (not inside), Geist Sans 12px, with a 10×10 coloured square.
+- **Tooltip:** dark (`--neutral-900` background, `--neutral-100` text), 12px, Mono for numerics, 180ms fade-in.
+- **Empty state in chart:** the string *"Not enough signal yet"* in `--neutral-500`. Never a fabricated placeholder curve.
+- **Sparklines on KPI cards:** 1.5px stroke, no fill, no axes, `--brand-500` colour.
+
+---
+
+## 11. Motion & Micro-Interactions
+
+Analyst-respecting means **fast, subtle, and never decorative.**
+
+| Interaction | Duration | Easing | Properties |
+|---|---|---|---|
+| Hover | 100ms | ease-out | Colour shift only — no scale, no shadow pop |
+| Button press | 80ms | ease-out | Opacity 100 → 90 → 100 |
+| Panel / modal enter | 180ms | ease-out | 4px Y-translate + opacity |
+| Panel / modal exit | 120ms | ease-in | Reverse of enter |
+| Data cell update | 600ms | ease-out | Fade from amber-300 tint back to default (signals "this value changed") |
+| Route change | 0ms | — | Instant. Analysts context-switch often; transitions would enrage Sebastiaan. |
+| Skeleton shimmer | 1.2s loop | ease-in-out | 0.6 → 1.0 → 0.6 opacity on `--neutral-100` |
+| Tooltip | 180ms | ease-out | Opacity only |
+
+**Never:** confetti, progress-bar bounces, loading Lotties, tooltip wobble, "celebrate" animations, page-transition slides.
+
+**Reduced motion:** respect `prefers-reduced-motion: reduce` — disable all transforms and keep only opacity fades at half duration.
+
+---
+
+## 12. Writing Guidelines
+
+**Use:** *forecast* (the product's core verb — over "predict" which reads slightly fortune-teller), *signal, gap, coverage, pipeline, skill-mix, demand, supply, bench, utilization, yield, watchlist, portfolio.*
+
+**Avoid:** *predict* as a marketing verb (fine inside "prediction" as a noun for a specific output), *AI-powered, unlock, supercharge, revolutionary, game-changing, actionable insights, data-driven* (overused — assume the reader knows it is).
+
+**Gap vs. shortfall:** use **gap** — shorter, reads on a dashboard label, the same word in Dutch and decoded by French speakers.
+
+**Numbers:** always include the unit and the timeframe. *"+23 roles, 30-day rolling"* not *"+23 trending."* Always wrap numerics in Geist Mono with `tabular-nums`.
+
+**Microcopy patterns:**
+- Empty state: *"No signals match your filters. Try adjusting your date range."* + [Reset filters]
+- Error: *"Couldn't refresh signals — check your connection."* + [Retry]
+- Low confidence: *"Low confidence — fewer than 2 signal sources contributing."*
+- Loading is mute — skeletons never show text.
+
+**Multilingual notes** (EN is the default product UI; labels stay EN for the hackathon, these are for later localization):
+
+- NL: *voorspelling* (forecast), *hiaat / tekort* (gap — **hiaat** is closer in register), *signaal, pijplijn.*
+- FR: *prévision* (forecast), *écart* (gap — never *manque* which reads as deficiency), *signal, pipeline.*
+- Get a bilingual reviewer per release — "gap" has three FR translations with different business connotations.
+
+---
+
+## 13. Responsive Behaviour
 
 This is a desktop-first tool (Sebastiaan uses it on a laptop/monitor). Mobile is deprioritised but should degrade gracefully.
 
@@ -630,7 +872,7 @@ This is a desktop-first tool (Sebastiaan uses it on a laptop/monitor). Mobile is
 
 ---
 
-## 9. Hackathon Implementation Priority
+## 14. Hackathon Implementation Priority
 
 Not everything above needs to be built on day one. Prioritised by hackathon story:
 
@@ -649,7 +891,7 @@ Not everything above needs to be built on day one. Prioritised by hackathon stor
 
 ---
 
-## 10. Open UX Questions
+## 15. Open UX Questions
 
 1. **Heatmap: skills vs. disciplines as rows?** Current spec shows skills grouped under disciplines. Alternative: show only discipline-level rows, drill into skills on click. Depends on how many skills have data on day one.
 
@@ -657,8 +899,10 @@ Not everything above needs to be built on day one. Prioritised by hackathon stor
 
 3. **Weekly digest format:** The spec focuses on the dashboard. The weekly digest (email or notification) needs its own UX design — defer to V1 post-hackathon.
 
-4. **Dark mode?** Not for hackathon. Consider for V1 if Sebastiaan uses it in the evening. The colour system is designed to be invertible.
+4. **Dark mode?** The colour tokens in §6.4 are invertible and a dark theme is a first-class target for V1 — analysts on long evening sessions default to dark. Not a hackathon day-one item, but don't write styles that assume light-only.
+
+5. **Logo & monogram:** briefing is locked in §8, but the actual wordmark + monogram design needs a design pass before first external demo.
 
 ---
 
-*UX specification follows Shneiderman's information-seeking mantra (overview first, zoom and filter, details on demand) and the data visualization best practices from the UX Designer skill reference. Designed for a single power user (Sebastiaan) accessing on desktop, with a clear path from glance → scan → drill.*
+*Azimuth's UX specification follows Shneiderman's information-seeking mantra (overview first, zoom and filter, details on demand) and the data visualization best practices from the UX Designer skill reference. Visual system: graphite + cocoa brand, six locked semantic colors for data, warm stone neutrals, Geist Sans + Geist Mono typography. Designed for a single power user (Sebastiaan) accessing on desktop, with a clear path from glance → scan → drill.*
