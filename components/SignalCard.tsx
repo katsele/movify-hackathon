@@ -1,3 +1,4 @@
+import type { KeyboardEvent, MouseEvent } from "react";
 import { ExternalLink, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SkillTag } from "@/components/SkillTag";
@@ -67,11 +68,18 @@ interface SignalCardProps {
     converges_with_sources?: RecentSignal["converges_with_sources"];
     converging_count?: RecentSignal["converging_count"];
   };
+  selected?: boolean;
+  onSelect?: () => void;
 }
 
-export function SignalCard({ signal }: SignalCardProps) {
+export function SignalCard({
+  signal,
+  selected = false,
+  onSelect,
+}: SignalCardProps) {
   const meta = SIGNAL_ICON[signal.source];
   const Icon = meta.icon;
+  const interactive = Boolean(onSelect);
   const skills = signal.skill_names?.length
     ? signal.skill_names
     : [signal.skill_name, ...(signal.extra_skills ?? [])].filter(Boolean);
@@ -90,6 +98,16 @@ export function SignalCard({ signal }: SignalCardProps) {
   const showEventChip = Boolean(eventType) && eventType !== "procurement";
   const sourceHost = signal.url ? safeHost(signal.url) : null;
   const sourceLabel = outlet ?? sourceHost;
+  const handleAnchorClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.stopPropagation();
+  };
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!onSelect) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onSelect();
+    }
+  };
 
   const title = signal.url ? (
     <a
@@ -97,6 +115,7 @@ export function SignalCard({ signal }: SignalCardProps) {
       target="_blank"
       rel="noopener noreferrer"
       className="inline-flex items-start gap-1 hover:underline underline-offset-2"
+      onClick={handleAnchorClick}
     >
       <span>{signal.title}</span>
       <ExternalLink
@@ -117,10 +136,19 @@ export function SignalCard({ signal }: SignalCardProps) {
   return (
     <div
       className={cn(
-        "p-3 rounded-md border border-neutral-200 bg-white hover:shadow-sm transition-shadow",
-        convergingCount > 0 &&
+        "rounded-md border border-neutral-200 bg-white p-3 transition-shadow hover:shadow-sm",
+        interactive &&
+          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400/40 focus-visible:ring-offset-2",
+        selected
+          ? "border-neutral-300 bg-neutral-50 shadow-sm ring-1 ring-neutral-300/70"
+          : convergingCount > 0 &&
           "ring-1 ring-signal-watch/40 border-signal-watch/30",
       )}
+      onClick={onSelect}
+      onKeyDown={handleKeyDown}
+      role={interactive ? "button" : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      aria-pressed={interactive ? selected : undefined}
     >
       <div className="flex items-start gap-3">
         <span
@@ -143,6 +171,7 @@ export function SignalCard({ signal }: SignalCardProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="normal-case tracking-normal hover:underline underline-offset-2 text-neutral-700"
+                    onClick={handleAnchorClick}
                   >
                     {sourceLabel}
                   </a>

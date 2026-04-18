@@ -20,9 +20,15 @@ interface FilterBarProps {
   filters: FilterDefinition[];
   active: Record<string, string | undefined>;
   onChange: (id: string, value: string | undefined) => void;
+  onClearAll?: () => void;
 }
 
-export function FilterBar({ filters, active, onChange }: FilterBarProps) {
+export function FilterBar({
+  filters,
+  active,
+  onChange,
+  onClearAll,
+}: FilterBarProps) {
   const activeEntries = Object.entries(active).filter(([, v]) => !!v);
 
   return (
@@ -67,6 +73,7 @@ export function FilterBar({ filters, active, onChange }: FilterBarProps) {
               >
                 {def?.label}: {label}
                 <button
+                  type="button"
                   className="ml-1 inline-flex"
                   onClick={() => onChange(id, undefined)}
                   aria-label={`Clear ${def?.label}`}
@@ -76,6 +83,17 @@ export function FilterBar({ filters, active, onChange }: FilterBarProps) {
               </Badge>
             );
           })}
+          {onClearAll && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 text-[11px]"
+              onClick={onClearAll}
+            >
+              Clear all
+            </Button>
+          )}
         </div>
       )}
     </div>
