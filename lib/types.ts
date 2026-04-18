@@ -18,7 +18,8 @@ export type SignalSource =
   | "google_trends"
   | "ats_greenhouse"
   | "ats_lever"
-  | "news";
+  | "news"
+  | "news_intelligence";
 export type SignalType =
   | "procurement_notice"
   | "trend_spike"
@@ -147,13 +148,33 @@ export interface PipelineDemand {
 }
 
 export interface RecentSignal {
+  signal_id?: string;
   skill_name: string;
   discipline: string;
+  skill_names?: string[];
+  skill_disciplines?: string[];
+  confidences?: number[];
   source: SignalSource;
   signal_type: SignalType;
   title: string | null;
+  url?: string | null;
+  raw_data?: SignalRawData | null;
+  region?: Region | null;
   detected_at: string;
   confidence: number;
+}
+
+export interface SignalRawData {
+  client?: string;
+  client_key?: string;
+  industry?: string;
+  event_type?: string;
+  matched_events?: string[];
+  outlet?: string;
+  summary?: string;
+  score?: number;
+  priors_tier?: "exact" | "industry" | "wildcard" | "client_default" | "none";
+  [key: string]: unknown;
 }
 
 export interface ForecastWithSkill extends Forecast {

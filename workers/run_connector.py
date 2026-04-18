@@ -10,12 +10,14 @@ from dotenv import load_dotenv
 
 from connectors.boond import BoondConnector
 from connectors.google_trends import GoogleTrendsConnector
+from connectors.news_intelligence import NewsIntelligenceConnector
 from connectors.ted_procurement import TEDProcurementConnector
 
 CONNECTORS = {
     "boond": BoondConnector,
     "ted_procurement": TEDProcurementConnector,
     "google_trends": GoogleTrendsConnector,
+    "news_intelligence": NewsIntelligenceConnector,
 }
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
