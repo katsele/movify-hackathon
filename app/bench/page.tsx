@@ -11,65 +11,98 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MOCK_CONSULTANTS, MOCK_DEALS } from "@/lib/mock-data";
+import { useConsultants, useDeals } from "@/lib/hooks/useBench";
+import { useConsultantSkills } from "@/lib/hooks/useConsultantSkills";
+import { useDealProfiles } from "@/lib/hooks/useDealProfiles";
+import type { Seniority } from "@/lib/types";
 
-const CONSULTANT_SKILLS: Record<string, string[]> = {
-  c1: ["React", "Next.js", "TypeScript"],
-  c2: ["Node.js", "GraphQL", "AWS"],
-  c3: ["AI Engineering", "LangChain", "Python"],
-  c4: ["Service Design", "Figma", "Workshop facilitation"],
-  c5: ["dbt", "Snowflake", "Python"],
+const SENIORITY_RANK: Record<Seniority, number> = {
+  junior: 0,
+  mid: 1,
+  senior: 2,
+  expert: 3,
 };
 
-const CONSULTANT_SENIORITY: Record<string, string> = {
-  c1: "senior",
-  c2: "expert",
-  c3: "mid",
-  c4: "senior",
-  c5: "mid",
-};
-
-const DEAL_SKILLS: Record<string, string[]> = {
-  d1: ["React", "Node.js", "TypeScript"],
-  d2: ["AI Engineering", "LangChain"],
-  d3: ["dbt", "Snowflake", "Python"],
-};
+function topSeniority(profs: Seniority[] | undefined): Seniority | undefined {
+  if (!profs?.length) return undefined;
+  return profs.reduce((top, next) =>
+    SENIORITY_RANK[next] > SENIORITY_RANK[top] ? next : top,
+  );
+}
 
 export default function BenchPage() {
+  const consultants = useConsultants();
+  const deals = useDeals();
+  const consultantSkills = useConsultantSkills();
+  const dealProfiles = useDealProfiles();
+
+  const loading =
+    consultants.isLoading ||
+    deals.isLoading ||
+    consultantSkills.isLoading ||
+    dealProfiles.isLoading;
+  const errored =
+    consultants.error ??
+    deals.error ??
+    consultantSkills.error ??
+    dealProfiles.error;
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Bench"
         subtitle="Current consultant status + active pipeline deals."
-        lastUpdated="4 hours ago"
       />
+
+      {errored && (
+        <Card>
+          <CardContent className="pt-6 text-sm text-red-600">
+            Failed to load: {errored.message}
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
           <CardTitle>Consultants</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Seniority</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Available from</TableHead>
-                <TableHead>Top skills</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {MOCK_CONSULTANTS.map((c) => (
-                <ConsultantRow
-                  key={c.id}
-                  consultant={c}
-                  skills={CONSULTANT_SKILLS[c.id]}
-                  seniority={CONSULTANT_SENIORITY[c.id]}
-                />
-              ))}
-            </TableBody>
-          </Table>
+          {loading && !consultants.data && (
+            <p className="text-sm text-muted-foreground">Loading…</p>
+          )}
+          {consultants.data && consultants.data.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              No consultants yet. Run{" "}
+              <code>python workers/run_connector.py boond</code> to pull live
+              data.
+            </p>
+          )}
+          {consultants.data && consultants.data.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Seniority</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Available from</TableHead>
+                  <TableHead>Top skills</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {consultants.data.map((c) => {
+                  const rows = consultantSkills.data?.[c.id] ?? [];
+                  return (
+                    <ConsultantRow
+                      key={c.id}
+                      consultant={c}
+                      skills={rows.map((r) => r.name)}
+                      seniority={topSeniority(rows.map((r) => r.proficiency))}
+                    />
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
 
@@ -78,27 +111,39 @@ export default function BenchPage() {
           <CardTitle>Pipeline deals</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Deal</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Probability</TableHead>
-                <TableHead>Expected start</TableHead>
-                <TableHead>Profiles</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {MOCK_DEALS.map((d) => (
-                <DealRow
-                  key={d.id}
-                  deal={d}
-                  requestedSkills={DEAL_SKILLS[d.id] ?? []}
-                />
-              ))}
-            </TableBody>
-          </Table>
+          {loading && !deals.data && (
+            <p className="text-sm text-muted-foreground">Loading…</p>
+          )}
+          {deals.data && deals.data.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              No open deals in the pipeline.
+            </p>
+          )}
+          {deals.data && deals.data.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Deal</TableHead>
+                  <TableHead>Client</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Probability</TableHead>
+                  <TableHead>Expected start</TableHead>
+                  <TableHead>Profiles</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {deals.data.map((d) => (
+                  <DealRow
+                    key={d.id}
+                    deal={d}
+                    requestedSkills={(dealProfiles.data?.[d.id] ?? []).map(
+                      (p) => p.name,
+                    )}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>

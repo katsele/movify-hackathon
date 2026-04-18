@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useForecast } from "@/lib/hooks/useForecast";
+import { useConsultants } from "@/lib/hooks/useBench";
 import { buildMockForecast, MOCK_SIGNALS } from "@/lib/mock-data";
 
 export default function DashboardPage() {
@@ -24,7 +25,11 @@ export default function DashboardPage() {
     .sort((a, b) => b.gap - a.gap)
     .slice(0, 3);
 
-  const onBench = 7;
+  const consultants = useConsultants();
+  const onBench =
+    consultants.data?.filter((c) =>
+      ["on_bench", "rolling_off"].includes(c.current_status),
+    ).length ?? 0;
   const pipelineValue = 1.8;
   const topGapSkill = topGaps[0];
 
