@@ -8,6 +8,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from connectors.ats_sources_sync import AtsSourcesSyncConnector
 from connectors.boond import BoondConnector
 from connectors.boond_csv import BoondCsvConnector
 from connectors.google_trends import GoogleTrendsConnector
@@ -20,6 +21,7 @@ CONNECTORS = {
     "ted_procurement": TEDProcurementConnector,
     "google_trends": GoogleTrendsConnector,
     "news_intelligence": NewsIntelligenceConnector,
+    "ats_sources": AtsSourcesSyncConnector,
 }
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
