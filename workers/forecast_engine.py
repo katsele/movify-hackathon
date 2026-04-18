@@ -1,8 +1,11 @@
 """Forecasting engine — weighted signal aggregation (V1).
 
-Combines CRM pipeline, news intelligence, procurement notices and historical
-patterns into a rolling 12-month demand forecast per skill. Trend and job-posting
-weights are zeroed for the hackathon cut (those connectors ship in V1).
+Canonical spec: `docs/forecast-formula.md`. Must stay in lockstep with
+`lib/server/forecast-engine.ts`; the parity test asserts identical
+outputs on a shared fixture.
+
+Per-source scorers emit headcount-equivalent values; the demand is a
+trust-weighted average over sources that contributed.
 """
 from __future__ import annotations
 
@@ -15,21 +18,23 @@ from typing import Any
 
 from supabase import Client, create_client
 
+from forecast_constants import (
+    CONVERGENCE_WINDOW_DAYS,
+    FTE_PER_NEWS,
+    FTE_PER_POSTING,
+    FTE_PER_TENDER,
+    FTE_PER_TREND,
+    SIGNAL_RECENCY_WINDOW_DAYS,
+    compute_confidence,
+    count_active,
+    predict_demand,
+)
+
 log = logging.getLogger(__name__)
 
-CONVERGENCE_WINDOW_DAYS = 28
-SIGNAL_RECENCY_WINDOW_DAYS = 90
 MIN_PERSISTED_DEMAND = 0.1
-SOURCE_CONFIDENCE_CAPS: dict[str, float] = {
-    "crm_pipeline": 0.50,
-    "procurement_notice": 0.75,
-    "news_event": 0.55,
-    "historical_pattern": 0.40,
-    "trend_spike": 0.40,
-    "job_posting": 0.55,
-}
 
-# Historical pattern constants -------------------------------------------------
+# Historical pattern constants (inherited from PR #22) -----------------------
 HALF_LIFE_YEARS = 2.0
 BENCH_PRESSURE_GAIN = 0.5
 MIN_HISTORY_WEIGHTED_STARTS = 6.0
@@ -127,15 +132,32 @@ class ForecastEngine:
     ) -> list[dict]:
         results: list[dict] = []
         stamp = generated_at or datetime.now(timezone.utc).isoformat()
+        signal_rows = self._fetch_signal_skill_rows(skill_id)
 
         for offset in range(1, months_ahead + 1):
             target_month = _add_months(_start_of_month(date.today()), offset)
 
             crm = self._score_crm_pipeline(skill_id, target_month)
-            procurement = self._score_procurement(skill_id, target_month)
-            news = self._score_news_events(skill_id, target_month)
-            trend = self._score_trends(skill_id, target_month)
-            postings = self._score_job_postings(skill_id, target_month)
+            procurement = (
+                self._score_signal_source(signal_rows, ("ted_procurement",), target_month)
+                * FTE_PER_TENDER
+            )
+            news = (
+                self._score_signal_source(
+                    signal_rows, ("news_intelligence", "news"), target_month
+                )
+                * FTE_PER_NEWS
+            )
+            trend = (
+                self._score_signal_source(signal_rows, ("google_trends",), target_month)
+                * FTE_PER_TREND
+            )
+            postings = (
+                self._score_signal_source(
+                    signal_rows, ("ats_greenhouse", "ats_lever"), target_month
+                )
+                * FTE_PER_POSTING
+            )
             has_current_signal = (
                 crm > 0 or procurement > 0 or news > 0 or trend > 0 or postings > 0
             )
@@ -143,39 +165,22 @@ class ForecastEngine:
             if not has_current_signal:
                 historical *= HISTORY_DAMPEN_WITHOUT_CURRENT_SIGNAL
 
-            raw_demand = (
-                crm * self.weights["crm_pipeline"]
-                + procurement * self.weights["procurement_notice"]
-                + historical * self.weights["historical_pattern"]
-                + news * self.weights["news_event"]
-                + trend * self.weights["trend_spike"]
-                + postings * self.weights["job_posting"]
-            )
-
-            source_confidences = {
-                "crm_pipeline": self._effective_source_confidence(
-                    "crm_pipeline", crm
-                ),
-                "procurement_notice": self._effective_source_confidence(
-                    "procurement_notice", procurement
-                ),
-                "news_event": self._effective_source_confidence("news_event", news),
-                "trend_spike": self._effective_source_confidence(
-                    "trend_spike", trend
-                ),
-                "job_posting": self._effective_source_confidence(
-                    "job_posting", postings
-                ),
-                "historical_pattern": self._effective_source_confidence(
-                    "historical_pattern", historical
-                ),
+            estimates = {
+                "crm_pipeline": crm,
+                "procurement_notice": procurement,
+                "historical_pattern": historical,
+                "news_event": news,
+                "trend_spike": trend,
+                "job_posting": postings,
             }
-            confidence = self._combine_source_confidence(source_confidences)
-            converging = sum(
-                1
-                for source, value in source_confidences.items()
-                if value > 0 and source != "historical_pattern"
-            ) >= 2
+            raw_demand = predict_demand(estimates, self.weights)
+            converging = (
+                len(self._convergent_sources(signal_rows, target_month)) >= 2
+            )
+            confidence = compute_confidence(
+                count_active(estimates.values()),
+                converging,
+            )
             supply = self._get_supply(skill_id, target_month)
 
             results.append(
@@ -188,7 +193,7 @@ class ForecastEngine:
                     "gap": round(raw_demand - supply, 2),
                     "confidence": round(confidence, 2),
                     "contributing_signals": self._contributing_signal_ids(
-                        skill_id, target_month
+                        signal_rows, target_month
                     ),
                     "notes": self._explain(
                         skill_id,
@@ -218,32 +223,6 @@ class ForecastEngine:
             for forecast in forecasts
         )
 
-    @staticmethod
-    def _effective_source_confidence(source: str, score: float) -> float:
-        if score <= 0:
-            return 0.0
-        cap = SOURCE_CONFIDENCE_CAPS[source]
-        return min(cap, 1 - math.exp(-score))
-
-    @staticmethod
-    def _combine_source_confidence(source_confidences: dict[str, float]) -> float:
-        active = {
-            source: value for source, value in source_confidences.items() if value > 0
-        }
-        if not active:
-            return 0.0
-
-        combined = 1.0 - math.prod(1.0 - value for value in active.values())
-        supporting = [
-            source for source in active.keys() if source != "historical_pattern"
-        ]
-
-        if not supporting:
-            return round(min(combined, 0.25), 2)
-        if len(supporting) == 1:
-            return round(min(combined, SOURCE_CONFIDENCE_CAPS[supporting[0]]), 2)
-        return round(min(combined + 0.1, 0.95), 2)
-
     def _score_crm_pipeline(self, skill_id: str, target_month: date) -> float:
         deals = (
             self.db.table("deal_profiles")
@@ -270,54 +249,27 @@ class ForecastEngine:
             score += row["quantity"] * probability * proximity
         return score
 
-    def _score_procurement(self, skill_id: str, target_month: date) -> float:
-        return self._score_signal_sources(
-            skill_id,
-            sources=("ted_procurement",),
-            target_month=target_month,
-            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
-        )
-
-    def _score_news_events(self, skill_id: str, target_month: date) -> float:
-        return self._score_signal_sources(
-            skill_id,
-            sources=("news_intelligence", "news"),
-            target_month=target_month,
-            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
-        )
-
-    def _score_trends(self, skill_id: str, target_month: date) -> float:
-        return self._score_signal_sources(
-            skill_id,
-            sources=("google_trends",),
-            target_month=target_month,
-            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
-        )
-
-    def _score_job_postings(self, skill_id: str, target_month: date) -> float:
-        return self._score_signal_sources(
-            skill_id,
-            sources=("ats_greenhouse", "ats_lever"),
-            target_month=target_month,
-            window_days=SIGNAL_RECENCY_WINDOW_DAYS,
-        )
-
-    def _score_signal_sources(
-        self,
-        skill_id: str,
-        *,
-        sources: tuple[str, ...],
-        target_month: date,
-        window_days: int,
-    ) -> float:
-        rows = (
+    def _fetch_signal_skill_rows(self, skill_id: str) -> list[dict]:
+        return (
             self.db.table("signal_skills")
-            .select("confidence, signals(detected_at, source)")
+            .select("signal_id, confidence, signals(detected_at, source)")
             .eq("skill_id", skill_id)
             .execute()
             .data
             or []
         )
+
+    @staticmethod
+    def _score_signal_source(
+        rows: list[dict],
+        sources: tuple[str, ...],
+        target_month: date,
+    ) -> float:
+        """Return Σ confidence × decay for signals whose source matches.
+
+        Callers multiply by the appropriate `FTE_PER_*` constant to get
+        headcount-equivalent units.
+        """
         score = 0.0
         allowed = set(sources)
         for row in rows:
@@ -328,10 +280,10 @@ class ForecastEngine:
             if detected is None:
                 continue
             days_age = abs((target_month - detected).days)
-            if days_age > window_days:
+            if days_age > SIGNAL_RECENCY_WINDOW_DAYS:
                 continue
-            decay = max(0.0, 1.0 - days_age / window_days)
-            score += row["confidence"] * decay
+            decay = max(0.0, 1.0 - days_age / SIGNAL_RECENCY_WINDOW_DAYS)
+            score += (row.get("confidence") or 0.0) * decay
         return score
 
     def _score_historical_pattern(self, skill_id: str, target_month: date) -> float:
@@ -492,25 +444,39 @@ class ForecastEngine:
             available += 1
         return available
 
+    @staticmethod
     def _contributing_signal_ids(
-        self, skill_id: str, target_month: date
+        signal_rows: list[dict], target_month: date
     ) -> list[str]:
-        rows = (
-            self.db.table("signal_skills")
-            .select("signal_id, signals(detected_at)")
-            .eq("skill_id", skill_id)
-            .execute()
-            .data
-            or []
-        )
         ids: list[str] = []
-        for row in rows:
-            detected = _parse_detected_at((row.get("signals") or {}).get("detected_at"))
+        for row in signal_rows:
+            sig = row.get("signals") or {}
+            detected = _parse_detected_at(sig.get("detected_at"))
             if detected is None:
                 continue
             if abs((target_month - detected).days) <= CONVERGENCE_WINDOW_DAYS:
                 ids.append(row["signal_id"])
         return sorted(set(ids))
+
+    @staticmethod
+    def _convergent_sources(signal_rows: list[dict], target_month: date) -> set[str]:
+        """Distinct signal *sources* with a signal inside the convergence window.
+
+        Mirrors `convergentSources` in lib/server/forecast-engine.ts so both
+        engines agree on when a forecast is "converging".
+        """
+        sources: set[str] = set()
+        for row in signal_rows:
+            sig = row.get("signals") or {}
+            source = sig.get("source")
+            if not source:
+                continue
+            detected = _parse_detected_at(sig.get("detected_at"))
+            if detected is None:
+                continue
+            if abs((target_month - detected).days) <= CONVERGENCE_WINDOW_DAYS:
+                sources.add(source)
+        return sources
 
     def _explain(
         self,

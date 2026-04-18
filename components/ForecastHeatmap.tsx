@@ -146,10 +146,12 @@ export function ForecastHeatmap({
                               {skill.skill} · {cellMonth}
                             </div>
                             <div className="tabular">
-                              Demand: <span className="font-mono">{cell.demand}</span>
+                              Predicted consultants:{" "}
+                              <span className="font-mono">{cell.demand}</span>
                             </div>
                             <div className="tabular">
-                              Supply: <span className="font-mono">{cell.supply}</span>
+                              Available consultants:{" "}
+                              <span className="font-mono">{cell.supply}</span>
                             </div>
                             <div className="tabular">
                               Gap:{" "}
@@ -238,15 +240,15 @@ function Legend() {
     <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px] text-neutral-500">
       <div className="flex items-center gap-1.5">
         <span className="inline-block h-3 w-3 rounded bg-signal-gap" />
-        Gap ≥ 3 — act now
+        Consultant gap ≥ 3 — act now
       </div>
       <div className="flex items-center gap-1.5">
         <span className="inline-block h-3 w-3 rounded bg-signal-watch" />
-        Gap 1–2 — watch
+        Gap 1–3 — watch
       </div>
       <div className="flex items-center gap-1.5">
         <span className="inline-block h-3 w-3 rounded bg-signal-covered" />
-        Covered
+        Covered or surplus
       </div>
       <div className="flex items-center gap-1.5">
         <span className="inline-block h-3 w-3 rounded bg-signal-gap hatched" />

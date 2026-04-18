@@ -1,10 +1,18 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ForecastFactorKey, SignalSource } from "@/lib/types";
+import {
+  CONVERGENCE_WINDOW_DAYS,
+  SIGNAL_RECENCY_WINDOW_DAYS,
+  computeConfidence,
+  countActive,
+  FTE_PER_NEWS,
+  FTE_PER_POSTING,
+  FTE_PER_TENDER,
+  FTE_PER_TREND,
+  predictDemand,
+} from "@/lib/server/forecast-constants";
 
 const FORECAST_MONTHS = 12;
-const CONVERGENCE_WINDOW_DAYS = 28;
-const SIGNAL_RECENCY_WINDOW_DAYS = 90;
-const CONFIDENCE_DIVISOR = 4;
 const UPSERT_BATCH_SIZE = 500;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const MS_PER_YEAR = 365.25 * MS_PER_DAY;
@@ -543,18 +551,24 @@ export async function generateAndPersistForecasts(
       const targetMonth = addMonths(currentMonth, offset);
 
       const crm = scoreCrmPipeline(dealRows, currentMonth, targetMonth);
-      const procurement = scoreSignalSources(signalRows, targetMonth, [
-        "ted_procurement",
-      ]);
-      const news = scoreSignalSources(signalRows, targetMonth, [
-        "news",
-        "news_intelligence",
-      ]);
-      const trend = scoreSignalSources(signalRows, targetMonth, ["google_trends"]);
-      const postings = scoreSignalSources(signalRows, targetMonth, [
-        "ats_greenhouse",
-        "ats_lever",
-      ]);
+      const procurement =
+        FTE_PER_TENDER *
+        scoreSignalSources(signalRows, targetMonth, ["ted_procurement"]);
+      const news =
+        FTE_PER_NEWS *
+        scoreSignalSources(signalRows, targetMonth, [
+          "news",
+          "news_intelligence",
+        ]);
+      const trend =
+        FTE_PER_TREND *
+        scoreSignalSources(signalRows, targetMonth, ["google_trends"]);
+      const postings =
+        FTE_PER_POSTING *
+        scoreSignalSources(signalRows, targetMonth, [
+          "ats_greenhouse",
+          "ats_lever",
+        ]);
       const hasCurrentSignal =
         crm > 0 || procurement > 0 || news > 0 || trend > 0 || postings > 0;
       let historical = scoreHistoricalPattern(aggregate, targetMonth);
@@ -571,20 +585,12 @@ export async function generateAndPersistForecasts(
         job_posting: postings,
       };
 
-      const rawDemand =
-        scores.crm_pipeline * weights.crm_pipeline +
-        scores.procurement_notice * weights.procurement_notice +
-        scores.historical_pattern * weights.historical_pattern +
-        scores.news_event * weights.news_event +
-        scores.trend_spike * weights.trend_spike +
-        scores.job_posting * weights.job_posting;
+      const rawDemand = predictDemand(scores, weights);
 
-      const activeSignals = Object.values(scores).filter((score) => score > 0).length;
-      const baseConfidence = Math.min(activeSignals / CONFIDENCE_DIVISOR, 1);
       const converging = convergentSources(signalRows, targetMonth).size >= 2;
-      const confidence = Math.min(
-        baseConfidence + (converging ? 0.2 : 0),
-        1,
+      const confidence = computeConfidence(
+        countActive(Object.values(scores)),
+        converging,
       );
 
       const supply = getSupply(consultantRows, targetMonth);
